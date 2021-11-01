@@ -11,6 +11,7 @@ const admin = new User({
     homeAddress: "2 McBoatfacing Street, River Thames",
     countryCode: 20,
     phone: '1006043322',
-    passport: '',
+    email: 'jerry@gmail.com',
+    passport: '3000',
     isAdmin: true,
 });
