@@ -1,9 +1,12 @@
 const express = require('express');
 const connectDB = require('./config/db');
 var cors = require('cors');
-
+const mongoose = require("mongoose");
 // Routes
 // require any routes here if needed. e.g: `const books = require('./routes/api/books');`
+const UserController = require("./routes/api/UserController.js");
+const User = require("./models/User.js");
+
 
 const app = express();
 
