@@ -23,6 +23,9 @@ app.get('/', (req, res) => res.send('Server running...'));
 // use Routes
 // Use the routes here. e.g: `app.use('/api/books', books);`
 app.post('/login', user.login);
+app.get('/viewFlights',flights.viewFlights)
+app.put('/updateFlight/:id',flights.updateFlight)
+
 const port = process.env.PORT || 8000;
 
 app.listen(port, () => console.log(`Server running on port ${port}`));
