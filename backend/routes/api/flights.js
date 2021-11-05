@@ -28,14 +28,25 @@ router.post('/flight', function(req,res){
     }
 });
 
-router.get('/flight',function(req,res){
-    flight.find({}).then(result => {
-        res.send(result);
-        console.log("added");
-    })
-    .catch(err => {
-    console.log(err);                  
-    });
-})
-
 module.exports = router;
+
+const Flight = require('../models/Flight');
+exports.viewFlights = (req, res) => {                                               
+    Flight.find({})
+      .then(result => {
+        res.send(result);
+      })
+      .catch(err => {
+        console.log(err);
+      });
+    };
+    exports.updateFlight = (req,res)=>{
+        Flight.findByIdAndUpdate(req.params.id,req.body).then(result =>{
+    
+            res.status(200).send("flight updated ");
+            console.log('The flight is Updated successfully !');
+        }).catch(err => {
+            console.log(err);
+          });
+    
+      };
