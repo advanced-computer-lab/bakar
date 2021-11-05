@@ -31,6 +31,8 @@ app.post('/login', user.login);
 app.use('/', flights);
 app.get('/viewFlights',flights.viewFlights)
 app.put('/updateFlight/:id',flights.updateFlight)
+app.delete("/flights/:id", flights.deleteFlight);
+app.delete("/flights", flights.deleteFlights);
 
 const port = process.env.PORT || 8000;
 

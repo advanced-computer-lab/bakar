@@ -49,3 +49,25 @@ exports.viewFlights = (req, res) => {
           });
     
       };
+
+
+
+exports.deleteFlight = async (req, res) => {
+  try {
+    const dbResult = await Flight.findByIdAndDelete(req.params.id);
+    res.status(200).send(dbResult);
+  } catch (error) {
+    console.log(error);
+    res.status(500).send("Error deleting request");
+  }
+};
+
+exports.deleteFlights = async (req, res) => {
+  try {
+    const dbResult = await Flight.deleteMany(req.body);
+    res.status(200).send(dbResult);
+  } catch (error) {
+    console.log(error);
+    res.status(500).send("Error deleting request");
+  }
+};
