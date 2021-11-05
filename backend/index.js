@@ -4,8 +4,7 @@ var cors = require('cors');
 const mongoose = require("mongoose");
 // Routes
 // require any routes here if needed. e.g: `const books = require('./routes/api/books');`
-const UserController = require("./routes/api/UserController.js");
-const User = require("./models/User.js");
+const user = require("./routes/api/user.js");
 
 
 const app = express();
@@ -23,7 +22,7 @@ app.get('/', (req, res) => res.send('Server running...'));
 
 // use Routes
 // Use the routes here. e.g: `app.use('/api/books', books);`
-
+app.post('/login', user.login);
 const port = process.env.PORT || 8000;
 
 app.listen(port, () => console.log(`Server running on port ${port}`));
