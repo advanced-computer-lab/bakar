@@ -1,11 +1,12 @@
-const express = require('express');
-const connectDB = require('./config/db');
-var cors = require('cors');
+const express = require("express");
+const connectDB = require("./config/db");
+const cors = require("cors");
 const mongoose = require("mongoose");
+
 // Routes
 // require any routes here if needed. e.g: `const books = require('./routes/api/books');`
 const user = require("./routes/api/user.js");
-
+const flights = require("./routes/api/flights.js");
 
 const app = express();
 
@@ -18,7 +19,7 @@ app.use(cors({ origin: true, credentials: true }));
 // Init Middleware
 app.use(express.json({ extended: false }));
 
-app.get('/', (req, res) => res.send('Server running...'));
+app.get("/", (req, res) => res.send("Server running..."));
 
 // use Routes
 // Use the routes here. e.g: `app.use('/api/books', books);`
