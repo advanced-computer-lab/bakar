@@ -7,7 +7,7 @@ var bodyParser = require('body-parser')
 // require any routes here if needed. e.g: `const books = require('./routes/api/books');`
 
 const app = express();
-var aFlight = require('./routes/api/flights');
+const aFlight = require('./routes/api/flights');
 // Connect Database
 connectDB();
 
