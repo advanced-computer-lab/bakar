@@ -9,7 +9,7 @@ function Flights() {
   const [flights, setFlights] = useState([]);
 
   const getData = async () => {
-      const res = await axios.get('/flights');
+      const res = await axios.get('http://localhost:8000/viewFlights');
       setFlights(res.data.flights)
   }
 
