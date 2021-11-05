@@ -1,15 +1,15 @@
-const express = require('express');
-const connectDB = require('./config/db');
-var cors = require('cors');
-var bodyParser = require('body-parser')
-const app = express();
+const express = require("express");
+const connectDB = require("./config/db");
+const cors = require("cors");
 const mongoose = require("mongoose");
+const bodyParser = require('body-parser');
 
 // Routes
-// require any routes here if needed. e.g: `const books = require('./routes/api/books');
-const aFlight = require('./routes/api/flights');
-const UserController = require("./routes/api/UserController.js");
-const User = require("./models/User.js");
+// require any routes here if needed. e.g: `const books = require('./routes/api/books');`
+const user = require("./routes/api/user.js");
+const flights = require("./routes/api/flights.js");
+
+const app = express();
 
 // Connect Database
 connectDB();
@@ -23,11 +23,12 @@ app.use(bodyParser.urlencoded({
 // Init Middleware
 app.use(express.json({ extended: false }));
 
-app.get('/', (req, res) => res.send('Server running...'));
+app.get("/", (req, res) => res.send("Server running..."));
 
 // use Routes
 // Use the routes here. e.g: `app.use('/api/books', books);`
-app.use('/', aFlight);
+app.post('/login', user.login);
+app.use('/', flights);
 app.get('/viewFlights',flights.viewFlights)
 app.put('/updateFlight/:id',flights.updateFlight)
 

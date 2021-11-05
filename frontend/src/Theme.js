@@ -1,0 +1,33 @@
+const theme = {
+    palette: {
+      type: 'light',
+      primary: {
+        main: '#183642',
+        contrastText: '#F3F6F7',
+        dark: '#152328',
+        light: '#2D4853',
+      },
+      secondary: {
+        main: '#CD5334',
+      },
+      background: {
+        default: '#F3F6F7',
+        paper: '#FEEFDD',
+      },
+      text: {
+        primary: '#183642',
+      },
+      info: {
+        main: '#2196f3',
+      },
+      divider: 'rgba(21,35,40,0.1)',
+    },
+    typography: {
+      fontFamily: 'Lato',
+      button: {
+        fontFamily: 'Lato',
+      },
+    },
+  };
+
+export default theme;
