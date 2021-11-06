@@ -15,7 +15,7 @@ const app = express();
 connectDB();
 
 // cors
-app.use(cors({ origin: true, credentials: true }));
+app.use(cors());
 app.use(bodyParser.urlencoded({
   extended: true
 }));
@@ -27,12 +27,8 @@ app.get("/", (req, res) => res.send("Server running..."));
 
 // use Routes
 // Use the routes here. e.g: `app.use('/api/books', books);`
-app.post('/login', user.login);
-app.use('/', flights);
-app.get('/viewFlights',flights.viewFlights)
-app.put('/updateFlight/:id',flights.updateFlight)
-app.delete("/flights/:id", flights.deleteFlight);
-app.delete("/flights", flights.deleteFlights);
+app.use('/users', user);
+app.use('/flights', flights);
 
 const port = process.env.PORT || 8000;
 

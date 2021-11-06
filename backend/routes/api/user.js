@@ -1,3 +1,5 @@
+const express = require('express');
+const router = express.Router();
 const mongoose = require("mongoose");
 const Users = require("../../models/User.js");
 const User = mongoose.model("userSchema", Users);
@@ -16,7 +18,8 @@ const admin = new User({
   isAdmin: true,
 });
 
-exports.login = (req, res) => {
+router.post('/login', (req, res) => {
+  console.log('tom');
   User.findOne({
     username: req.body.username.toLowerCase(),
     password: req.body.password,
@@ -31,4 +34,6 @@ exports.login = (req, res) => {
       }
     }
   });
-};
+});
+
+module.exports = router;
