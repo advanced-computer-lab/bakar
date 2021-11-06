@@ -1,20 +1,33 @@
 import React from "react";
 import TableRow from "@mui/material/TableRow";
-import { TableCell } from "@mui/material";
+import { Checkbox, TableCell } from "@mui/material";
+import EditFlight from '../EditFlight/EditFlight'
 
 function FlightRow(props) {
+  function handleChange(event) {
+    let newChecks = {...props.checks, [props.flightNo]: event.target.checked};
+    props.setChecks(newChecks);
+    console.log(newChecks);
+  }
+
   return (
-    <TableRow>
-      <TableCell>{props.id}</TableCell>
-      <TableCell>
-        {props.departDate} - {props.arriveDate}
-      </TableCell>
-      <TableCell>
-        {props.departLocation} - {props.arriveLocation}
-      </TableCell>
-      <TableCell>{props.seats}</TableCell>
-      <TableCell>{props.price}</TableCell>
-    </TableRow>
+      <TableRow>
+        <TableCell>{props.flightNo}</TableCell>
+        <TableCell>
+          {props.departureTime} - {props.arrivalTime}
+        </TableCell>
+        <TableCell>
+          {props.departureLocation} - {props.arrivalLocation}
+        </TableCell>
+        <TableCell>{props.seats}</TableCell>
+        <TableCell>{props.priceEcon}</TableCell>
+        <TableCell>
+          <EditFlight flight={props} />
+        </TableCell>
+        <TableCell>
+          <Checkbox onChange={handleChange} />
+        </TableCell>
+      </TableRow>
   );
 }
 

@@ -7,25 +7,19 @@ function FlightTable(props) {
 		<TableContainer component={Paper}>
 			<Table>
 				<TableBody>
-					<FlightRow
-						id={1}
-						departDate={'1/11/2021'}
-						arriveDate={'2/11/2021'}
-						departLocation={'Cairo'}
-						arriveLocation={'Berlin'}
-						seats={'19'}
-						price={'8850 EG'}
-					/>
 					{props.flights &&
 						props.flights.map((flight) => (
 							<FlightRow
-								id={flight.flightNo}
-								departDate={flight.departureTime}
-								arriveDate={flight.arrivalTime}
-								departLocation={flight.departureLocation}
-								arriveLocation={flight.arrivalLocation}
-								seats={flight.seats}
-								price={flight.price}
+								key={flight.flightNo}
+								flightNo={flight.flightNo}
+								departureTime={flight.departureTime}
+								arrivalTime={flight.arrivalTime}
+								departureLocation={flight.departureLocation}
+								arrivalLocation={flight.arrivalLocation}
+								seats={flight.seatsEcon + flight.seatsBus}
+								priceEcon={flight.priceEcon}
+								checks={props.checks}
+								setChecks={props.setChecks}
 							/>
 						))}
 				</TableBody>

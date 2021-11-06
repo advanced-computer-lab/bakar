@@ -19,7 +19,6 @@ const admin = new User({
 });
 
 router.post('/login', (req, res) => {
-  console.log('tom');
   User.findOne({
     username: req.body.username.toLowerCase(),
     password: req.body.password,
