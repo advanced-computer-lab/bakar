@@ -4,28 +4,29 @@ const express = require('express');
 const router = express.Router();
 const Flight = require('../../models/Flight');
 
-router.post('/', function(req,res){
-        if(req.body.departureTime < req.body.arrivalTime){
-            if(req.body.seatsEcon >= 0 && req.body.seatsBus >= 0 && req.body.seatsFirst >= 0){
-                if(req.body.departureLocation != req.body.arrivalLocation){    
-                    const newFlight = new Flight(req.body)
+router.post('/', function(req,res) {
+  console.log(req.body);
+  if(req.body.departureTime < req.body.arrivalTime){
+      if(req.body.seatsEcon >= 0 && req.body.seatsBus >= 0){
+          if(req.body.departureLocation != req.body.arrivalLocation){    
+              const newFlight = new Flight(req.body)
 
-                    newFlight.save().then(result => {
-                        res.sendStatus(200);
-                        console.log("added");
-                    })
-                    .catch(err => {
-                    console.log(err);                  
-                    });
-                }else{
-                    throw "Arrival location isn't matching with departureLocation";
-                }
-            }else{
-                throw "Invalid seatNumber";
-            }
-    }else{
-        throw "Invalid departureTime or arrivalTime";
-    }
+              newFlight.save().then(result => {
+                  res.sendStatus(200);
+                  console.log("added");
+              })
+              .catch(err => {
+              console.log(err);                  
+              });
+          }else{
+              throw "Arrival location isn't matching with departureLocation";
+          }
+      }else{
+          throw "Invalid seatNumber";
+      }
+  } else{
+      throw "Invalid departureTime or arrivalTime";
+  }
 });
 
 router.get('/', (req, res) => {
@@ -38,8 +39,8 @@ router.get('/', (req, res) => {
   });
 });
 
-router.put('/:id', (req, res) => {
-  Flight.findByIdAndUpdate(req.params.id,req.body)
+router.put('/:flightNo', (req, res) => {
+  Flight.updateOne(req.params.flightNo,req.body)
   .then(result =>{
     res.status(200).send("flight updated ");
     console.log('The flight is Updated successfully !');
@@ -50,9 +51,9 @@ router.put('/:id', (req, res) => {
 
 });
 
-router.delete('/:id', async (req, res) => {
+router.delete('/:flightNo', async (req, res) => {
   try {
-    const dbResult = await Flight.findByIdAndDelete(req.params.id);
+    const dbResult = await Flight.deleteOne({flightNo: req.params.flightNo});
     res.status(200).send(dbResult);
   } catch (error) {
     console.log(error);
@@ -60,9 +61,11 @@ router.delete('/:id', async (req, res) => {
   }
 });
 
-router.delete('/', async (req, res) => {
+router.post('/delete', async (req, res) => {
+  console.log(req.body);
+  const flights = req.body.deleteQuery;
   try {
-    const dbResult = await Flight.deleteMany(req.body);
+    const dbResult = await Flight.deleteMany(flights);
     res.status(200).send(dbResult);
   } catch (error) {
     console.log(error);

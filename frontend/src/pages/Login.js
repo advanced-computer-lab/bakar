@@ -12,7 +12,7 @@ import Grid from "@mui/material/Grid";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import Copyright from "../components/Copyright";
-import axios from "axios";
+import axios from "../api";
 import { useNavigate } from "react-router";
 
 export default function SignInSide() {
@@ -21,12 +21,10 @@ export default function SignInSide() {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
     // eslint-disable-next-line no-console
-    let response = await axios.post("http://localhost:8000/login", {
+    let response = await axios.post("/users/login", {
       username: data.get("username"),
       password: data.get("password"),
     });
-    console.log(data);
-    console.log(response);
     if (response.status === 200) {
       navigate("/flights");
     } else {
