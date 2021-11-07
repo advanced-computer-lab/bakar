@@ -63,12 +63,10 @@ export default function EditFlight({ flight }) {
       };
       console.log(data);
       let response = await axios.put("/flights/" + flight.flightNo, data);
-      console.log(data);
       console.log(response);
       setOpen(false);
       flight.getData("");
     } catch (err) {
-      console.log("Hi2");
       console.log(err);
     }
   };
@@ -81,7 +79,7 @@ export default function EditFlight({ flight }) {
       </IconButton>
       <Dialog open={open} onClose={handleClose}>
         <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 1 }}>
-          <DialogTitle>Create</DialogTitle>
+          <DialogTitle>Edit</DialogTitle>
           <DialogContent>
             <DialogContentText>Enter flight data</DialogContentText>
             <TextField
@@ -105,7 +103,9 @@ export default function EditFlight({ flight }) {
               label="Departure Time"
               value={departureTime}
               onChange={(newValue) => {
-                setDepartureTime(newValue);
+                setDepartureTime(
+                  new Date(new Date(newValue.setSeconds(0)).setMilliseconds(0))
+                );
               }}
             />
             <DateTimePicker
@@ -115,8 +115,9 @@ export default function EditFlight({ flight }) {
               label="Arrival Time"
               value={arrivalTime}
               onChange={(newValue) => {
-                console.log(newValue);
-                setArrivalTime(newValue);
+                setArrivalTime(
+                  new Date(new Date(newValue.setSeconds(0)).setMilliseconds(0))
+                );
               }}
             />
             <TextField
