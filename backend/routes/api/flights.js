@@ -28,7 +28,7 @@ router.post("/", async (req, res) => {
 
 router.get("/", async (req, res) => {
   try {
-    const result = await Flight.find({}).exec();
+    const result = await Flight.find(req.query).exec();
     res.send(result);
   } catch (err) {
     console.log(err);
@@ -68,16 +68,5 @@ router.post("/delete", async (req, res) => {
     res.status(500).send("Error deleting request");
   }
 });
-
-router.get('/search',async (req,res) => {
-  try{
-    const dbResult = await Flight.find(req.query).exec();
-    res.status(200).send(dbResult);
-  }
-  catch(error){
-    console.log(error);
-    res.status(500).send("Error at searching");
-  }
-})
 
 module.exports = router;

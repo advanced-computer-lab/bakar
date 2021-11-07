@@ -1,11 +1,36 @@
 import { Paper, Table, TableBody, TableContainer } from "@mui/material";
 import React from "react";
 import FlightRow from "./FlightRow";
+import { TableRow, TableCell, TableHead } from "@mui/material";
 
 function FlightTable(props) {
+  const style = {
+    fontSize: 16,
+    fontWeight: "bold",
+  };
+
   return (
     <TableContainer component={Paper}>
       <Table>
+        <TableHead>
+          <TableRow>
+            <TableCell style={style} align="center" colSpan={1}>
+              Flight Number
+            </TableCell>
+            <TableCell style={style} align="center" colSpan={1}>
+              Departure Time - Arrival Time
+            </TableCell>
+            <TableCell style={style} align="center" colSpan={1}>
+              Departure Location - Arrival Loation
+            </TableCell>
+            <TableCell style={style} align="center" colSpan={1}>
+              Number of Seats
+            </TableCell>
+            <TableCell style={style} align="center" colSpan={1}>
+              Price of Economy Seats
+            </TableCell>
+          </TableRow>
+        </TableHead>
         <TableBody>
           {props.flights &&
             props.flights.map((flight) => (
