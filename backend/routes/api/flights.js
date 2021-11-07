@@ -69,9 +69,9 @@ router.post("/delete", async (req, res) => {
   }
 });
 
-router.post('/search',async (req,res) => {
+router.get('/search',async (req,res) => {
   try{
-    const dbResult = await Flight.find(req.query);
+    const dbResult = await Flight.find(req.query).exec();
     res.status(200).send(dbResult);
   }
   catch(error){
