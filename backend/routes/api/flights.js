@@ -70,4 +70,15 @@ router.delete('/', async (req, res) => {
   }
 });
 
+router.post('/search',async (req,res) => {
+  try{
+    const dbResult = await Flight.find(req.query);
+    res.status(200).send(dbResult);
+  }
+  catch(error){
+    console.log(error);
+    res.status(500).send("Error at searching");
+  }
+})
+
 module.exports = router;
