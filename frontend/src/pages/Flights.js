@@ -1,24 +1,45 @@
-import { Button } from "@mui/material";
 import React, { useState } from "react";
 import FlightTable from "../components/FlightTable/FlightTable";
-import AddIcon from '@mui/icons-material/Add';
+import CreateFlight from "../components/CreateFlight/CreateFlight";
+import DeleteFlight from "../components/DeleteFlight/DeleteFlight";
+import Grid from "@mui/material/Grid";
 
-import axios from 'axios';
+import axios from "axios";
 
 function Flights() {
   const [flights, setFlights] = useState([]);
+  const [checks, setChecks] = useState({});
 
-  const getData = async () => {
-      const res = await axios.get('http://localhost:8000/viewFlights');
-      setFlights(res.data.flights)
-  }
+  const getData = async (queryString) => {
+    const res = await axios.get("/flights");
+    let flightData = res["data"];
+    setFlights(flightData);
+    let currentChecks = {};
+    flightData.forEach((element) => {
+      currentChecks[element.flightNo] = false;
+    });
+    setChecks(currentChecks);
+  };
 
-  getData();
+  React.useEffect(() => getData(), []);
 
   return (
     <div>
-      <Button variant='contained' startIcon={<AddIcon />}>Add a flight</Button>
-      <FlightTable flights={flights} />
+      <Grid container spacing={2}>
+        <Grid item>
+          <CreateFlight getData={getData} />
+        </Grid>
+        <Grid item>
+          <DeleteFlight checks={checks} getData={getData} />
+        </Grid>
+      </Grid>
+      <br></br>
+      <FlightTable
+        flights={flights}
+        checks={checks}
+        setChecks={setChecks}
+        getData={getData}
+      />
     </div>
   );
 }

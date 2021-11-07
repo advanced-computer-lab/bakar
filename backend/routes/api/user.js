@@ -1,4 +1,4 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
 const mongoose = require("mongoose");
 const Users = require("../../models/User.js");
@@ -18,8 +18,7 @@ const admin = new User({
   isAdmin: true,
 });
 
-router.post('/login', (req, res) => {
-  console.log('tom');
+router.post("/login", (req, res) => {
   User.findOne({
     username: req.body.username.toLowerCase(),
     password: req.body.password,
