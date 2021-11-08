@@ -1,6 +1,5 @@
 import React from "react";
-import TableRow from "@mui/material/TableRow";
-import { Checkbox, TableCell } from "@mui/material";
+import { TableRow, Checkbox, TableCell } from "@mui/material";
 import EditFlight from "../EditFlight/EditFlight";
 
 function FlightRow(props) {
@@ -9,18 +8,19 @@ function FlightRow(props) {
     props.setChecks(newChecks);
     console.log(newChecks);
   }
-
+  const departureTime = new Date(props.departureTime);
+  const arrivalTime = new Date(props.arrivalTime);
   return (
     <TableRow>
-      <TableCell>{props.flightNo}</TableCell>
-      <TableCell>
-        {props.departureTime} - {props.arrivalTime}
+      <TableCell align="center">{props.flightNo}</TableCell>
+      <TableCell align="center">
+        {departureTime.toLocaleDateString()}  {departureTime.toLocaleTimeString()} - {arrivalTime.toLocaleDateString()}  {arrivalTime.toLocaleTimeString()}
       </TableCell>
-      <TableCell>
+      <TableCell align="center">
         {props.departureLocation} - {props.arrivalLocation}
       </TableCell>
-      <TableCell>{props.seatsEcon + props.seatsBus}</TableCell>
-      <TableCell>{props.priceEcon}</TableCell>
+      <TableCell align="center">{props.seatsEcon + props.seatsBus}</TableCell>
+      <TableCell align="center">{props.priceEcon}</TableCell>
       <TableCell>
         <EditFlight flight={props} />
       </TableCell>

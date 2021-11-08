@@ -1,0 +1,16 @@
+Seif ELBerkawy: 
+    backend: requirement id 3
+    frontend: requirement id 3, 5, 8, 10
+
+Abdallah Mohamed:
+    backend: requirement id 4, 5
+
+Rafik Yasser:
+    backend: requirement id 6, 7
+
+Ahmad Abdallah:
+    backend: requirement id 8
+    frontend: requirement id 7, 8, 10
+
+Mohamed Kamal:
+    frontend: requirement id 3, 4, 5, 6, 7, 8, 9, 10

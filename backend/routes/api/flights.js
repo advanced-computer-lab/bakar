@@ -28,7 +28,7 @@ router.post("/", async (req, res) => {
 
 router.get("/", async (req, res) => {
   try {
-    const result = await Flight.find({}).exec();
+    const result = await Flight.find(req.query).exec();
     res.send(result);
   } catch (err) {
     console.log(err);

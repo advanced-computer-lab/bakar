@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import FlightTable from "../components/FlightTable/FlightTable";
 import CreateFlight from "../components/CreateFlight/CreateFlight";
 import DeleteFlight from "../components/DeleteFlight/DeleteFlight";
+import SearchFlight from "../components/SearchFlight/SearchFlight";
 import Grid from "@mui/material/Grid";
 
 import axios from "axios";
@@ -11,7 +12,7 @@ function Flights() {
   const [checks, setChecks] = useState({});
 
   const getData = async (queryString) => {
-    const res = await axios.get("/flights");
+    const res = await axios.get("/flights?" + queryString);
     let flightData = res["data"];
     setFlights(flightData);
     let currentChecks = {};
@@ -31,6 +32,9 @@ function Flights() {
         </Grid>
         <Grid item>
           <DeleteFlight checks={checks} getData={getData} />
+        </Grid>
+        <Grid item>
+          <SearchFlight getData={getData} />
         </Grid>
       </Grid>
       <br></br>
