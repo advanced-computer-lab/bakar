@@ -3,6 +3,11 @@ const router = express.Router();
 const mongoose = require("mongoose");
 const Users = require("../../models/User.js");
 const User = mongoose.model("userSchema", Users);
+const passport = require("passport");
+const jwt = require("jsonwebtoken");
+const JwtStrategy = require("passport-jwt").Strategy;
+const ExtractJwt = require("passport-jwt").ExtractJwt;
+const secretkey = "tom&jerry";
 
 //Admin's entry
 const admin = new User({
@@ -18,21 +23,63 @@ const admin = new User({
   isAdmin: true,
 });
 
-router.post("/login", (req, res) => {
-  User.findOne({
-    username: req.body.username.toLowerCase(),
-    password: req.body.password,
-  }).exec((err, user) => {
-    if (err) {
-      console.log(err);
+router.post("/login", async (req, res) => {
+  console.log(req.body);
+  passport.authenticate("local", function (err, user, info) {
+    console.log(user);
+    if (!user) {
+      console.log("Incorrect username or password");
     } else {
-      if (user != null) {
-        if (user.isAdmin) res.sendStatus(200);
-      } else {
-        res.sendStatus(403);
-      }
+      req.login(user, function (err) {
+        const token = jwt.sign(
+          { username: user.username },
+          secretkey,
+          { expiresIn: "24h" }
+        );
+        console.log(token);
+        res.send(token);
+      });
     }
-  });
+  })(req, res);
+});
+
+router.post("/register", (req, res) => {
+  const register = new User({
+    username: req.body.username,
+    firstName: req.body.firstName,
+    lastName: req.body.lastName,
+    homeAddress: req.body.homeAddress,
+    countryCode: req.body.countryCode,
+    phone: req.body.phone,
+    email: req.body.email,
+    passport: req.body.passport,
+    isAdmin: false,
+  })
+  User.register(
+    register, req.body.password,
+    (err, user) => {
+      if (err) {
+        console.log(err);
+      } else {
+        passport.authenticate("local")(req, res, function () {
+    console.log(user);
+    if (!user) {
+      console.log("Incorrect username or password");
+    } else {
+      req.login(user, function (err) {
+        const token = jwt.sign(
+          { username: user.username },
+          secretkey,
+          { expiresIn: "24h" }
+        );
+        console.log(token);
+        res.send(token);
+      });
+          res.sendStatus(200);
+        };
+      });
+    }
+    });
 });
 
 module.exports = router;

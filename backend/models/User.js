@@ -1,7 +1,9 @@
 // TODO: Create User model & create an Administrator entry, refer to issue #1: https://github.com/advanced-computer-lab/bakar/issues/1
 //External variables
 const mongoose = require("mongoose");
+const passportLocalMongoose = require('passport-local-mongoose');
 const Schema = mongoose.Schema;
+
 
 //User's model
 const userSchema = new Schema({
@@ -9,10 +11,6 @@ const userSchema = new Schema({
     type: String,
     required: true,
     unique: true,
-  },
-  password: {
-    type: String,
-    required: true,
   },
   firstName: {
     type: String,
@@ -48,5 +46,5 @@ const userSchema = new Schema({
     type: Boolean,
   },
 });
-
+userSchema.plugin(passportLocalMongoose);
 module.exports = userSchema;

@@ -10,6 +10,9 @@ import AddIcon from "@mui/icons-material/Add";
 import axios from "../../api";
 import Box from "@mui/material/Box";
 import { DateTimePicker } from "@mui/lab";
+import  { useEffect } from "react";
+import { useNavigate } from "react-router";
+const jwt = require("jsonwebtoken");
 
 export default function CreateFlight({ getData }) {
   const [open, setOpen] = React.useState(false);
@@ -17,6 +20,18 @@ export default function CreateFlight({ getData }) {
     new Date(Date.now())
   );
   const [arrivalTime, setArrivalTime] = React.useState(new Date(Date.now()));
+
+  let navigate = useNavigate();
+  const token = localStorage.getItem("token");
+
+  useEffect(() => {
+    try {
+      jwt.verify(token, "tom&jerry");
+    } catch (err) {
+      console.log(err);
+      navigate("/");
+    }
+  });
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -33,25 +48,31 @@ export default function CreateFlight({ getData }) {
     console.log(departureTime);
     console.log(arrivalTime);
     try {
-      let response = await axios.post("/flights", {
-        flightNo: data.get("flightNo"),
-        departureTime: new Date(
-          new Date(departureTime.setSeconds(0)).setMilliseconds(0)
-        ),
-        arrivalTime: new Date(
-          new Date(arrivalTime.setSeconds(0)).setMilliseconds(0)
-        ),
-        departureLocation: data.get("departureLocation"),
-        arrivalLocation: data.get("arrivalLocation"),
-        seatsEcon: data.get("seatsEcon"),
-        seatsBus: data.get("seatsBus"),
-        departureTerminal: data.get("departureTerminal"),
-        arrivalTerminal: data.get("arrivalTerminal"),
-        priceEcon: data.get("priceEcon"),
-        priceBus: data.get("priceBus"),
-      });
+      let response = await axios.post(
+        "/flights",
+        {
+          flightNo: data.get("flightNo"),
+          departureTime: new Date(
+            new Date(departureTime.setSeconds(0)).setMilliseconds(0)
+          ),
+          arrivalTime: new Date(
+            new Date(arrivalTime.setSeconds(0)).setMilliseconds(0)
+          ),
+          departureLocation: data.get("departureLocation"),
+          arrivalLocation: data.get("arrivalLocation"),
+          seatsEcon: data.get("seatsEcon"),
+          seatsBus: data.get("seatsBus"),
+          departureTerminal: data.get("departureTerminal"),
+          arrivalTerminal: data.get("arrivalTerminal"),
+          priceEcon: data.get("priceEcon"),
+          priceBus: data.get("priceBus"),
+        },
+        {
+          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+        }
+      );
       console.log(data);
-      console.log(response);
+      console.log(response.headers);
       setOpen(false);
       getData("");
     } catch (err) {

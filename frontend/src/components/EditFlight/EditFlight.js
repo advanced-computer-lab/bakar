@@ -11,6 +11,9 @@ import axios from "../../api";
 import Box from "@mui/material/Box";
 import EditIcon from "@mui/icons-material/Edit";
 import { DateTimePicker } from "@mui/lab";
+import  { useEffect } from "react";
+import { useNavigate } from "react-router";
+const jwt = require("jsonwebtoken");
 
 export default function EditFlight({ flight }) {
   const [open, setOpen] = React.useState(false);
@@ -35,6 +38,21 @@ export default function EditFlight({ flight }) {
   const [seatsBus, setSeatsBus] = React.useState(flight.seatsBus);
   const [priceEcon, setPriceEcon] = React.useState(flight.priceEcon);
   const [priceBus, setPriceBus] = React.useState(flight.priceBus);
+
+
+  let navigate = useNavigate();
+  const token = localStorage.getItem("token");
+
+  useEffect(() => {
+    try {
+      jwt.verify(token, "tom&jerry");
+    } catch (err) {
+      console.log(err);
+      navigate("/");
+    }
+  });
+
+
   const handleClose = () => {
     setOpen(false);
   };
@@ -62,7 +80,9 @@ export default function EditFlight({ flight }) {
         priceBus: priceBus,
       };
       console.log(data);
-      let response = await axios.put("/flights/" + flight.flightNo, data);
+      let response = await axios.put("/flights/" + flight.flightNo, data, {
+        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+      });
       console.log(response);
       setOpen(false);
       flight.getData("");
