@@ -8,6 +8,7 @@ import Login from "./pages/Login";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import AdapterDateFns from "@mui/lab/AdapterDateFns";
 import LocalizationProvider from "@mui/lab/LocalizationProvider";
+import Register from "./pages/Register";
 
 const generalTheme = createTheme(theme);
 
@@ -19,6 +20,7 @@ function App() {
           <div>
             <Routes>
               <Route path="/" element={<Login />} />
+              <Route path="/register" element={<Register />} />
               <Route path="/flights" element={<Flights />} />
             </Routes>
           </div>

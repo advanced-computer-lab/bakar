@@ -31,11 +31,9 @@ router.post("/login", async (req, res) => {
       console.log("Incorrect username or password");
     } else {
       req.login(user, function (err) {
-        const token = jwt.sign(
-          { username: user.username },
-          secretkey,
-          { expiresIn: "24h" }
-        );
+        const token = jwt.sign({ username: user.username }, secretkey, {
+          expiresIn: "24h",
+        });
         console.log(token);
         res.send(token);
       });
@@ -54,32 +52,27 @@ router.post("/register", (req, res) => {
     email: req.body.email,
     passport: req.body.passport,
     isAdmin: false,
-  })
-  User.register(
-    register, req.body.password,
-    (err, user) => {
-      if (err) {
-        console.log(err);
-      } else {
-        passport.authenticate("local")(req, res, function () {
-    console.log(user);
-    if (!user) {
-      console.log("Incorrect username or password");
+  });
+  User.register(register, req.body.password, (err, user) => {
+    if (err) {
+      console.log(err);
     } else {
-      req.login(user, function (err) {
-        const token = jwt.sign(
-          { username: user.username },
-          secretkey,
-          { expiresIn: "24h" }
-        );
-        console.log(token);
-        res.send(token);
-      });
-          res.sendStatus(200);
-        };
+      passport.authenticate("local")(req, res, function () {
+        console.log(user);
+        if (!user) {
+          console.log("Incorrect username or password");
+        } else {
+          req.login(user, function (err) {
+            const token = jwt.sign({ username: user.username }, secretkey, {
+              expiresIn: "24h",
+            });
+            console.log(token);
+            res.send(token);
+          });
+        }
       });
     }
-    });
+  });
 });
 
 module.exports = router;
