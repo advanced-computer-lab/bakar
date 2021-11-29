@@ -47,13 +47,11 @@ export default function SearchFlight({ getData }) {
         priceEcon: priceEcon,
         priceBus: priceBus,
       };
-      console.log(data.departureTime);
       let requested = Object.fromEntries(
         Object.entries(data).filter(([_, v]) => v != null)
       );
       let searchParams = new URLSearchParams(requested);
       let searchQuery = searchParams.toString();
-      console.log(searchQuery);
       setOpen(false);
       getData(searchQuery);
       setDepartureTime(null);

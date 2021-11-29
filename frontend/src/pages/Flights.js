@@ -6,22 +6,24 @@ import CreateFlight from '../components/CreateFlight/CreateFlight';
 import DeleteFlight from '../components/DeleteFlight/DeleteFlight';
 import SearchFlight from '../components/SearchFlight/SearchFlight';
 import axios from 'axios';
+import { user } from "../userType";
 
 function Flights() {
-	const [flights, setFlights] = useState([]);
-	const [checks, setChecks] = useState({});
-
-	const getData = async (queryString) => {
-		const res = await axios.get('/flights?' + queryString);
-		let flightData = res['data'];
-		setFlights(flightData);
-		let currentChecks = {};
-		flightData.forEach((element) => {
-			currentChecks[element.flightNo] = false;
-		});
-		setChecks(currentChecks);
-	};
-
+  const [flights, setFlights] = useState([]);
+  const [checks, setChecks] = useState({});
+  const getData = async (queryString) => {
+    const res = await axios.get("/flights?" + queryString, {
+      headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+    });
+    let flightData = res["data"];
+    setFlights(flightData);
+    let currentChecks = {};
+    flightData.forEach((element) => {
+      currentChecks[element.flightNo] = false;
+    });
+    setChecks(currentChecks);
+  };
+  
 	React.useEffect(() => getData(), []);
 
 	return (

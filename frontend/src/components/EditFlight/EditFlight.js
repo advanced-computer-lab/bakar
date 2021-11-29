@@ -35,6 +35,7 @@ export default function EditFlight({ flight }) {
   const [seatsBus, setSeatsBus] = React.useState(flight.seatsBus);
   const [priceEcon, setPriceEcon] = React.useState(flight.priceEcon);
   const [priceBus, setPriceBus] = React.useState(flight.priceBus);
+
   const handleClose = () => {
     setOpen(false);
   };
@@ -45,9 +46,7 @@ export default function EditFlight({ flight }) {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    console.log("Hello");
     try {
-      console.log("Hi");
       let data = {
         flightNo: flightNo,
         departureTime: departureTime,
@@ -61,9 +60,9 @@ export default function EditFlight({ flight }) {
         priceEcon: priceEcon,
         priceBus: priceBus,
       };
-      console.log(data);
-      let response = await axios.put("/flights/" + flight.flightNo, data);
-      console.log(response);
+        await axios.put("/flights/" + flight.flightNo, data, {
+        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+      });
       setOpen(false);
       flight.getData("");
     } catch (err) {
