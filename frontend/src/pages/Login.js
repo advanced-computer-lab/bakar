@@ -13,7 +13,9 @@ import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import Copyright from "../components/Login/Login";
 import axios from "../api";
+import { UserType, setUserType } from "../userType";
 import { useNavigate } from "react-router";
+const jwt = require("jsonwebtoken");
 
 export default function SignInSide() {
   let navigate = useNavigate();
@@ -25,15 +27,21 @@ export default function SignInSide() {
       username: data.get("username"),
       password: data.get("password"),
     });
+    localStorage.setItem("token", response.data);
+    const token = localStorage.getItem("token");
+    try {
+      jwt.verify(token, "tom&jerry");
+      setUserType(UserType.admin);
+    } catch (err) {
+      jwt.verify(token, "jerry&tom");
+      setUserType(UserType.user);
+    }
+
     if (response.status === 200) {
       navigate("/flights");
     } else {
       navigate("/");
     }
-    console.log({
-      username: data.get("username"),
-      password: data.get("password"),
-    });
   };
 
   return (
@@ -117,7 +125,7 @@ export default function SignInSide() {
                 </Link>
               </Grid>
               <Grid item>
-                <Link href="#" variant="body2">
+                <Link href="/register" variant="body2">
                   {"Don't have an account? Sign Up"}
                 </Link>
               </Grid>

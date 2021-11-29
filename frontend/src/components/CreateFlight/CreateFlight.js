@@ -29,29 +29,30 @@ export default function CreateFlight({ getData }) {
   const handleSubmit = async (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    console.log(data);
-    console.log(departureTime);
-    console.log(arrivalTime);
     try {
-      let response = await axios.post("/flights", {
-        flightNo: data.get("flightNo"),
-        departureTime: new Date(
-          new Date(departureTime.setSeconds(0)).setMilliseconds(0)
-        ),
-        arrivalTime: new Date(
-          new Date(arrivalTime.setSeconds(0)).setMilliseconds(0)
-        ),
-        departureLocation: data.get("departureLocation"),
-        arrivalLocation: data.get("arrivalLocation"),
-        seatsEcon: data.get("seatsEcon"),
-        seatsBus: data.get("seatsBus"),
-        departureTerminal: data.get("departureTerminal"),
-        arrivalTerminal: data.get("arrivalTerminal"),
-        priceEcon: data.get("priceEcon"),
-        priceBus: data.get("priceBus"),
-      });
-      console.log(data);
-      console.log(response);
+      let response = await axios.post(
+        "/flights",
+        {
+          flightNo: data.get("flightNo"),
+          departureTime: new Date(
+            new Date(departureTime.setSeconds(0)).setMilliseconds(0)
+          ),
+          arrivalTime: new Date(
+            new Date(arrivalTime.setSeconds(0)).setMilliseconds(0)
+          ),
+          departureLocation: data.get("departureLocation"),
+          arrivalLocation: data.get("arrivalLocation"),
+          seatsEcon: data.get("seatsEcon"),
+          seatsBus: data.get("seatsBus"),
+          departureTerminal: data.get("departureTerminal"),
+          arrivalTerminal: data.get("arrivalTerminal"),
+          priceEcon: data.get("priceEcon"),
+          priceBus: data.get("priceBus"),
+        },
+        {
+          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+        }
+      );
       setOpen(false);
       getData("");
     } catch (err) {
