@@ -6,8 +6,11 @@ import CreateFlight from '../components/CreateFlight/CreateFlight';
 import DeleteFlight from '../components/DeleteFlight/DeleteFlight';
 import SearchFlight from '../components/SearchFlight/SearchFlight';
 import axios from 'axios';
+import { UserType } from "../userType";
 
-function Flights() {
+function Flights({userType}) {
+	console.log(userType);
+	let flag = userType === UserType.admin;
   const [flights, setFlights] = useState([]);
   const [checks, setChecks] = useState({});
   const getData = async (queryString) => {
@@ -27,21 +30,21 @@ function Flights() {
 
 	return (
 		<div>
-			<NavBar />
+			<NavBar userType={userType} />
 			<div style={{ padding: '10px' }}>
 				<Grid container spacing={2}>
-					<Grid item>
+					{flag && <Grid item>
 						<CreateFlight getData={getData} />
-					</Grid>
-					<Grid item>
+					</Grid>}
+					{flag && <Grid item>
 						<DeleteFlight checks={checks} getData={getData} />
-					</Grid>
+					</Grid>}
 					<Grid item>
 						<SearchFlight getData={getData} />
 					</Grid>
 				</Grid>
 				<br />
-				<FlightTable
+				<FlightTable userType={userType}
 					flights={flights}
 					checks={checks}
 					setChecks={setChecks}

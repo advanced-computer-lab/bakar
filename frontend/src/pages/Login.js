@@ -15,10 +15,10 @@ import {
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Copyright from '../components/Login/Login';
 import axios from '../api';
-import { UserType, setUserType } from "../userType";
+import { UserType } from "../userType";
 const jwt = require("jsonwebtoken");
 
-export default function SignInSide() {
+export default function SignInSide({setUserType}) {
   let navigate = useNavigate();
   const handleSubmit = async (event) => {
     event.preventDefault();

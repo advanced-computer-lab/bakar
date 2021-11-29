@@ -19,7 +19,7 @@ const styles = {
 	height: '100vh',
 };
 
-export default function Homepage() {
+export default function Homepage({userType}) {
 	return (
 		<div style={styles}>
 			<CssBaseline />
