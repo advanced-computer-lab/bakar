@@ -1,14 +1,9 @@
 const express = require("express");
 const router = express.Router();
 const Flight = require("../../models/Flight");
-const jwt = require("jsonwebtoken");
 
 
 router.post("/",async (req, res) => {
-  const header = req.headers.authorization
-  const decoded = jwt.verify(header.slice(7, header.length), "tom&jerry");
-  console.log(decoded);
-  console.log(req.body);
   if (req.body.departureTime < req.body.arrivalTime) {
     if (req.body.seatsEcon >= 0 && req.body.seatsBus >= 0) {
       if (req.body.departureLocation != req.body.arrivalLocation) {
@@ -32,14 +27,6 @@ router.post("/",async (req, res) => {
 });
 
 router.get("/", async (req, res) => {
-  const header = req.headers.authorization
-  console.group(header.slice(7, header.length));
-  try{
-    jwt.verify(header.slice(7, header.length), "tom&jerry");
-  } catch(err){
-    console.log(err);
-    //return res.redirect("/");
-  }
   try {
     const result = await Flight.find(req.query).exec();
     res.send(result);
@@ -62,9 +49,6 @@ router.put("/:flightNo", async (req, res) => {
 });
 
 router.delete("/:flightNo", async (req, res) => {
-  const header = req.headers.authorization
-  const decoded = jwt.verify(header.slice(7, header.length), "tom&jerry");
-  console.log(decoded);
   try {
     const dbResult = await Flight.deleteOne({
       flightNo: req.params.flightNo,
@@ -77,11 +61,6 @@ router.delete("/:flightNo", async (req, res) => {
 });
 
 router.post("/delete", async (req, res) => {
-  console.log(req.body);
-  const flights = req.body.deleteQuery;
-  const header = req.headers.authorization;
-  const decoded = jwt.verify(header.slice(7, header.length), "tom&jerry");
-  console.log(decoded);
   try {
     const dbResult = await Flight.deleteMany(flights).exec();
     res.status(200).send(dbResult);

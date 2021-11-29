@@ -30,7 +30,7 @@ export default function CreateFlight({ getData }) {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
     try {
-      let response = await axios.post(
+      await axios.post(
         "/flights",
         {
           flightNo: data.get("flightNo"),

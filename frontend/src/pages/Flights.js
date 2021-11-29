@@ -6,7 +6,6 @@ import CreateFlight from '../components/CreateFlight/CreateFlight';
 import DeleteFlight from '../components/DeleteFlight/DeleteFlight';
 import SearchFlight from '../components/SearchFlight/SearchFlight';
 import axios from 'axios';
-import { user } from "../userType";
 
 function Flights() {
   const [flights, setFlights] = useState([]);

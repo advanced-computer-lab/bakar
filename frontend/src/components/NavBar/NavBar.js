@@ -1,5 +1,5 @@
 import { React } from 'react';
-import { AppBar, Button, Divider, Toolbar, Typography } from '@mui/material';
+import { AppBar, Button, Toolbar, Typography } from '@mui/material';
 import LoginIcon from '@mui/icons-material/Login';
 import Logo from '../../assets/Logo.svg';
 
