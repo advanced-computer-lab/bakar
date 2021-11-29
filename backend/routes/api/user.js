@@ -37,7 +37,6 @@ router.post("/login", async (req, res) => {
           res.send(token);
         });
       } else {
-        console.log("kamal");
         req.login(user, function (err) {
           const token = jwt.sign({ username: user.username }, secretKeyUser, {
             expiresIn: "24h",

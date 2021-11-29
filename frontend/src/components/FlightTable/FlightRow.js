@@ -1,8 +1,10 @@
 import React from "react";
 import { TableRow, Checkbox, TableCell } from "@mui/material";
 import EditFlight from "../EditFlight/EditFlight";
+import { UserType } from "../../userType";
 
 function FlightRow(props) {
+  let flag = props.userType === UserType.admin;
   function handleChange(event) {
     let newChecks = { ...props.checks, [props.flightNo]: event.target.checked };
     props.setChecks(newChecks);
@@ -22,10 +24,10 @@ function FlightRow(props) {
       <TableCell align="center">{props.seatsEcon + props.seatsBus}</TableCell>
       <TableCell align="center">{props.priceEcon}</TableCell>
       <TableCell>
-        <EditFlight flight={props} />
+        {flag && <EditFlight flight={props} />}
       </TableCell>
       <TableCell>
-        <Checkbox onChange={handleChange} />
+        {flag && <Checkbox onChange={handleChange} />}
       </TableCell>
     </TableRow>
   );
