@@ -25,9 +25,7 @@ const admin = new User({
 });
 
 router.post("/login", async (req, res) => {
-  console.log(req.body);
   passport.authenticate("local", function (err, user, info) {
-    console.log(user);
     if (!user) {
       console.log("Incorrect username or password");
     } else {
@@ -36,7 +34,6 @@ router.post("/login", async (req, res) => {
           const token = jwt.sign({ username: user.username }, secretKeyAdmin, {
             expiresIn: "24h",
           });
-          console.log(token);
           res.send(token);
         });
       } else {
@@ -44,7 +41,6 @@ router.post("/login", async (req, res) => {
           const token = jwt.sign({ username: user.username }, secretKeyUser, {
             expiresIn: "24h",
           });
-          console.log(token);
           res.send(token);
         });
       }
@@ -69,7 +65,6 @@ router.post("/register", (req, res) => {
       console.log(err);
     } else {
       passport.authenticate("local")(req, res, function () {
-        console.log(user);
         if (!user) {
           console.log("Incorrect username or password");
         } else {
@@ -77,7 +72,6 @@ router.post("/register", (req, res) => {
             const token = jwt.sign({ username: user.username }, secretKeyUser, {
               expiresIn: "24h",
             });
-            console.log(token);
             res.send(token);
           });
         }

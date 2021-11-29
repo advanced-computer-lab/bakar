@@ -31,9 +31,8 @@ export default function DeleteFlight({ checks, getData }) {
         $in: toBeDeleted,
       },
     };
-    console.log(deleteQuery);
     try {
-      let response = await axios.post(
+      await axios.post(
         "/flights/delete",
         {
           deleteQuery: deleteQuery,
@@ -42,7 +41,6 @@ export default function DeleteFlight({ checks, getData }) {
           headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
         }
       );
-      console.log(response);
       setOpen(false);
       getData("");
     } catch (err) {

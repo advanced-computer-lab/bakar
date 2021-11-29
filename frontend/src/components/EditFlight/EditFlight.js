@@ -46,9 +46,7 @@ export default function EditFlight({ flight }) {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    console.log("Hello");
     try {
-      console.log("Hi");
       let data = {
         flightNo: flightNo,
         departureTime: departureTime,
@@ -62,11 +60,9 @@ export default function EditFlight({ flight }) {
         priceEcon: priceEcon,
         priceBus: priceBus,
       };
-      console.log(data);
-      let response = await axios.put("/flights/" + flight.flightNo, data, {
+        await axios.put("/flights/" + flight.flightNo, data, {
         headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
       });
-      console.log(response);
       setOpen(false);
       flight.getData("");
     } catch (err) {

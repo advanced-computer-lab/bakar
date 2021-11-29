@@ -27,7 +27,6 @@ export default function SignInSide() {
       username: data.get("username"),
       password: data.get("password"),
     });
-    console.log(response);
     localStorage.setItem("token", response.data);
     const token = localStorage.getItem("token");
     try {
@@ -43,10 +42,6 @@ export default function SignInSide() {
     } else {
       navigate("/");
     }
-    console.log({
-      username: data.get("username"),
-      password: data.get("password"),
-    });
   };
 
   return (

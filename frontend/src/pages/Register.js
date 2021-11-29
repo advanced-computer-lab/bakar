@@ -29,17 +29,12 @@ export default function SignUpSide() {
       countryCode: data.get("countryCode"),
       phone: data.get("phoneNumber"),
     });
-    console.log(response);
     localStorage.setItem("token", response.data);
     if (response.status === 200) {
       navigate("/flights");
     } else {
       navigate("/");
     }
-    console.log({
-      username: data.get("username"),
-      password: data.get("password"),
-    });
   };
   return (
     <Grid container component={Paper} sx={{ height: "100vh" }}>

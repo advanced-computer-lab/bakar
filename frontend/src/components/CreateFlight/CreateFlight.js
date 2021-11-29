@@ -29,9 +29,6 @@ export default function CreateFlight({ getData }) {
   const handleSubmit = async (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    console.log(data);
-    console.log(departureTime);
-    console.log(arrivalTime);
     try {
       let response = await axios.post(
         "/flights",
@@ -56,8 +53,6 @@ export default function CreateFlight({ getData }) {
           headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
         }
       );
-      console.log(data);
-      console.log(response.headers);
       setOpen(false);
       getData("");
     } catch (err) {

@@ -11,13 +11,10 @@ import axios from "axios";
 function Flights() {
   const [flights, setFlights] = useState([]);
   const [checks, setChecks] = useState({});
-
-  console.log(user);
   const getData = async (queryString) => {
     const res = await axios.get("/flights?" + queryString, {
       headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
     });
-    console.log(res);
     let flightData = res["data"];
     setFlights(flightData);
     let currentChecks = {};
