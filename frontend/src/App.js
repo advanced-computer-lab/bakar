@@ -8,6 +8,8 @@ import LocalizationProvider from '@mui/lab/LocalizationProvider';
 import Homepage from './pages/Homepage';
 import Login from './pages/Login';
 import Flights from './pages/Flights';
+import Register from "./pages/Register";
+
 
 const generalTheme = createTheme(theme);
 
@@ -21,6 +23,7 @@ function App() {
 						<Routes>
 							<Route path="/" element={<Homepage />} />
 							<Route path="/login" element={<Login />} />
+              <Route path="/register" element={<Register />} />
 							<Route path="/flights" element={<Flights />} />
 						</Routes>
 					</div>

@@ -4,15 +4,17 @@ import CreateFlight from "../components/CreateFlight/CreateFlight";
 import DeleteFlight from "../components/DeleteFlight/DeleteFlight";
 import SearchFlight from "../components/SearchFlight/SearchFlight";
 import Grid from "@mui/material/Grid";
+import { user } from "../userType";
 
 import axios from "axios";
 
 function Flights() {
   const [flights, setFlights] = useState([]);
   const [checks, setChecks] = useState({});
-
   const getData = async (queryString) => {
-    const res = await axios.get("/flights?" + queryString);
+    const res = await axios.get("/flights?" + queryString, {
+      headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+    });
     let flightData = res["data"];
     setFlights(flightData);
     let currentChecks = {};
