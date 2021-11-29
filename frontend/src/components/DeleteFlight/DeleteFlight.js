@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
@@ -7,22 +7,9 @@ import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import DeleteIcon from "@mui/icons-material/Delete";
 import axios from "../../api";
-import { useNavigate } from "react-router";
-const jwt = require("jsonwebtoken");
 
 export default function DeleteFlight({ checks, getData }) {
   const [open, setOpen] = React.useState(false);
-  let navigate = useNavigate();
-  const token = localStorage.getItem("token");
-
-  useEffect(() => {
-    try {
-      jwt.verify(token, "tom&jerry");
-    } catch (err) {
-      console.log(err);
-      navigate("/");
-    }
-  });
 
   const handleClickOpen = () => {
     setOpen(true);

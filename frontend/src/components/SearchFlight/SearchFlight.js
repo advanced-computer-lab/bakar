@@ -9,9 +9,6 @@ import DialogTitle from "@mui/material/DialogTitle";
 import Box from "@mui/material/Box";
 import SearchIcon from "@mui/icons-material/Search";
 import { DateTimePicker } from "@mui/lab";
-import  { useEffect } from "react";
-import { useNavigate } from "react-router";
-const jwt = require("jsonwebtoken");
 
 export default function SearchFlight({ getData }) {
   const [open, setOpen] = React.useState(false);
@@ -29,18 +26,6 @@ export default function SearchFlight({ getData }) {
   const handleClose = () => {
     setOpen(false);
   };
-  
-  let navigate = useNavigate();
-  const token = localStorage.getItem("token");
-  useEffect(() => {
-    try {
-      jwt.verify(token, "tom&jerry");
-    } catch (err) {
-      console.log(err);
-      navigate("/");
-    }
-  });
-
 
   const handleOpen = () => {
     setOpen(true);

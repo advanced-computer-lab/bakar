@@ -4,29 +4,19 @@ import CreateFlight from "../components/CreateFlight/CreateFlight";
 import DeleteFlight from "../components/DeleteFlight/DeleteFlight";
 import SearchFlight from "../components/SearchFlight/SearchFlight";
 import Grid from "@mui/material/Grid";
+import { user } from "../userType";
 
 import axios from "axios";
-import { useNavigate } from "react-router";
-const jwt = require("jsonwebtoken");
 
 function Flights() {
   const [flights, setFlights] = useState([]);
   const [checks, setChecks] = useState({});
 
-  
-  let navigate = useNavigate();
-  const token = localStorage.getItem("token");
-  React.useEffect(() => {
-    try {
-      jwt.verify(token, "tom&jerry");
-    } catch (err) {
-      console.log(err);
-      navigate("/");
-    }
-  });
+  console.log(user);
   const getData = async (queryString) => {
-    const res = await axios.get("/flights?" + queryString,
-    {headers: { Authorization: `Bearer ${localStorage.getItem("token")}` }});
+    const res = await axios.get("/flights?" + queryString, {
+      headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+    });
     console.log(res);
     let flightData = res["data"];
     setFlights(flightData);

@@ -10,9 +10,6 @@ import AddIcon from "@mui/icons-material/Add";
 import axios from "../../api";
 import Box from "@mui/material/Box";
 import { DateTimePicker } from "@mui/lab";
-import  { useEffect } from "react";
-import { useNavigate } from "react-router";
-const jwt = require("jsonwebtoken");
 
 export default function CreateFlight({ getData }) {
   const [open, setOpen] = React.useState(false);
@@ -20,18 +17,6 @@ export default function CreateFlight({ getData }) {
     new Date(Date.now())
   );
   const [arrivalTime, setArrivalTime] = React.useState(new Date(Date.now()));
-
-  let navigate = useNavigate();
-  const token = localStorage.getItem("token");
-
-  useEffect(() => {
-    try {
-      jwt.verify(token, "tom&jerry");
-    } catch (err) {
-      console.log(err);
-      navigate("/");
-    }
-  });
 
   const handleClickOpen = () => {
     setOpen(true);

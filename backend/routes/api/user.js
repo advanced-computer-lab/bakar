@@ -7,7 +7,8 @@ const passport = require("passport");
 const jwt = require("jsonwebtoken");
 const JwtStrategy = require("passport-jwt").Strategy;
 const ExtractJwt = require("passport-jwt").ExtractJwt;
-const secretkey = "tom&jerry";
+const secretKeyAdmin = "tom&jerry";
+const secretKeyUser = "jerry&tom";
 
 //Admin's entry
 const admin = new User({
@@ -30,13 +31,23 @@ router.post("/login", async (req, res) => {
     if (!user) {
       console.log("Incorrect username or password");
     } else {
-      req.login(user, function (err) {
-        const token = jwt.sign({ username: user.username }, secretkey, {
-          expiresIn: "24h",
+      if (user.isAdmin) {
+        req.login(user, function (err) {
+          const token = jwt.sign({ username: user.username }, secretKeyAdmin, {
+            expiresIn: "24h",
+          });
+          console.log(token);
+          res.send(token);
         });
-        console.log(token);
-        res.send(token);
-      });
+      } else {
+        req.login(user, function (err) {
+          const token = jwt.sign({ username: user.username }, secretKeyUser, {
+            expiresIn: "24h",
+          });
+          console.log(token);
+          res.send(token);
+        });
+      }
     }
   })(req, res);
 });
@@ -63,7 +74,7 @@ router.post("/register", (req, res) => {
           console.log("Incorrect username or password");
         } else {
           req.login(user, function (err) {
-            const token = jwt.sign({ username: user.username }, secretkey, {
+            const token = jwt.sign({ username: user.username }, secretKeyUser, {
               expiresIn: "24h",
             });
             console.log(token);
