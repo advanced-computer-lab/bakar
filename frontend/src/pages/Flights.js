@@ -18,6 +18,7 @@ function Flights({ userType }) {
 		const res = await axios.get('/flights?' + queryString, {
 			headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
 		});
+		console.log(res);
 		let flightData = res['data'];
 		setFlights(flightData);
 		let currentChecks = {};
