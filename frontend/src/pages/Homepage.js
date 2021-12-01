@@ -1,13 +1,10 @@
-import {
-	Button,
-	CssBaseline,
-	Divider,
-	Toolbar,
-	Typography,
-} from '@mui/material';
+import { Button, Divider, Grid, Toolbar, Typography } from '@mui/material';
 import { React } from 'react';
+import { useNavigate } from 'react-router';
 import TypeAnimation from 'react-type-animation';
 import Logo from '../assets/Logo.svg';
+import SearchFlightUser from '../components/SearchFlightUser/SearchFlightUser';
+import { UserType } from '../userType';
 
 const styles = {
 	backgroundImage:
@@ -19,10 +16,23 @@ const styles = {
 	height: '100vh',
 };
 
-export default function Homepage({userType}) {
+export default function Homepage({ userType }) {
+	let flag = userType === UserType.guest;
+	let navigate = useNavigate();
+	function handleClick(event) {
+		if (event.target.name === 'log') {
+			if (flag) {
+				navigate('/login');
+			} else {
+				localStorage.removeItem('token');
+				document.location.reload();
+			}
+		} else {
+			navigate('/flights?');
+		}
+	}
 	return (
 		<div style={styles}>
-			<CssBaseline />
 			<Toolbar>
 				<img
 					alt="logo"
@@ -47,16 +57,27 @@ export default function Homepage({userType}) {
 					variant="middle"
 					sx={{ height: '50px' }}
 				/>
-				<Button color="inherit" href="/login" sx={{ textTransform: 'none' }}>
-					Login
+				<Button
+					name="log"
+					color="primary"
+					variant="text"
+					onClick={handleClick}
+					sx={{ textTransform: 'none' }}
+				>
+					{flag ? 'Login' : 'Logout'}
 				</Button>
 			</Toolbar>
 			<TypeAnimation
 				item
 				cursor={false}
-				sequence={['React typing animation based on typical', 1000, '']}
+				sequence={['Book a flight', 1000, 'It is simple with us.']}
 				wrapper="h2"
 			/>
+			<Grid container alignItems="center" justifyContent="center">
+				<Grid item>
+					<SearchFlightUser></SearchFlightUser>
+				</Grid>
+			</Grid>
 		</div>
 	);
 }

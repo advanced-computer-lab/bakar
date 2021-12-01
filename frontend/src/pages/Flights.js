@@ -6,49 +6,67 @@ import CreateFlight from '../components/CreateFlight/CreateFlight';
 import DeleteFlight from '../components/DeleteFlight/DeleteFlight';
 import SearchFlight from '../components/SearchFlight/SearchFlight';
 import axios from 'axios';
-import { UserType } from "../userType";
+import { useLocation } from 'react-router-dom';
+import { UserType } from '../userType';
+import FlightDetails from '../components/FlightDetails/FlightDetails';
 
-function Flights({userType}) {
-	console.log(userType);
+function Flights({ userType }) {
+	let query = useLocation().search;
+	query = query.slice(1, query.length);
 	let flag = userType === UserType.admin;
-  const [flights, setFlights] = useState([]);
-  const [checks, setChecks] = useState({});
-  const getData = async (queryString) => {
-    const res = await axios.get("/flights?" + queryString, {
-      headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
-    });
-    let flightData = res["data"];
-    setFlights(flightData);
-    let currentChecks = {};
-    flightData.forEach((element) => {
-      currentChecks[element.flightNo] = false;
-    });
-    setChecks(currentChecks);
-  };
-  
-	React.useEffect(() => getData(), []);
+
+	const [flights, setFlights] = useState([]);
+	const [checks, setChecks] = useState({});
+	const [clicked, setClicked] = useState(null);
+
+	const getData = async (queryString) => {
+		console.log(queryString);
+		const res = await axios.get('/flights?' + queryString, {
+			headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
+		});
+		console.log(res);
+		let flightData = res['data'];
+		setFlights(flightData);
+		let currentChecks = {};
+		flightData.forEach((element) => {
+			currentChecks[element.flightNo] = false;
+		});
+		setChecks(currentChecks);
+	};
+
+	React.useEffect(() => getData(query), []);
 
 	return (
 		<div>
 			<NavBar userType={userType} />
 			<div style={{ padding: '10px' }}>
 				<Grid container spacing={2}>
-					{flag && <Grid item>
-						<CreateFlight getData={getData} />
-					</Grid>}
-					{flag && <Grid item>
-						<DeleteFlight checks={checks} getData={getData} />
-					</Grid>}
-					<Grid item>
-						<SearchFlight getData={getData} />
-					</Grid>
+					{flag && (
+						<Grid item>
+							<CreateFlight getData={getData} />
+						</Grid>
+					)}
+					{flag && (
+						<Grid item>
+							<DeleteFlight checks={checks} getData={getData} />
+						</Grid>
+					)}
+					<Grid item>{flag && <SearchFlight getData={getData} />}</Grid>
 				</Grid>
 				<br />
-				<FlightTable userType={userType}
+				<FlightDetails
+					open={clicked !== null ? true : false}
+					clicked={clicked}
+					setClicked={setClicked}
+					getData={getData}
+				></FlightDetails>
+				<FlightTable
+					userType={userType}
 					flights={flights}
 					checks={checks}
 					setChecks={setChecks}
 					getData={getData}
+					setClicked={setClicked}
 				/>
 			</div>
 		</div>
