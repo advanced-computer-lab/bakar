@@ -69,7 +69,6 @@ export default function  CheckOut(probs) {
                 <DialogActions>
                     <Button
                     variant="contained">
-                    {/*onClick=*/}
                     Proceed
                     </Button>
                 </DialogActions>
