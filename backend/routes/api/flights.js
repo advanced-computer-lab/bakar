@@ -31,37 +31,16 @@ router.post('/', async (req, res) => {
 
 router.get('/', async (req, res) => {
 	try {
-		console.log(req.query);
-		let partial = { availableBus: '', availableEcon: '' };
-
-		if (req.query.availableBus != null) {
-			partial.availableBus = req.query.availableBus;
-			delete req.query.availableBus;
-		}
-		if (req.query.availableEcon != null) {
-			partial.availableEcon = req.query.availableEcon;
-			delete req.query.availableEcon;
-		}
-		if (partial.availableBus == '' && partial.availableEcon == '') {
-			console.log(partial);
-			const result = await Flight.find(req.query).exec();
-			console.log('result: ' + result);
-			res.send(result);
-		} else if (partial.availableEcon == '') {
-			const result = await Flight.find({
-				...req.query,
-				availableBus: { $gte: partial.availableBus },
-			});
-			console.log('result: ' + result);
-			res.send(result);
-		} else {
-			const result = await Flight.find({
-				...req.query,
-				availableEcon: { $gte: partial.availableEcon },
-			});
-			console.log('result: ' + result);
-			res.send(result);
-		}
+		const myQuery = {
+			...req.query,
+			departureTime: { $gte: req.query.departureTime || new Date().getTime() },
+			availableBus: { $gte: req.query.availableBus || 0 },
+			availableEcon: { $gte: req.query.availableEcon || 0 },
+		};
+		console.log(myQuery);
+		const result = await Flight.find(myQuery).exec();
+		console.log('result: ' + result);
+		res.send(result);
 	} catch (err) {
 		console.log(err);
 	}

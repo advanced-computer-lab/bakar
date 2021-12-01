@@ -33,10 +33,7 @@ export default function FlightDetails({ open, setClicked, clicked, getData }) {
 			console.log(err);
 		}
 	};
-	const [departureLocation, setDepartureLocation] = React.useState(null);
-	const [arrivalLocation, setArrivalLocation] = React.useState(null);
-	const [departureTerminal, setDepartureTerminal] = React.useState();
-	const [arrivalTerminal, setArrivalTerminal] = React.useState();
+
 	React.useEffect(() => fetchData(), [clicked]);
 	const handleSubmit = async () => {
 		try {
@@ -45,6 +42,7 @@ export default function FlightDetails({ open, setClicked, clicked, getData }) {
 				arrivalLocation: data.departureLocation,
 				departureTerminal: data.arrivalTerminal,
 				arrivalTerminal: data.departureTerminal,
+				departureTime: data.arrivalTime,
 			};
 			let requested = Object.fromEntries(
 				Object.entries(search).filter(([_, v]) => v != null)

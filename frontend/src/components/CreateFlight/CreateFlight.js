@@ -48,6 +48,10 @@ export default function CreateFlight({ getData }) {
 					arrivalTerminal: data.get('arrivalTerminal'),
 					priceEcon: data.get('priceEcon'),
 					priceBus: data.get('priceBus'),
+					noBagsEcon: data.get('noBagsEcon'),
+					noBagsBus: data.get('noBagsBus'),
+					weightEcon: data.get('weightEcon'),
+					weightBus: data.get('weightBus'),
 				},
 				{
 					headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
@@ -187,6 +191,46 @@ export default function CreateFlight({ getData }) {
 							fullWidth
 							variant="outlined"
 							onWheel={(event) => event.preventDefault}
+						/>
+						<TextField
+							autoFocus
+							margin="dense"
+							name="noBagsEcon"
+							id="noBagsEcon"
+							label="Economy Bags"
+							type="tel"
+							fullWidth
+							variant="outlined"
+						/>
+						<TextField
+							autoFocus
+							margin="dense"
+							name="noBagsBus"
+							id="noBagsBus"
+							label="Business Bags"
+							type="text"
+							fullWidth
+							variant="outlined"
+						/>
+						<TextField
+							autoFocus
+							margin="dense"
+							name="weightEcon"
+							id="weightEcon"
+							label="Economy Bag Weight"
+							type="tel"
+							fullWidth
+							variant="outlined"
+						/>
+						<TextField
+							autoFocus
+							margin="dense"
+							name="weightBus"
+							id="weightBus"
+							label="Business Bag Weight"
+							type="text"
+							fullWidth
+							variant="outlined"
 						/>
 					</DialogContent>
 

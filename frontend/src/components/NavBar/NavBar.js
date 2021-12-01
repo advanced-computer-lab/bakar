@@ -20,7 +20,9 @@ export default function NavBar({ userType }) {
 				document.location.reload();
 			}
 		} else {
+			console.log('hoho');
 			navigate('/flights');
+			document.location.reload();
 		}
 	}
 	return (
@@ -54,7 +56,7 @@ export default function NavBar({ userType }) {
 				<Button
 					color="inherit"
 					name="viewFlights"
-					onclick={handleClick}
+					onClick={handleClick}
 					sx={{ textTransform: 'none' }}
 				>
 					View Available Flights
