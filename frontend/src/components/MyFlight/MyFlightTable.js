@@ -14,14 +14,20 @@ function MyFlightTable(props) {
       <Table>
         <TableHead>
           <TableRow>
-            <TableCell style={style} align="center" colSpan={1}>
-              Flight Number
+          <TableCell style={style} align="center" colSpan={1}>
+              Ticket Number 
             </TableCell>
             <TableCell style={style} align="center" colSpan={1}>
-              Departure Time - Arrival Time
+              Departure Flight Number 
+            </TableCell>
+            <TableCell style={style} align="center" colSpan={1}>
+              Arrival Flight Number
             </TableCell>
             <TableCell style={style} align="center" colSpan={1}>
               Departure Location - Arrival Loation
+            </TableCell>
+            <TableCell style={style} align="center" colSpan={1}>
+              Cabin
             </TableCell>
             <TableCell style={style} align="center" colSpan={1}>
               Reserved Seat
@@ -32,24 +38,16 @@ function MyFlightTable(props) {
           </TableRow>
         </TableHead>
         <TableBody>
-          {props.flights &&
-            props.flights.map((ticket) => (
+          {props.tickets &&
+            props.tickets.map((ticket) => (
               <MyFlightRow
-                key={ticket.flightNo}
+                key={ticket._id}
                 userType={props.userType}
-                flightNo={ticket.flightNo}
-                departureTime={ticket.departureTime}
-                arrivalTime={ticket.arrivalTime}
-                departureLocation={ticket.departureLocation}
-                departureTerminal={ticket.departureTerminal}
-                arrivalLocation={ticket.arrivalLocation}
-                arrivalTerminal={ticket.arrivalTerminal}
-                seatsEcon={ticket.seatsEcon}
-                seatsBus={ticket.seatsBus}
-                priceEcon={ticket.priceEcon}
-                priceBus={ticket.priceBus}
-                checks={props.checks}
-                setChecks={props.setChecks}
+                id={ticket._id}
+                departureFlightNo={ticket.departureFlightNo}
+                returnFlightNo={ticket.returnFlightNo}
+                cabin={ticket.cabin}
+                price={ticket.price}
                 getData={props.getData}
               />
             ))}

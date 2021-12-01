@@ -8,6 +8,7 @@ import LocalizationProvider from '@mui/lab/LocalizationProvider';
 import Homepage from './pages/Homepage';
 import Login from './pages/Login';
 import Flights from './pages/Flights';
+import Tickets from './pages/Tickets';
 import Register from './pages/Register';
 import { UserType } from './userType';
 const jwt = require('jsonwebtoken');
@@ -51,7 +52,12 @@ function App() {
 								path="/flights"
 								element={<Flights userType={userType} />}
 							/>
+							<Route
+								path="/tickets"
+								element={<Tickets userType={userType} />}
+							/>
 						</Routes>
+						
 					</div>
 				</Router>
 			</ThemeProvider>

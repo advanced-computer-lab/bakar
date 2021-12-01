@@ -20,7 +20,7 @@ const ticketSchema = new Schema(
 		},
 		username: {
 			type: String,
-			required,
+			required: true,
 		},
 		email: {
 			type: String,

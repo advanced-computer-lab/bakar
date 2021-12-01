@@ -1,8 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const mongoose = require("mongoose");
-const Tickets = require("../../models/Ticket.js");
-const Ticket = mongoose.model("ticketSchema", Tickets);
+const Ticket = require("../../models/Ticket.js");
 const passport = require("passport");
 const jwt = require("jsonwebtoken");
 const JwtStrategy = require("passport-jwt").Strategy;
@@ -12,7 +11,7 @@ const secretKeyUser = "jerry&tom";
 
 router.get('/', async (req, res) => {
     try{
-      const result = await Ticket.find({username: req.params.username}).exec();
+      const result = await Ticket.find({}).exec();
       console.log("result: " + result);
       res.send(result);
     }catch (err) {
@@ -30,3 +29,5 @@ router.get('/', async (req, res) => {
 		res.status(500).send('Error deleting request');
 	}
 });
+
+module.exports = router;

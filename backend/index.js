@@ -12,6 +12,7 @@ const LocalStrategy = require('passport-local').Strategy;
 const user = require("./routes/api/user.js");
 const flights = require("./routes/api/flights.js");
 const UserModel = require("./models/User.js");
+const tickets = require("./routes/api/tickets.js")
 const User = mongoose.model("userSchema", UserModel);
 
 const app = express();
@@ -53,6 +54,7 @@ app.get("/", (req, res) => res.send("Server running..."));
 // Use the routes here. e.g: `app.use('/api/books', books);`
 app.use("/users", user);
 app.use("/flights", flights);
+app.use("/tickets", tickets)
 
 const port = process.env.PORT || 8000;
 
