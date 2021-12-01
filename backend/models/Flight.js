@@ -57,6 +57,22 @@ const flightSchema = new Schema(
 			type: Number,
 			required: true,
 		},
+		noBagsEcon: {
+			type: Number,
+			required: true,
+		},
+		noBagsBus: {
+			type: Number,
+			required: true,
+		},
+		weightEcon: {
+			type: Number,
+			required: true,
+		},
+		weightBus: {
+			type: Number,
+			required: true,
+		},
 	},
 	{ timestamps: true }
 );

@@ -54,17 +54,17 @@ export default function SearchFlight({ getData }) {
 			let searchQuery = searchParams.toString();
 			setOpen(false);
 			getData(searchQuery);
-			setDepartureTime(null);
-			setDepartureLocation(null);
-			setArrivalLocation(null);
-			setArrivalTerminal(null);
-			setDepartureTerminal(null);
-			setArrivalTime(null);
-			setFlightNo(null);
-			setSeatsEcon(null);
-			setSeatsBus(null);
-			setPriceBus(null);
-			setPriceEcon(null);
+			// setDepartureTime(null);
+			// setDepartureLocation(null);
+			// setArrivalLocation(null);
+			// setArrivalTerminal(null);
+			// setDepartureTerminal(null);
+			// setArrivalTime(null);
+			// setFlightNo(null);
+			// setSeatsEcon(null);
+			// setSeatsBus(null);
+			// setPriceBus(null);
+			// setPriceEcon(null);
 		} catch (err) {
 			console.log(err);
 		}
@@ -137,6 +137,7 @@ export default function SearchFlight({ getData }) {
 							id="departureTerminal"
 							label="Departure Terminal"
 							type="text"
+							value={departureTerminal}
 							onChange={(event) => {
 								setDepartureTerminal(event.target.value);
 							}}

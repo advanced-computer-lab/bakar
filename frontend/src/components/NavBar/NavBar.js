@@ -1,6 +1,6 @@
 import { React } from 'react';
 import { useNavigate } from 'react-router';
-import { AppBar, Button, Toolbar, Typography } from '@mui/material';
+import { AppBar, Button, Link, Toolbar, Typography } from '@mui/material';
 import LoginIcon from '@mui/icons-material/Login';
 import LogoutIcon from '@mui/icons-material/Logout';
 import Logo from '../../assets/Logo.svg';
@@ -17,6 +17,7 @@ export default function NavBar({ userType }) {
 			} else {
 				localStorage.removeItem('token');
 				navigate('/');
+				document.location.reload();
 			}
 		} else {
 			navigate('/flights');
@@ -40,11 +41,16 @@ export default function NavBar({ userType }) {
 						boxSizing: 'content-box',
 					}}
 				/>
-				<Typography
-					variant="h6"
-					component="div"
-					sx={{ flexGrow: 1 }}
-				></Typography>
+				<Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+					<Button
+						color="inherit"
+						name="viewFlights"
+						href="/"
+						sx={{ textTransform: 'none' }}
+					>
+						Home
+					</Button>
+				</Typography>
 				<Button
 					color="inherit"
 					name="viewFlights"

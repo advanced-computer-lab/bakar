@@ -32,37 +32,34 @@ router.post('/', async (req, res) => {
 router.get('/', async (req, res) => {
 	try {
 		console.log(req.query);
-		let partial = {"availableBus":"" , "availableEcon": ""};
-		
-		if (req.query.availableBus != null){
+		let partial = { availableBus: '', availableEcon: '' };
+
+		if (req.query.availableBus != null) {
 			partial.availableBus = req.query.availableBus;
 			delete req.query.availableBus;
 		}
-		if (req.query.availableEcon != null){
+		if (req.query.availableEcon != null) {
 			partial.availableEcon = req.query.availableEcon;
 			delete req.query.availableEcon;
 		}
-		if(partial.availableBus == "" && partial.availableEcon == ""){
+		if (partial.availableBus == '' && partial.availableEcon == '') {
 			console.log(partial);
-			const result = await Flight.find(
-				req.query,
-			).exec();
-			console.log("result: " + result);
+			const result = await Flight.find(req.query).exec();
+			console.log('result: ' + result);
 			res.send(result);
-		} else if(partial.availableEcon == ""){
-			const result = await Flight.find({...req.query,
+		} else if (partial.availableEcon == '') {
+			const result = await Flight.find({
+				...req.query,
 				availableBus: { $gte: partial.availableBus },
-			},
-			)
-			console.log("result: " + result);
+			});
+			console.log('result: ' + result);
 			res.send(result);
-	}
-		else{
-			const result = await Flight.find({...req.query,
-				availableEcon: { $gte: partial.availableEcon }
-			},
-			)
-			console.log("result: " + result);
+		} else {
+			const result = await Flight.find({
+				...req.query,
+				availableEcon: { $gte: partial.availableEcon },
+			});
+			console.log('result: ' + result);
 			res.send(result);
 		}
 	} catch (err) {
@@ -70,10 +67,19 @@ router.get('/', async (req, res) => {
 	}
 });
 
+router.get('/:flightNo', async (req, res) => {
+	try {
+		const result = await Flight.findOne({
+			flightNo: req.params.flightNo,
+		}).exec();
+		res.status(200).send(result);
+		console.log('The flight is  successfully !');
+	} catch (err) {
+		console.log(err);
+	}
+});
+
 router.put('/:flightNo', async (req, res) => {
-	const header = req.headers.authorization;
-	const decoded = jwt.verify(header.slice(7, header.length), 'tom&jerry');
-	console.log(decoded);
 	try {
 		await Flight.updateOne({ flightNo: req.params.flightNo }, req.body).exec();
 		res.status(200).send('flight updated ');
