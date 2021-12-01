@@ -3,6 +3,12 @@ const router = express.Router();
 const mongoose = require("mongoose");
 const Users = require("../../models/User.js");
 const User = mongoose.model("userSchema", Users);
+const passport = require("passport");
+const jwt = require("jsonwebtoken");
+const JwtStrategy = require("passport-jwt").Strategy;
+const ExtractJwt = require("passport-jwt").ExtractJwt;
+const secretKeyAdmin = "tom&jerry";
+const secretKeyUser = "jerry&tom";
 
 //Admin's entry
 const admin = new User({
@@ -18,19 +24,58 @@ const admin = new User({
   isAdmin: true,
 });
 
-router.post("/login", (req, res) => {
-  User.findOne({
-    username: req.body.username.toLowerCase(),
-    password: req.body.password,
-  }).exec((err, user) => {
+router.post("/login", async (req, res) => {
+  passport.authenticate("local", function (err, user, info) {
+    if (!user) {
+      console.log("Incorrect username or password");
+    } else {
+      if (user.isAdmin) {
+        req.login(user, function (err) {
+          const token = jwt.sign({ username: user.username }, secretKeyAdmin, {
+            expiresIn: "24h",
+          });
+          res.send(token);
+        });
+      } else {
+        req.login(user, function (err) {
+          const token = jwt.sign({ username: user.username }, secretKeyUser, {
+            expiresIn: "24h",
+          });
+          res.send(token);
+        });
+      }
+    }
+  })(req, res);
+});
+
+router.post("/register", (req, res) => {
+  const register = new User({
+    username: req.body.username,
+    firstName: req.body.firstName,
+    lastName: req.body.lastName,
+    homeAddress: req.body.homeAddress,
+    countryCode: req.body.countryCode,
+    phone: req.body.phone,
+    email: req.body.email,
+    passport: req.body.passport,
+    isAdmin: false,
+  });
+  User.register(register, req.body.password, (err, user) => {
     if (err) {
       console.log(err);
     } else {
-      if (user != null) {
-        if (user.isAdmin) res.sendStatus(200);
-      } else {
-        res.sendStatus(403);
-      }
+      passport.authenticate("local")(req, res, function () {
+        if (!user) {
+          console.log("Incorrect username or password");
+        } else {
+          req.login(user, function (err) {
+            const token = jwt.sign({ username: user.username }, secretKeyUser, {
+              expiresIn: "24h",
+            });
+            res.send(token);
+          });
+        }
+      });
     }
   });
 });

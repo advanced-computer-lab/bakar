@@ -1,21 +1,24 @@
-import { React } from "react";
-import Avatar from "@mui/material/Avatar";
-import Button from "@mui/material/Button";
-import CssBaseline from "@mui/material/CssBaseline";
-import TextField from "@mui/material/TextField";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import Checkbox from "@mui/material/Checkbox";
-import Link from "@mui/material/Link";
-import Paper from "@mui/material/Paper";
-import Box from "@mui/material/Box";
-import Grid from "@mui/material/Grid";
-import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
-import Typography from "@mui/material/Typography";
-import Copyright from "../components/Login/Login";
-import axios from "../api";
-import { useNavigate } from "react-router";
+import { React } from 'react';
+import { useNavigate } from 'react-router';
+import {
+	Avatar,
+	Box,
+	Button,
+	Checkbox,
+	FormControlLabel,
+	Grid,
+	Link,
+	Paper,
+	TextField,
+	Typography,
+} from '@mui/material';
+import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
+import Copyright from '../components/Login/Login';
+import axios from '../api';
+import { UserType } from "../userType";
+const jwt = require("jsonwebtoken");
 
-export default function SignInSide() {
+export default function SignInSide({setUserType}) {
   let navigate = useNavigate();
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -25,20 +28,25 @@ export default function SignInSide() {
       username: data.get("username"),
       password: data.get("password"),
     });
+    localStorage.setItem("token", response.data);
+    const token = localStorage.getItem("token");
+    try {
+      jwt.verify(token, "tom&jerry");
+      setUserType(UserType.admin);
+    } catch (err) {
+      jwt.verify(token, "jerry&tom");
+      setUserType(UserType.user);
+    }
+
     if (response.status === 200) {
       navigate("/flights");
     } else {
       navigate("/");
     }
-    console.log({
-      username: data.get("username"),
-      password: data.get("password"),
-    });
   };
 
   return (
-    <Grid container component={Paper} sx={{ height: "100vh" }}>
-      <CssBaseline />
+    <Grid container component={Paper} sx={{ height: "100vh" }}> 
       <Grid
         item
         xs={false}
@@ -117,7 +125,7 @@ export default function SignInSide() {
                 </Link>
               </Grid>
               <Grid item>
-                <Link href="#" variant="body2">
+                <Link href="/register" variant="body2">
                   {"Don't have an account? Sign Up"}
                 </Link>
               </Grid>
