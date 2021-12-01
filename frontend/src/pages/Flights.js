@@ -7,15 +7,21 @@ import CreateFlight from '../components/CreateFlight/CreateFlight';
 import DeleteFlight from '../components/DeleteFlight/DeleteFlight';
 import SearchFlight from '../components/SearchFlight/SearchFlight';
 import axios from 'axios';
+import { useLocation } from 'react-router-dom';
 import { UserType } from '../userType';
-import SearchFlightUser from '../components/SearchFlightUser/SearchFlightUser';
+import FlightDetails from '../components/FlightDetails/FlightDetails';
 
 function Flights({ userType }) {
-	console.log(userType);
+	let query = useLocation().search;
+	query = query.slice(1, query.length);
 	let flag = userType === UserType.admin;
+
 	const [flights, setFlights] = useState([]);
 	const [checks, setChecks] = useState({});
+	const [clicked, setClicked] = useState(null);
+
 	const getData = async (queryString) => {
+		console.log(queryString);
 		const res = await axios.get('/flights?' + queryString, {
 			headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
 		});
@@ -29,7 +35,7 @@ function Flights({ userType }) {
 		setChecks(currentChecks);
 	};
 
-	React.useEffect(() => getData(), []);
+	React.useEffect(() => getData(query), []);
 
 	return (
 		<div>
@@ -46,18 +52,22 @@ function Flights({ userType }) {
 							<DeleteFlight checks={checks} getData={getData} />
 						</Grid>
 					)}
-					<Grid item>
-						{flag && <SearchFlight getData={getData} />}
-						{!flag && <SearchFlightUser getData={getData} />}
-					</Grid>
+					<Grid item>{flag && <SearchFlight getData={getData} />}</Grid>
 				</Grid>
 				<br />
+				<FlightDetails
+					open={clicked !== null ? true : false}
+					clicked={clicked}
+					setClicked={setClicked}
+					getData={getData}
+				></FlightDetails>
 				<FlightTable
 					userType={userType}
 					flights={flights}
 					checks={checks}
 					setChecks={setChecks}
 					getData={getData}
+					setClicked={setClicked}
 				/>
 			</div>
 		</div>

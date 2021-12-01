@@ -54,17 +54,6 @@ export default function SearchFlight({ getData }) {
 			let searchQuery = searchParams.toString();
 			setOpen(false);
 			getData(searchQuery);
-			setDepartureTime(null);
-			setDepartureLocation(null);
-			setArrivalLocation(null);
-			setArrivalTerminal(null);
-			setDepartureTerminal(null);
-			setArrivalTime(null);
-			setFlightNo(null);
-			setSeatsEcon(null);
-			setSeatsBus(null);
-			setPriceBus(null);
-			setPriceEcon(null);
 		} catch (err) {
 			console.log(err);
 		}
@@ -90,6 +79,7 @@ export default function SearchFlight({ getData }) {
 							name="flightNo"
 							id="flightNo"
 							label="Flight Number"
+							value={flightNo}
 							type="text"
 							onChange={(event) => {
 								setFlightNo(event.target.value);
@@ -124,6 +114,7 @@ export default function SearchFlight({ getData }) {
 							name="departureLocation"
 							id="departureLocation"
 							label="Departure Location"
+							value={departureLocation}
 							type="text"
 							onChange={(event) => {
 								setDepartureLocation(event.target.value);
@@ -137,6 +128,7 @@ export default function SearchFlight({ getData }) {
 							id="departureTerminal"
 							label="Departure Terminal"
 							type="text"
+							value={departureTerminal}
 							onChange={(event) => {
 								setDepartureTerminal(event.target.value);
 							}}
@@ -148,6 +140,7 @@ export default function SearchFlight({ getData }) {
 							name="arrivalLocation"
 							id="arrivalLocation"
 							label="Arrival Location"
+							value={arrivalLocation}
 							type="text"
 							onChange={(event) => {
 								setArrivalLocation(event.target.value);
@@ -160,6 +153,7 @@ export default function SearchFlight({ getData }) {
 							name="arrivalTerminal"
 							id="arrivalTerminal"
 							label="Arrival Terminal"
+							value={arrivalTerminal}
 							type="text"
 							onChange={(event) => {
 								setArrivalTerminal(event.target.value);
@@ -172,6 +166,7 @@ export default function SearchFlight({ getData }) {
 							name="seatsEcon"
 							id="seatsEcon"
 							label="Number of Economy Seats"
+							value={seatsEcon}
 							type="number"
 							onChange={(event) => {
 								setSeatsEcon(event.target.value);
@@ -184,6 +179,7 @@ export default function SearchFlight({ getData }) {
 							name="seatsBus"
 							id="seatsBus"
 							label="Number of Business Seats"
+							value={seatsBus}
 							type="number"
 							onChange={(event) => {
 								setSeatsBus(event.target.value);
@@ -196,6 +192,7 @@ export default function SearchFlight({ getData }) {
 							name="priceEcon"
 							id="priceEcon"
 							label="Price of Economy Seats"
+							value={priceEcon}
 							type="number"
 							onChange={(event) => {
 								setPriceEcon(event.target.value);
@@ -208,6 +205,7 @@ export default function SearchFlight({ getData }) {
 							name="priceBus"
 							id="priceBus"
 							label="Price of Business Seats"
+							value={priceBus}
 							type="number"
 							onChange={(event) => {
 								setPriceBus(event.target.value);

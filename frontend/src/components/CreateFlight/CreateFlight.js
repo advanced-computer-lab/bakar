@@ -150,9 +150,10 @@ export default function CreateFlight({ getData }) {
 							name="seatsEcon"
 							id="seatsEcon"
 							label="Number of Economy Seats"
-							type="number"
+							type="tel"
 							fullWidth
 							variant="outlined"
+							onWheel={(event) => event.preventDefault}
 						/>
 						<TextField
 							autoFocus
@@ -160,9 +161,10 @@ export default function CreateFlight({ getData }) {
 							name="seatsBus"
 							id="seatsBus"
 							label="Number of Business Seats"
-							type="number"
+							type="tel"
 							fullWidth
 							variant="outlined"
+							onWheel={(event) => event.preventDefault}
 						/>
 						<TextField
 							autoFocus
@@ -170,9 +172,10 @@ export default function CreateFlight({ getData }) {
 							name="priceEcon"
 							id="priceEcon"
 							label="Price of Economy Seats"
-							type="number"
+							type="tel"
 							fullWidth
 							variant="outlined"
+							onWheel={(event) => event.preventDefault}
 						/>
 						<TextField
 							autoFocus
@@ -180,9 +183,10 @@ export default function CreateFlight({ getData }) {
 							name="priceBus"
 							id="priceBus"
 							label="Price of Business Seats"
-							type="number"
+							type="tel"
 							fullWidth
 							variant="outlined"
+							onWheel={(event) => event.preventDefault}
 						/>
 					</DialogContent>
 
