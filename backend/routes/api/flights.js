@@ -60,6 +60,17 @@ router.delete("/:flightNo", async (req, res) => {
   }
 });
 
+router.get("/:flightNo", async (req,res) =>{
+  try{
+      const dbResult = await Flight.find({flightNo : req.params.flightNo}).exec();
+      console.log(dbResult);
+      res.send(dbResult).status(200);
+  } catch (err) {
+    console.log(err);
+    res.status(500).send("Error deleting request");
+  }
+})
+
 router.post("/delete", async (req, res) => {
   try {
     const dbResult = await Flight.deleteMany(flights).exec();
