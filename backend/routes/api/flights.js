@@ -124,4 +124,25 @@ router.post('/delete', async (req, res) => {
 	}
 });
 
+router.get('/seats/:flightNo',async (req,res) =>{
+	try{
+			const result = await Flight.findOne({
+				flightNo: req.params.flightNo,
+			}).exec();
+			if(req.body.cabin == "Economy"){
+				res.status(200).send(result.seatsEcon);
+			}
+			else if(req.body.cabin == "Business"){
+				res.status(200).send(result.seatsBus);
+			}
+			else {
+				res.status(500).send("Error")
+			}
+	} catch (err) {
+		console.log(err);
+		res.status(500).send('Error deleting request');
+	}
+
+})
+
 module.exports = router;
