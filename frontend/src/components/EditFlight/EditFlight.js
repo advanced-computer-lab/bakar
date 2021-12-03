@@ -35,6 +35,10 @@ export default function EditFlight({ flight }) {
 	const [seatsBus, setSeatsBus] = React.useState(flight.seatsBus);
 	const [priceEcon, setPriceEcon] = React.useState(flight.priceEcon);
 	const [priceBus, setPriceBus] = React.useState(flight.priceBus);
+	const [noBagsEcon, setNoBagsEcon] = React.useState(flight.noBagsEcon);
+	const [noBagsBus, setNoBagsBus] = React.useState(flight.noBagsBus);
+	const [weightEcon, setWeightEcon] = React.useState(flight.weightEcon);
+	const [weightBus, setWeightBus] = React.useState(flight.weightBus);
 
 	const handleClose = () => {
 		setOpen(false);
@@ -219,6 +223,62 @@ export default function EditFlight({ flight }) {
 							value={priceBus}
 							onChange={(event) => {
 								setPriceBus(event.target.value);
+							}}
+							fullWidth
+							variant="outlined"
+						/>
+						<TextField
+							autoFocus
+							margin="dense"
+							name="noBagsEcon"
+							id="noBagsEcon"
+							label="Economy Bags"
+							type="tel"
+							value={noBagsEcon}
+							onChange={(event) => {
+								setNoBagsEcon(event.target.value);
+							}}
+							fullWidth
+							variant="outlined"
+						/>
+						<TextField
+							autoFocus
+							margin="dense"
+							name="noBagsBus"
+							id="noBagsBus"
+							label="Business Bags"
+							type="text"
+							value={noBagsBus}
+							onChange={(event) => {
+								setNoBagsBus(event.target.value);
+							}}
+							fullWidth
+							variant="outlined"
+						/>
+						<TextField
+							autoFocus
+							margin="dense"
+							name="weightEcon"
+							id="weightEcon"
+							label="Economy Bag Weight"
+							type="tel"
+							value={weightEcon}
+							onChange={(event) => {
+								setWeightEcon(event.target.value);
+							}}
+							fullWidth
+							variant="outlined"
+						/>
+						<TextField
+							autoFocus
+							margin="dense"
+							name="weightBus"
+							id="weightBus"
+							label="Business Bag Weight"
+							type="text"
+							value={weightBus}
+							onChange={(event) => {
+								setWeightBus(event.target.value);
 							}}
 							fullWidth
 							variant="outlined"

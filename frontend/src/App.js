@@ -17,21 +17,21 @@ const jwt = require("jsonwebtoken");
 const generalTheme = createTheme(theme);
 
 function App() {
-  let token = "";
-  function getToken() {
-    token = localStorage.getItem("token");
-    if (token == null) {
-      return UserType.guest;
-    }
-    try {
-      jwt.verify(token, "tom&jerry");
-      return UserType.admin;
-    } catch (err) {
-      console.log("hello2");
-      jwt.verify(token, "jerry&tom");
-      return UserType.user;
-    }
-  }
+	let token = '';
+	function getToken() {
+		token = localStorage.getItem('token');
+		if (token == null) {
+			return UserType.guest;
+		} else{
+			const test = JSON.parse(atob(token.split('.')[1]));
+			console.log(test);
+			if(test.isAdmin){
+				return UserType.admin;
+			} else{
+				return UserType.user;
+			}
+		}
+	}
   const [userType, setUserType] = useState(getToken());
   return (
     <LocalizationProvider dateAdapter={AdapterDateFns}>

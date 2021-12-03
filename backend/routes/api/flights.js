@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const Flight = require('../../models/Flight');
+const jwt = require("jsonwebtoken");
 
 router.post('/', async (req, res) => {
 	if (req.body.departureTime < req.body.arrivalTime) {
@@ -31,37 +32,17 @@ router.post('/', async (req, res) => {
 
 router.get('/', async (req, res) => {
 	try {
-		console.log(req.query);
-		let partial = { availableBus: '', availableEcon: '' };
-
-		if (req.query.availableBus != null) {
-			partial.availableBus = req.query.availableBus;
-			delete req.query.availableBus;
-		}
-		if (req.query.availableEcon != null) {
-			partial.availableEcon = req.query.availableEcon;
-			delete req.query.availableEcon;
-		}
-		if (partial.availableBus == '' && partial.availableEcon == '') {
-			console.log(partial);
-			const result = await Flight.find(req.query).exec();
-			console.log('result: ' + result);
-			res.send(result);
-		} else if (partial.availableEcon == '') {
-			const result = await Flight.find({
-				...req.query,
-				availableBus: { $gte: partial.availableBus },
-			});
-			console.log('result: ' + result);
-			res.send(result);
-		} else {
-			const result = await Flight.find({
-				...req.query,
-				availableEcon: { $gte: partial.availableEcon },
-			});
-			console.log('result: ' + result);
-			res.send(result);
-		}
+		const myQuery = {
+			...req.query,
+			departureTime: { $gte: req.query.departureTime || new Date().getTime() },
+			availableBus: { $gte: req.query.availableBus || 0 },
+			availableEcon: { $gte: req.query.availableEcon || 0 },
+		};
+		
+		console.log(myQuery);
+		const result = await Flight.find(myQuery).exec();
+		console.log('result: ' + result);
+		res.send(result);
 	} catch (err) {
 		console.log(err);
 	}
@@ -128,5 +109,26 @@ router.post('/delete', async (req, res) => {
 		res.status(500).send('Error deleting request');
 	}
 });
+
+router.get('/seats/:flightNo',async (req,res) =>{
+	try{
+			const result = await Flight.findOne({
+				flightNo: req.params.flightNo,
+			}).exec();
+			if(req.body.cabin == "Economy"){
+				res.status(200).send(result.seatsEcon);
+			}
+			else if(req.body.cabin == "Business"){
+				res.status(200).send(result.seatsBus);
+			}
+			else {
+				res.status(500).send("Error")
+			}
+	} catch (err) {
+		console.log(err);
+		res.status(500).send('Error deleting request');
+	}
+
+})
 
 module.exports = router;
