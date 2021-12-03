@@ -24,9 +24,6 @@ function MyFlightTable(props) {
               Arrival Flight Number
             </TableCell>
             <TableCell style={style} align="center" colSpan={1}>
-              Departure Location - Arrival Loation
-            </TableCell>
-            <TableCell style={style} align="center" colSpan={1}>
               Cabin
             </TableCell>
             <TableCell style={style} align="center" colSpan={1}>
@@ -49,6 +46,7 @@ function MyFlightTable(props) {
                 cabin={ticket.cabin}
                 price={ticket.price}
                 getData={props.getData}
+                setClicked ={props.setClicked}
               />
             ))}
         </TableBody>

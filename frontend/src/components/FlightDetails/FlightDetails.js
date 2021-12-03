@@ -21,7 +21,7 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 	return <Slide direction="up" ref={ref} {...props} />;
 });
 
-export default function FlightDetails({ open, setClicked, clicked, getData }) {
+export default function FlightDetails({ open, setClicked, clicked, getData, select }) {
 	let navigate = useNavigate();
 
 	const [data, setData] = React.useState({});
@@ -145,7 +145,7 @@ export default function FlightDetails({ open, setClicked, clicked, getData }) {
 						container
 						sx={{ alignItems: 'center', justifyContent: 'center' }}
 					>
-						<Button
+						{!select && <Button
 							variant="contained"
 							color="primary"
 							sx={{ ':hover': { backgroundColor: '#CD5334' } }}
@@ -155,7 +155,7 @@ export default function FlightDetails({ open, setClicked, clicked, getData }) {
 							}}
 						>
 							Select
-						</Button>
+						</Button>}
 					</Grid>
 				</List>
 			</Dialog>
