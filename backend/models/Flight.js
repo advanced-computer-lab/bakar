@@ -73,6 +73,18 @@ const flightSchema = new Schema(
 			type: Number,
 			required: true,
 		},
+		seatsEconView: {
+            type: [String],
+            enum:['Free','Adult','Child'],
+            default:'Free',
+            required: true,
+        },
+        seatsBusView: {
+            type: [String],
+            enum:['Free','Adult','Child'],
+            default:'Free',
+            required: true,
+        },
 	},
 	{ timestamps: true }
 );
