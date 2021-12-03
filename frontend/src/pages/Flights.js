@@ -11,20 +11,29 @@ import { UserType } from '../userType';
 import FlightDetails from '../components/FlightDetails/FlightDetails';
 
 function Flights({ userType }) {
-	let query = useLocation().search;
-	query = query.slice(1, query.length);
+	let query = useLocation().search.substring(1);
+	const queryObj = JSON.parse(
+		'{"' +
+			decodeURI(query)
+				.replace(/"/g, '\\"')
+				.replace(/&/g, '","')
+				.replace(/=/g, '":"') +
+			'"}'
+	);
+	let seats = queryObj.n;
+	delete queryObj.n;
 	let flag = userType === UserType.admin;
 
 	const [flights, setFlights] = useState([]);
 	const [checks, setChecks] = useState({});
 	const [clicked, setClicked] = useState(null);
+	const [departureFlight, setDepartureFlight] = useState(null);
+	const [returnFlight, setReturnFlight] = useState(null);
 
 	const getData = async (queryString) => {
-		console.log(queryString);
 		const res = await axios.get('/flights?' + queryString, {
 			headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
 		});
-		console.log(res);
 		let flightData = res['data'];
 		setFlights(flightData);
 		let currentChecks = {};
@@ -34,6 +43,7 @@ function Flights({ userType }) {
 		setChecks(currentChecks);
 	};
 
+	// eslint-disable-next-line react-hooks/exhaustive-deps
 	React.useEffect(() => getData(query), []);
 
 	return (
@@ -53,13 +63,19 @@ function Flights({ userType }) {
 					)}
 					<Grid item>{flag && <SearchFlight getData={getData} />}</Grid>
 				</Grid>
-				<br />
 				<FlightDetails
 					open={clicked !== null ? true : false}
 					clicked={clicked}
 					setClicked={setClicked}
+					departureFlight={departureFlight}
+					setDepartureFlight={setDepartureFlight}
+					returnFlight={returnFlight}
+					setReturnFlight={setReturnFlight}
 					getData={getData}
 				></FlightDetails>
+				<h2>
+					{departureFlight == null ? 'Departure Flights' : 'Return Flights'}
+				</h2>
 				<FlightTable
 					userType={userType}
 					flights={flights}
@@ -67,6 +83,7 @@ function Flights({ userType }) {
 					setChecks={setChecks}
 					getData={getData}
 					setClicked={setClicked}
+					noOfSeats={seats}
 				/>
 			</div>
 		</div>

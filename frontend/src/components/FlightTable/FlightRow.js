@@ -17,22 +17,50 @@ function FlightRow(props) {
 	const arrivalTime = new Date(props.arrivalTime);
 
 	return (
-		<TableRow hover onClick={() => props.setClicked(props.flightNo)}>
-			{!flag && <TableCell align="center">{props.flightNo}</TableCell>}
-			<TableCell align="center">
+		<TableRow hover>
+			{!flag && (
+				<TableCell
+					align="center"
+					onClick={() => props.setClicked(props.flightNo)}
+				>
+					{props.flightNo}
+				</TableCell>
+			)}
+			<TableCell
+				align="center"
+				onClick={() => props.setClicked(props.flightNo)}
+			>
 				{departureTime.toLocaleDateString()}{' '}
 				{departureTime.toLocaleTimeString()} -{' '}
 				{arrivalTime.toLocaleDateString()} {arrivalTime.toLocaleTimeString()}
 			</TableCell>
-			<TableCell align="center">
+			<TableCell
+				align="center"
+				onClick={() => props.setClicked(props.flightNo)}
+			>
 				{props.departureLocation} - {props.arrivalLocation} <br />{' '}
 				{props.departureTerminal} - {props.arrivalTerminal}
 			</TableCell>
 			{!flag && (
-				<TableCell align="center">{props.seatsEcon + props.seatsBus}</TableCell>
+				<TableCell
+					align="center"
+					onClick={() => props.setClicked(props.flightNo)}
+				>
+					{props.seatsEcon + props.seatsBus}
+				</TableCell>
 			)}
-			<TableCell align="center">{props.priceEcon}</TableCell>
-			<TableCell align="center">{props.priceBus}</TableCell>
+			<TableCell
+				align="center"
+				onClick={() => props.setClicked(props.flightNo)}
+			>
+				{props.priceEcon * props.noOfSeats}
+			</TableCell>
+			<TableCell
+				align="center"
+				onClick={() => props.setClicked(props.flightNo)}
+			>
+				{props.priceBus * props.noOfSeats}
+			</TableCell>
 			<TableCell>{!flag && <EditFlight flight={props} />}</TableCell>
 			<TableCell>{!flag && <Checkbox onChange={handleChange} />}</TableCell>
 		</TableRow>

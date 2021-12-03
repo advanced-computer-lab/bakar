@@ -1,6 +1,6 @@
 import { React } from 'react';
 import { useNavigate } from 'react-router';
-import { AppBar, Button, Link, Toolbar, Typography } from '@mui/material';
+import { AppBar, Button, Toolbar, Typography } from '@mui/material';
 import LoginIcon from '@mui/icons-material/Login';
 import LogoutIcon from '@mui/icons-material/Logout';
 import Logo from '../../assets/Logo.svg';
@@ -20,12 +20,14 @@ export default function NavBar({ userType }) {
 				document.location.reload();
 			}
 		} else {
+			console.log('hoho');
 			navigate('/flights');
+			document.location.reload();
 		}
 	}
 	return (
 		<AppBar
-			item
+			item="true"
 			position="static"
 			color="inherit"
 			sx={{ marginBottom: '20px' }}
@@ -54,7 +56,7 @@ export default function NavBar({ userType }) {
 				<Button
 					color="inherit"
 					name="viewFlights"
-					onclick={handleClick}
+					onClick={handleClick}
 					sx={{ textTransform: 'none' }}
 				>
 					View Available Flights

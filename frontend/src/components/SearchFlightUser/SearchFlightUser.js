@@ -17,7 +17,7 @@ import {
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import { useNavigate } from 'react-router';
 
-export default function SearchFlightUser({ getData }) {
+export default function SearchFlightUser({ getData, detailsOnly }) {
 	const [departureTime, setDepartureTime] = React.useState(null);
 	const [arrivalTime, setArrivalTime] = React.useState(null);
 	const [departureTerminal, setDepartureTerminal] = React.useState();
@@ -38,20 +38,17 @@ export default function SearchFlightUser({ getData }) {
 				arrivalTerminal: arrivalTerminal,
 			};
 			data[cabin] = adults + children;
-			console.log(data[cabin]);
-			console.log(cabin);
 			let requested = Object.fromEntries(
 				Object.entries(data).filter(([_, v]) => v != null)
 			);
 			let searchParams = new URLSearchParams(requested);
 			let searchQuery = searchParams.toString();
-			console.log(searchQuery);
 			setDepartureTime(null);
 			setArrivalTerminal(null);
 			setDepartureTerminal(null);
 			setArrivalTime(null);
 			setCabin(null);
-			navigate('/flights?' + searchQuery);
+			navigate(`/flights?n=${adults + children * 0.8}&` + searchQuery);
 		} catch (err) {
 			console.log(err);
 		}
@@ -76,7 +73,7 @@ export default function SearchFlightUser({ getData }) {
 						direction="row"
 						columnSpacing={{ xs: 1, sm: 2, md: 3 }}
 					>
-						<Grid item direction="column">
+						<Grid item>
 							<Grid
 								container
 								direction="row"
@@ -135,7 +132,7 @@ export default function SearchFlightUser({ getData }) {
 								variant="outlined"
 							/>
 						</Grid>
-						<Grid item direction="column">
+						<Grid item>
 							<FormLabel component="legend">Cabin</FormLabel>
 							<RadioGroup
 								row
@@ -167,14 +164,17 @@ export default function SearchFlightUser({ getData }) {
 							></NumberCounter>
 						</Grid>
 					</Grid>
-					<Button
-						type="submit"
-						variant="contained"
-						fullWidth="true"
-						startIcon={<KeyboardArrowDownIcon />}
-					>
-						Search flights
-					</Button>
+					<br />
+					{!detailsOnly && (
+						<Button
+							type="submit"
+							variant="contained"
+							fullWidth
+							startIcon={<KeyboardArrowDownIcon />}
+						>
+							Search flights
+						</Button>
+					)}
 				</DialogContent>
 			</Box>
 		</div>

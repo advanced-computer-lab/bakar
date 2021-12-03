@@ -15,50 +15,67 @@ import {
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import axios from '../../api';
-import { useNavigate } from 'react-router';
+import CheckOut from '../CheckOut/CheckOut';
 
 const Transition = React.forwardRef(function Transition(props, ref) {
 	return <Slide direction="up" ref={ref} {...props} />;
 });
 
-export default function FlightDetails({ open, setClicked, clicked, getData }) {
-	let navigate = useNavigate();
-
+export default function FlightDetails({
+	open,
+	setClicked,
+	clicked,
+	getData,
+	isDetails,
+	departureFlight,
+	setDepartureFlight,
+	returnFlight,
+	setReturnFlight,
+}) {
 	const [data, setData] = React.useState({});
+	const [openCheck, setOpenCheck] = React.useState();
 	const fetchData = async () => {
 		try {
 			setData((await axios.get(`/flights/${clicked}`)).data);
-			console.log(data);
 		} catch (err) {
 			console.log(err);
 		}
 	};
-	const [departureLocation, setDepartureLocation] = React.useState(null);
-	const [arrivalLocation, setArrivalLocation] = React.useState(null);
-	const [departureTerminal, setDepartureTerminal] = React.useState();
-	const [arrivalTerminal, setArrivalTerminal] = React.useState();
+
+	// eslint-disable-next-line react-hooks/exhaustive-deps
 	React.useEffect(() => fetchData(), [clicked]);
-	const handleSubmit = async () => {
+
+	const handleSelect = async () => {
 		try {
+			setDepartureFlight(data);
 			let search = {
 				departureLocation: data.arrivalLocation,
 				arrivalLocation: data.departureLocation,
 				departureTerminal: data.arrivalTerminal,
 				arrivalTerminal: data.departureTerminal,
+				departureTime: data.arrivalTime,
 			};
 			let requested = Object.fromEntries(
 				Object.entries(search).filter(([_, v]) => v != null)
 			);
-			console.log(search);
-			let searchParams = new URLSearchParams(requested);
-			let searchQuery = searchParams.toString();
-			console.log(searchQuery);
+			let searchQuery = new URLSearchParams(requested).toString();
 			await getData(searchQuery);
 			setClicked(null);
 		} catch (err) {
 			console.log(err);
 		}
 	};
+
+	const handleReserve = async () => {
+		try {
+			setReturnFlight(data);
+			// setClicked(null);
+			setOpenCheck(true);
+		} catch (err) {
+			console.log(err);
+		}
+	};
+
 	return (
 		<div>
 			<Dialog
@@ -115,16 +132,22 @@ export default function FlightDetails({ open, setClicked, clicked, getData }) {
 					</ListItem>
 					<Divider />
 					<ListItem>
-						<ListItemText primary="Economy Price" secondary={data.priceEcon} />
-					</ListItem>
-					<Divider />
-					<ListItem>
-						<ListItemText primary="Business Price" secondary={data.priceBus} />
+						<ListItemText
+							primary="Economy Price per adult (x0.8 per child)"
+							secondary={data.priceEcon}
+						/>
 					</ListItem>
 					<Divider />
 					<ListItem>
 						<ListItemText
-							primary="Economy Baggage Allowance"
+							primary="Business Price per adult (x0.8 per child)"
+							secondary={data.priceBus}
+						/>
+					</ListItem>
+					<Divider />
+					<ListItem>
+						<ListItemText
+							primary="Economy Baggage Allowance per person"
 							secondary={
 								data.noBagsEcon + ' bag(s) x ' + data.weightEcon + ' kg '
 							}
@@ -133,7 +156,7 @@ export default function FlightDetails({ open, setClicked, clicked, getData }) {
 					<Divider />
 					<ListItem>
 						<ListItemText
-							primary="Business Baggage Allowance"
+							primary="Business Baggage Allowance per person"
 							secondary={
 								data.noBagsBus + ' bag(s) x ' + data.weightBus + ' kg '
 							}
@@ -144,18 +167,28 @@ export default function FlightDetails({ open, setClicked, clicked, getData }) {
 					<Grid
 						container
 						sx={{ alignItems: 'center', justifyContent: 'center' }}
+						position=""
 					>
-						<Button
-							variant="contained"
-							color="primary"
-							sx={{ ':hover': { backgroundColor: '#CD5334' } }}
-							onClick={() => {
-								console.log(data);
-								handleSubmit();
-							}}
-						>
-							Select
-						</Button>
+						{!isDetails && (
+							<Button
+								variant="contained"
+								color="primary"
+								sx={{ ':hover': { backgroundColor: '#CD5334' } }}
+								onClick={() => {
+									departureFlight == null ? handleSelect() : handleReserve();
+								}}
+							>
+								{departureFlight == null ? 'Select' : 'Reserve'}
+							</Button>
+						)}
+						{returnFlight != null && (
+							<CheckOut
+								departureFlight={departureFlight}
+								returnFlight={returnFlight}
+								openCheck={openCheck}
+								setOpenCheck={setOpenCheck}
+							/>
+						)}
 					</Grid>
 				</List>
 			</Dialog>
