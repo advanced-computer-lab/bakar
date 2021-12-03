@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const Flight = require('../../models/Flight');
+const jwt = require("jsonwebtoken");
 
 router.post('/', async (req, res) => {
 	if (req.body.departureTime < req.body.arrivalTime) {
@@ -37,6 +38,7 @@ router.get('/', async (req, res) => {
 			availableBus: { $gte: req.query.availableBus || 0 },
 			availableEcon: { $gte: req.query.availableEcon || 0 },
 		};
+		
 		console.log(myQuery);
 		const result = await Flight.find(myQuery).exec();
 		console.log('result: ' + result);
