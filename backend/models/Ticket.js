@@ -1,11 +1,9 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
+const autoIncrement = require('mongoose-auto-increment');
 
 const ticketSchema = new Schema(
 	{
-		_id: {
-			type: String,
-		},
 		departureFlightNo: {
 			type: String,
 			required: true,
@@ -18,6 +16,14 @@ const ticketSchema = new Schema(
 			type: String,
 			required: true,
 		},
+		seatsDeparture: {
+			type: [Number],
+			required: true,
+		},
+		seatsReturn: {
+			type: [Number],
+			required: true,
+		},
 		username: {
 			type: String,
 			required: true,
@@ -26,16 +32,18 @@ const ticketSchema = new Schema(
 			type: String,
 			required: true,
 		},
-		passport: {
-			type: String,
+		priceDeparture: {
+			type: Number,
 			required: true,
 		},
-		price: {
+		priceReturn: {
 			type: Number,
 			required: true,
 		},
 	},
 	{ timestamps: true }
 );
+
+ticketSchema.plugin(autoIncrement.plugin, 'Ticket');
 const ticket = mongoose.model('ticket', ticketSchema);
 module.exports = ticket;

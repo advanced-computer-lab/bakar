@@ -69,7 +69,7 @@ function FlightTable(props) {
 								noBagsBus={flight.noBagsBus}
 								weightEcon={flight.weightEcon}
 								weightBus={flight.weightBus}
-								noOfSeats={props.noOfSeats}
+								priceFactor={props.priceFactor}
 								checks={props.checks}
 								setChecks={props.setChecks}
 								getData={props.getData}

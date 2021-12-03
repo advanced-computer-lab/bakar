@@ -36,6 +36,7 @@ export default function SearchFlightUser({ getData, detailsOnly }) {
 				arrivalTime: arrivalTime,
 				departureTerminal: departureTerminal,
 				arrivalTerminal: arrivalTerminal,
+				cabin: cabin === 'availableEcon' ? 'Economy' : 'Business',
 			};
 			data[cabin] = adults + children;
 			let requested = Object.fromEntries(
@@ -48,7 +49,7 @@ export default function SearchFlightUser({ getData, detailsOnly }) {
 			setDepartureTerminal(null);
 			setArrivalTime(null);
 			setCabin(null);
-			navigate(`/flights?n=${adults + children * 0.8}&` + searchQuery);
+			navigate(`/flights?nA=${adults}&nC=${children}&` + searchQuery);
 		} catch (err) {
 			console.log(err);
 		}
