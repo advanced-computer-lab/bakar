@@ -31,16 +31,39 @@ router.post("/login", async (req, res) => {
     } else {
       if (user.isAdmin) {
         req.login(user, function (err) {
-          const token = jwt.sign({ username: user.username }, secretKeyAdmin, {
-            expiresIn: "24h",
-          });
+          const token = jwt.sign(
+            {
+              username: user.username,
+              firstName: user.firstName,
+              lastName: user.lastName,
+              email: user.email,
+              passport: user.passport,
+              isAdmin: user.isAdmin,
+            },
+            secretKeyAdmin,
+            {
+              noTimestamp: true,
+              expiresIn: "24h",
+            }
+          );
           res.send(token);
         });
       } else {
         req.login(user, function (err) {
-          const token = jwt.sign({ username: user.username }, secretKeyUser, {
-            expiresIn: "24h",
-          });
+          const token = jwt.sign(
+            {
+              username: user.username,
+              firstName: user.firstName,
+              lastName: user.lastName,
+              email: user.email,
+              passport: user.passport,
+              isAdmin: user.isAdmin,
+            },
+            secretKeyUser,
+            {
+              expiresIn: "24h",
+            }
+          );
           res.send(token);
         });
       }
@@ -69,9 +92,20 @@ router.post("/register", (req, res) => {
           console.log("Incorrect username or password");
         } else {
           req.login(user, function (err) {
-            const token = jwt.sign({ username: user.username }, secretKeyUser, {
-              expiresIn: "24h",
-            });
+            const token = jwt.sign(
+              {
+                username: user.username,
+                firstName: user.firstName,
+                lastName: user.lastName,
+                email: user.email,
+                passport: user.passport,
+                isAdmin: user.isAdmin,
+              },
+              secretKeyUser,
+              {
+                expiresIn: "24h",
+              }
+            );
             res.send(token);
           });
         }
