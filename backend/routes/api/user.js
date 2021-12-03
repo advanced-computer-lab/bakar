@@ -30,6 +30,7 @@ router.post("/login", async (req, res) => {
       console.log("Incorrect username or password");
     } else {
       if (user.isAdmin) {
+        console.log('waddap')
         req.login(user, function (err) {
           const token = jwt.sign(
             {
@@ -49,6 +50,7 @@ router.post("/login", async (req, res) => {
           res.send(token);
         });
       } else {
+        console.log("user");
         req.login(user, function (err) {
           const token = jwt.sign(
             {
@@ -114,18 +116,33 @@ router.post("/register", (req, res) => {
   });
 });
 
-router.put("/:username", async (req, res) => {
+router.put("/", passport.authenticate('jwt'),  async (req, res) => {
+  const user = req.user;
   try {
-    if(req.params.isAdmin == req.body.isAdmin){
-      await User.updateOne({ username: req.params.username }, req.body).exec();
-      res.status(200).send("user updated ");
+    if(!user.isAdmin){
+      console.log(user);
+      const updatedUser = await User.updateOne({ username: user.username }, req.body).exec();
       console.log("The user is Updated successfully !");
+      res.status(200).send("user updated ");
     }
-    else{throw "can't change Admin Status"
+    else{console.log("hello from the other side"); throw "can't change Admin Status";
   }
   } catch (err) {
     console.log(err);
   }
+  console.log('bye');
+  res.send(400);
 });
+
+// router.get('/', async (req, res) => {
+//   try{
+//     const result = await User.find({username:"tom"}).exec();
+//     console.log("result: " + result);
+//     res.send(result);
+//   }catch (err) {
+//     console.log(err);
+//     res.send(400);
+//   }
+// });
 
 module.exports = router;

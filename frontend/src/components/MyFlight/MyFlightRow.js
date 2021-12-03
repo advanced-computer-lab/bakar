@@ -3,10 +3,21 @@ import { TableRow, Checkbox, TableCell, Button, IconButton, Icon,Dialog,DialogCo
 import { UserType } from "../../userType";
 import DeleteIcon from '@mui/icons-material/Delete';
 import axios from "../../api";
+import FlightDetails from "../FlightDetails/FlightDetails";
+import { getDate } from "date-fns";
 
 function MyFlightRow(props) { 
   const handleClick = async (event) => {
     if(event.currentTarget.name=="delete"){
+        setOpen(true);
+    } else{
+       await axios.delete(`/tickets/${props.id}`);
+       props.getData()
+       setOpen(false);
+    }
+  }
+  const handleFlightClick = async (event) => {
+    if(event.currentTarget.name=="depFlightInfo"){
         setOpen(true);
     } else{
        await axios.delete(`/tickets/${props.id}`);
@@ -17,7 +28,7 @@ function MyFlightRow(props) {
 const handleClose = () => {
     setOpen(false);
 }
-
+  
   const [open,setOpen,] = useState();
   let flag = props.userType === UserType.admin;
   
@@ -27,16 +38,15 @@ const handleClose = () => {
     <TableRow>
       <TableCell align="center">{props.id}</TableCell>
       <TableCell align="center">
-          <Button>
+          <Button onClick={()=>props.setClicked(props.departureFlightNo)}>
           {props.departureFlightNo}
           </Button>
           </TableCell>
       <TableCell align="center">
-          <Button>
+          <Button onClick={()=>props.setClicked(props.returnFlightNo)}>
           {props.returnFlightNo}
           </Button>
           </TableCell>
-      <TableCell align="center">{"balahabdbeezo"}</TableCell>
       <TableCell align="center">{props.cabin}</TableCell>
       <TableCell align="center">{"current Seat"}</TableCell>
       <TableCell align="center">{props.price}</TableCell>
@@ -64,7 +74,6 @@ const handleClose = () => {
           </Button>
         </DialogActions>
       </Dialog>
-
     </TableRow>
   );
 }

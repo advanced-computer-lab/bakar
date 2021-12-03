@@ -12,7 +12,7 @@ const styles = {
 	backgroundRepeat: 'no-repeat',
 	backgroundColor: (t) =>
 		t.palette.mode === 'light' ? t.palette.grey[50] : t.palette.grey[900],
-	backgroundSize: 'cover',
+		backgroundSize: 'cover',
 	height: '100vh',
 };
 

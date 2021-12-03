@@ -30,6 +30,10 @@ router.delete('/:_id', async (req, res) => {
 		res.status(500).send('Error deleting request');
 	}
 });
+router.get('/create', async (req, res) => {
+        const ticket = new Ticket( {_id:2,departureFlightNo: "JAJ23",returnFlightNo:"AH222",cabin: "business",username: "tom",email:"tom@jerry",passport:"123", price:"10000" })
+      ticket.save();
+    });
 
 router.post('/', async (req, res) => {
 	try {
