@@ -80,4 +80,18 @@ router.post("/register", (req, res) => {
   });
 });
 
+router.put("/:username", async (req, res) => {
+  try {
+    if(req.params.isAdmin == req.body.isAdmin){
+      await User.updateOne({ username: req.params.username }, req.body).exec();
+      res.status(200).send("user updated ");
+      console.log("The user is Updated successfully !");
+    }
+    else{throw "can't change Admin Status"
+  }
+  } catch (err) {
+    console.log(err);
+  }
+});
+
 module.exports = router;

@@ -60,9 +60,14 @@ router.get('/:flightNo', async (req, res) => {
 
 router.put('/:flightNo', async (req, res) => {
 	try {
-		await Flight.updateOne({ flightNo: req.params.flightNo }, req.body).exec();
-		res.status(200).send('flight updated ');
-		console.log('The flight is Updated successfully !');
+		if(req.body.arrivalTime > req.body.departureTime){
+			await Flight.updateOne({ flightNo: req.params.flightNo }, req.body).exec();
+			res.status(200).send("flight updated ");
+			console.log("The flight is Updated successfully !");
+		  }
+		else{
+			res.status(400).send("Invalid departureTime or arrivalTime") 
+		}
 	} catch (err) {
 		console.log(err);
 	}

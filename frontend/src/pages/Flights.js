@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import NavBar from '../components/NavBar/NavBar';
 import { Grid } from '@mui/material';
 import FlightTable from '../components/FlightTable/FlightTable';
+import MyFlight from '../components/MyFlight/MyFlightTable';
 import CreateFlight from '../components/CreateFlight/CreateFlight';
 import DeleteFlight from '../components/DeleteFlight/DeleteFlight';
 import SearchFlight from '../components/SearchFlight/SearchFlight';

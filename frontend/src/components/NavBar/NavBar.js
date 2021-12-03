@@ -9,6 +9,7 @@ import { UserType } from '../../userType';
 export default function NavBar({ userType }) {
 	let navigate = useNavigate();
 	let flag = userType === UserType.guest;
+	let isAdmin = userType === UserType.admin;
 
 	function handleClick(event) {
 		if (event.target.name === 'log') {
@@ -61,6 +62,15 @@ export default function NavBar({ userType }) {
 				>
 					View Available Flights
 				</Button>
+				{!flag && !isAdmin &&(
+					<Button
+					color="inherit"
+					name="viewFlights"
+					onclick={handleClick}
+					sx={{ textTransform: 'none' }}
+				>
+					View Reserved Flights
+				</Button>)}
 				<Button
 					name="log"
 					startIcon={flag ? <LoginIcon /> : <LogoutIcon />}
