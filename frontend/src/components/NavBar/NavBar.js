@@ -1,6 +1,6 @@
 import { React } from 'react';
 import { useNavigate } from 'react-router';
-import { AppBar, Button, Link, Toolbar, Typography } from '@mui/material';
+import { AppBar, Button, Toolbar, Typography } from '@mui/material';
 import LoginIcon from '@mui/icons-material/Login';
 import LogoutIcon from '@mui/icons-material/Logout';
 import Logo from '../../assets/Logo.svg';
@@ -27,7 +27,7 @@ export default function NavBar({ userType }) {
 	}
 	return (
 		<AppBar
-			item
+			item="true"
 			position="static"
 			color="inherit"
 			sx={{ marginBottom: '20px' }}

@@ -38,14 +38,11 @@ export default function SearchFlightUser({ getData, detailsOnly }) {
 				arrivalTerminal: arrivalTerminal,
 			};
 			data[cabin] = adults + children;
-			console.log(data[cabin]);
-			console.log(cabin);
 			let requested = Object.fromEntries(
 				Object.entries(data).filter(([_, v]) => v != null)
 			);
 			let searchParams = new URLSearchParams(requested);
 			let searchQuery = searchParams.toString();
-			console.log(searchQuery);
 			setDepartureTime(null);
 			setArrivalTerminal(null);
 			setDepartureTerminal(null);
@@ -76,7 +73,7 @@ export default function SearchFlightUser({ getData, detailsOnly }) {
 						direction="row"
 						columnSpacing={{ xs: 1, sm: 2, md: 3 }}
 					>
-						<Grid item direction="column">
+						<Grid item>
 							<Grid
 								container
 								direction="row"
@@ -135,7 +132,7 @@ export default function SearchFlightUser({ getData, detailsOnly }) {
 								variant="outlined"
 							/>
 						</Grid>
-						<Grid item direction="column">
+						<Grid item>
 							<FormLabel component="legend">Cabin</FormLabel>
 							<RadioGroup
 								row
@@ -172,7 +169,7 @@ export default function SearchFlightUser({ getData, detailsOnly }) {
 						<Button
 							type="submit"
 							variant="contained"
-							fullWidth="true"
+							fullWidth
 							startIcon={<KeyboardArrowDownIcon />}
 						>
 							Search flights

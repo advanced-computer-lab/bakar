@@ -27,13 +27,13 @@ function Flights({ userType }) {
 	const [flights, setFlights] = useState([]);
 	const [checks, setChecks] = useState({});
 	const [clicked, setClicked] = useState(null);
+	const [departureFlight, setDepartureFlight] = useState(null);
+	const [returnFlight, setReturnFlight] = useState(null);
 
 	const getData = async (queryString) => {
-		console.log(queryString);
 		const res = await axios.get('/flights?' + queryString, {
 			headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
 		});
-		console.log(res);
 		let flightData = res['data'];
 		setFlights(flightData);
 		let currentChecks = {};
@@ -43,6 +43,7 @@ function Flights({ userType }) {
 		setChecks(currentChecks);
 	};
 
+	// eslint-disable-next-line react-hooks/exhaustive-deps
 	React.useEffect(() => getData(query), []);
 
 	return (
@@ -62,13 +63,19 @@ function Flights({ userType }) {
 					)}
 					<Grid item>{flag && <SearchFlight getData={getData} />}</Grid>
 				</Grid>
-				<br />
 				<FlightDetails
 					open={clicked !== null ? true : false}
 					clicked={clicked}
 					setClicked={setClicked}
+					departureFlight={departureFlight}
+					setDepartureFlight={setDepartureFlight}
+					returnFlight={returnFlight}
+					setReturnFlight={setReturnFlight}
 					getData={getData}
 				></FlightDetails>
+				<h2>
+					{departureFlight == null ? 'Departure Flights' : 'Return Flights'}
+				</h2>
 				<FlightTable
 					userType={userType}
 					flights={flights}
