@@ -31,8 +31,8 @@ function FlightRow(props) {
 			{!flag && (
 				<TableCell align="center">{props.seatsEcon + props.seatsBus}</TableCell>
 			)}
-			<TableCell align="center">{props.priceEcon}</TableCell>
-			<TableCell align="center">{props.priceBus}</TableCell>
+			<TableCell align="center">{props.priceEcon * props.noOfSeats}</TableCell>
+			<TableCell align="center">{props.priceBus * props.noOfSeats}</TableCell>
 			<TableCell>{!flag && <EditFlight flight={props} />}</TableCell>
 			<TableCell>{!flag && <Checkbox onChange={handleChange} />}</TableCell>
 		</TableRow>

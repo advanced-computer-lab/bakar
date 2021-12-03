@@ -11,8 +11,17 @@ import { UserType } from '../userType';
 import FlightDetails from '../components/FlightDetails/FlightDetails';
 
 function Flights({ userType }) {
-	let query = useLocation().search;
-	query = query.slice(1, query.length);
+	let query = useLocation().search.substring(1);
+	const queryObj = JSON.parse(
+		'{"' +
+			decodeURI(query)
+				.replace(/"/g, '\\"')
+				.replace(/&/g, '","')
+				.replace(/=/g, '":"') +
+			'"}'
+	);
+	let seats = queryObj.n;
+	delete queryObj.n;
 	let flag = userType === UserType.admin;
 
 	const [flights, setFlights] = useState([]);
@@ -67,6 +76,7 @@ function Flights({ userType }) {
 					setChecks={setChecks}
 					getData={getData}
 					setClicked={setClicked}
+					noOfSeats={seats}
 				/>
 			</div>
 		</div>

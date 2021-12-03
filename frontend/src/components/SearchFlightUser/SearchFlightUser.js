@@ -17,7 +17,7 @@ import {
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import { useNavigate } from 'react-router';
 
-export default function SearchFlightUser({ getData }) {
+export default function SearchFlightUser({ getData, detailsOnly }) {
 	const [departureTime, setDepartureTime] = React.useState(null);
 	const [arrivalTime, setArrivalTime] = React.useState(null);
 	const [departureTerminal, setDepartureTerminal] = React.useState();
@@ -51,7 +51,7 @@ export default function SearchFlightUser({ getData }) {
 			setDepartureTerminal(null);
 			setArrivalTime(null);
 			setCabin(null);
-			navigate('/flights?' + searchQuery);
+			navigate(`/flights?n=${adults + children * 0.8}&` + searchQuery);
 		} catch (err) {
 			console.log(err);
 		}
@@ -167,14 +167,17 @@ export default function SearchFlightUser({ getData }) {
 							></NumberCounter>
 						</Grid>
 					</Grid>
-					<Button
-						type="submit"
-						variant="contained"
-						fullWidth="true"
-						startIcon={<KeyboardArrowDownIcon />}
-					>
-						Search flights
-					</Button>
+					<br />
+					{!detailsOnly && (
+						<Button
+							type="submit"
+							variant="contained"
+							fullWidth="true"
+							startIcon={<KeyboardArrowDownIcon />}
+						>
+							Search flights
+						</Button>
+					)}
 				</DialogContent>
 			</Box>
 		</div>
