@@ -54,6 +54,7 @@ export default function NavBar({ userType }) {
 						Home
 					</Button>
 				</Typography>
+				
 				<Button
 					color="inherit"
 					name="viewFlights"
@@ -72,6 +73,15 @@ export default function NavBar({ userType }) {
 						View Reserved Flights
 					</Button>
 				)}
+
+				{!flag && !isAdmin &&<Button
+					color="inherit"
+					name="viewFlights"
+					href="/profile"
+					sx={{ textTransform: 'none' }}
+				> 
+				Profile
+				</Button>}
 				<Button
 					name="log"
 					startIcon={flag ? <LoginIcon /> : <LogoutIcon />}
