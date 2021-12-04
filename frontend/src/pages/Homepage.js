@@ -18,6 +18,7 @@ const styles = {
 
 export default function Homepage({ userType }) {
 	let flag = userType === UserType.guest;
+	let isAdmin = userType === UserType.admin;
 	let navigate = useNavigate();
 	function handleClick(event) {
 		if (event.target.name === 'log') {
@@ -57,6 +58,14 @@ export default function Homepage({ userType }) {
 					variant="middle"
 					sx={{ height: '50px' }}
 				/>
+				{!flag && !isAdmin &&<Button
+					color="inherit"
+					name="viewFlights"
+					href="/profile"
+					sx={{ textTransform: 'none' }}
+				> 
+				Profile
+				</Button>}
 				<Button
 					name="log"
 					color="primary"

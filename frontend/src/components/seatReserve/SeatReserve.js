@@ -78,7 +78,7 @@ export default function SeatReserve(props) {
 		}
 	};
 
-	React.useEffect(() => drawSeats(), [clicked]);
+	React.useEffect(() => drawSeats(), []);
 
 	const handleClose = () => {
 		setOpen(false);
