@@ -1,5 +1,5 @@
 Seif ELBerkawy:
-    Backend: 14, 15, 29 + authentication and diffrentiation between guest and different users
+    Backend: 14, 15, 29 + authentication and diffrentiation between guest and different users.
     Frontend: 11, 12, 13, 14, 15, 16, 29
 
 Abdallah Mohamed:
@@ -8,7 +8,7 @@ Abdallah Mohamed:
 
 Mohamed Kamal:
     Backend: 11, 12, 13, 16 
-    Frontend: 11, 12, 13, 14, 15, 16, 29 + validations
+    Frontend: 11, 12, 13, 14, 15, 16, 29 + validations.
 
 Rafik yasser:
     Backend: requirement id 26, 27, 27.1, 29, 29.1
