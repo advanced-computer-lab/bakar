@@ -15,11 +15,12 @@ import {
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import axios from '../../api';
-import CheckOut from '../CheckOut/CheckOut';
+import SeatReserve from '../seatReserve/SeatReserve';
 
 const Transition = React.forwardRef(function Transition(props, ref) {
 	return <Slide direction="up" ref={ref} {...props} />;
 });
+
 
 export default function FlightDetails({
 	open,
@@ -31,9 +32,16 @@ export default function FlightDetails({
 	setDepartureFlight,
 	returnFlight,
 	setReturnFlight,
+	cabin,
+	seats,
+	priceFactor,
 }) {
 	const [data, setData] = React.useState({});
-	const [openCheck, setOpenCheck] = React.useState();
+	const [openSeats, setOpenSeats] = React.useState();
+	const [ticket, setTicket] = React.useState();
+	const [departureSeats, setDepartureSeats] = React.useState([]);
+	const [returnSeats, setReturnSeats] = React.useState([]);
+
 	const fetchData = async () => {
 		try {
 			setData((await axios.get(`/flights/${clicked}`)).data);
@@ -59,6 +67,14 @@ export default function FlightDetails({
 				Object.entries(search).filter(([_, v]) => v != null)
 			);
 			let searchQuery = new URLSearchParams(requested).toString();
+			setTicket({
+				...ticket,
+				cabin: cabin,
+				departureFlightNo: data.flightNo,
+				priceDeparture:
+					cabin === 'Economy' ? data.priceEcon * seats : data.priceBus * seats,
+			});
+			setOpenSeats(true);
 			await getData(searchQuery);
 			setClicked(null);
 		} catch (err) {
@@ -69,8 +85,18 @@ export default function FlightDetails({
 	const handleReserve = async () => {
 		try {
 			setReturnFlight(data);
+			setOpenSeats(true);
+			setTicket({
+				...ticket,
+				cabin: cabin,
+				returnFlightNo: data.flightNo,
+				priceReturn:
+					cabin === 'Economy'
+						? data.priceEcon * priceFactor
+						: data.priceBus * priceFactor,
+				seatsDeparture: departureSeats,
+			});
 			// setClicked(null);
-			setOpenCheck(true);
 		} catch (err) {
 			console.log(err);
 		}
@@ -181,12 +207,21 @@ export default function FlightDetails({
 								{departureFlight == null ? 'Select' : 'Reserve'}
 							</Button>
 						)}
-						{returnFlight != null && (
-							<CheckOut
-								departureFlight={departureFlight}
-								returnFlight={returnFlight}
-								openCheck={openCheck}
-								setOpenCheck={setOpenCheck}
+						{openSeats && (
+							<SeatReserve
+								seats={
+									ticket.cabin === 'Economy'
+										? data.seatsEconView
+										: data.seatsBusView
+								}
+								number={seats}
+								openSeats={openSeats}
+								setOpenSeats={setOpenSeats}
+								setSeats={
+									departureSeats === [] ? setDepartureSeats : setReturnSeats
+								}
+								ticket={ticket}
+								setTicket={setTicket}
 							/>
 						)}
 					</Grid>

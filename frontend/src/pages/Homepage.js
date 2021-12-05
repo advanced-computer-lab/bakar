@@ -18,6 +18,7 @@ const styles = {
 
 export default function Homepage({ userType }) {
 	let flag = userType === UserType.guest;
+	let isAdmin = userType === UserType.admin;
 	let navigate = useNavigate();
 	function handleClick(event) {
 		if (event.target.name === 'log') {
@@ -52,6 +53,35 @@ export default function Homepage({ userType }) {
 				<Button color="inherit" href="/flights" sx={{ textTransform: 'none' }}>
 					View Available Flights
 				</Button>
+				<Divider
+					orientation="vertical"
+					variant="middle"
+					sx={{ height: '50px' }}
+				/>
+				{!flag && !isAdmin && (
+					<Button
+						color="inherit"
+						href="/tickets"
+						onclick={handleClick}
+						sx={{ textTransform: 'none' }}
+					>
+						View Reserved Flights
+					</Button>
+				)}
+				<Divider
+					orientation="vertical"
+					variant="middle"
+					sx={{ height: '50px' }}
+				/>
+				{!flag && !isAdmin && (
+					<Button
+						color="inherit"
+						href="/profile"
+						sx={{ textTransform: 'none' }}
+					>
+						Profile
+					</Button>
+				)}
 				<Divider
 					orientation="vertical"
 					variant="middle"

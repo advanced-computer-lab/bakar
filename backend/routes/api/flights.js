@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const Flight = require('../../models/Flight');
-const jwt = require("jsonwebtoken");
+const jwt = require('jsonwebtoken');
 
 router.post('/', async (req, res) => {
 	if (req.body.departureTime < req.body.arrivalTime) {
@@ -11,6 +11,8 @@ router.post('/', async (req, res) => {
 					...req.body,
 					availableEcon: req.body.seatsEcon,
 					availableBus: req.body.seatsBus,
+					seatsEconView: Array(parseInt(req.body.seatsEcon)).fill('Free'),
+					seatsBusView: Array(parseInt(req.body.seatsBus)).fill('Free'),
 				});
 				try {
 					await newFlight.save();
@@ -38,7 +40,7 @@ router.get('/', async (req, res) => {
 			availableBus: { $gte: req.query.availableBus || 0 },
 			availableEcon: { $gte: req.query.availableEcon || 0 },
 		};
-		
+
 		console.log(myQuery);
 		const result = await Flight.find(myQuery).exec();
 		console.log('result: ' + result);
@@ -54,7 +56,6 @@ router.get('/:flightNo', async (req, res) => {
 			flightNo: req.params.flightNo,
 		}).exec();
 		res.status(200).send(result);
-		console.log('The flight is  successfully !');
 	} catch (err) {
 		console.log(err);
 	}
@@ -62,13 +63,15 @@ router.get('/:flightNo', async (req, res) => {
 
 router.put('/:flightNo', async (req, res) => {
 	try {
-		if(req.body.arrivalTime > req.body.departureTime){
-			await Flight.updateOne({ flightNo: req.params.flightNo }, req.body).exec();
-			res.status(200).send("flight updated ");
-			console.log("The flight is Updated successfully !");
-		  }
-		else{
-			res.status(400).send("Invalid departureTime or arrivalTime") 
+		if (req.body.arrivalTime > req.body.departureTime) {
+			await Flight.updateOne(
+				{ flightNo: req.params.flightNo },
+				req.body
+			).exec();
+			res.status(200).send('flight updated ');
+			console.log('The flight is Updated successfully !');
+		} else {
+			res.status(400).send('Invalid departureTime or arrivalTime');
 		}
 	} catch (err) {
 		console.log(err);
@@ -92,7 +95,6 @@ router.get('/:flightNo', async (req, res) => {
 		const dbResult = await Flight.find({
 			flightNo: req.params.flightNo,
 		}).exec();
-		console.log(dbResult);
 		res.send(dbResult).status(200);
 	} catch (err) {
 		console.log(err);
@@ -101,6 +103,7 @@ router.get('/:flightNo', async (req, res) => {
 });
 
 router.post('/delete', async (req, res) => {
+	const flights = req.body.deleteQuery;
 	try {
 		const dbResult = await Flight.deleteMany(flights).exec();
 		res.status(200).send(dbResult);
@@ -110,25 +113,22 @@ router.post('/delete', async (req, res) => {
 	}
 });
 
-router.get('/seats/:flightNo',async (req,res) =>{
-	try{
-			const result = await Flight.findOne({
-				flightNo: req.params.flightNo,
-			}).exec();
-			if(req.body.cabin == "Economy"){
-				res.status(200).send(result.seatsEcon);
-			}
-			else if(req.body.cabin == "Business"){
-				res.status(200).send(result.seatsBus);
-			}
-			else {
-				res.status(500).send("Error")
-			}
+router.get('/seats/:flightNo', async (req, res) => {
+	try {
+		const result = await Flight.findOne({
+			flightNo: req.params.flightNo,
+		}).exec();
+		if (req.body.cabin == 'Economy') {
+			res.status(200).send(result.seatsEcon);
+		} else if (req.body.cabin == 'Business') {
+			res.status(200).send(result.seatsBus);
+		} else {
+			res.status(500).send('Error');
+		}
 	} catch (err) {
 		console.log(err);
 		res.status(500).send('Error deleting request');
 	}
-
-})
+});
 
 module.exports = router;

@@ -30,17 +30,17 @@ export default function SignInSide({ setUserType }) {
 		});
 		localStorage.setItem('token', response.data);
 		const token = localStorage.getItem('token');
-		
-			const test = JSON.parse(atob(token.split('.')[1]));
-			console.log(test);
-			if(test.isAdmin){
-				setUserType(UserType.admin);
-			} else{
+
+		const test = JSON.parse(atob(token.split('.')[1]));
+		console.log(test);
+		if (test.isAdmin) {
+			setUserType(UserType.admin);
+		} else {
 			setUserType(UserType.user);
-			}
+		}
 
 		if (response.status === 200) {
-			navigate('/flights?n=1');
+			navigate('/flights');
 		} else {
 			navigate('/');
 		}

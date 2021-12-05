@@ -53,13 +53,13 @@ function FlightRow(props) {
 				align="center"
 				onClick={() => props.setClicked(props.flightNo)}
 			>
-				{props.priceEcon * props.noOfSeats}
+				{props.priceEcon * props.priceFactor}
 			</TableCell>
 			<TableCell
 				align="center"
 				onClick={() => props.setClicked(props.flightNo)}
 			>
-				{props.priceBus * props.noOfSeats}
+				{props.priceBus * props.priceFactor}
 			</TableCell>
 			<TableCell>{!flag && <EditFlight flight={props} />}</TableCell>
 			<TableCell>{!flag && <Checkbox onChange={handleChange} />}</TableCell>

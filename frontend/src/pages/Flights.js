@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import NavBar from '../components/NavBar/NavBar';
 import { Grid } from '@mui/material';
 import FlightTable from '../components/FlightTable/FlightTable';
-import MyFlight from '../components/MyFlight/MyFlightTable';
 import CreateFlight from '../components/CreateFlight/CreateFlight';
 import DeleteFlight from '../components/DeleteFlight/DeleteFlight';
 import SearchFlight from '../components/SearchFlight/SearchFlight';
@@ -13,16 +12,23 @@ import FlightDetails from '../components/FlightDetails/FlightDetails';
 
 function Flights({ userType }) {
 	let query = useLocation().search.substring(1);
-	const queryObj = JSON.parse(
-		'{"' +
-			decodeURI(query)
-				.replace(/"/g, '\\"')
-				.replace(/&/g, '","')
-				.replace(/=/g, '":"') +
-			'"}'
-	);
-	let seats = queryObj.n;
-	delete queryObj.n;
+	let seats = 1;
+	let priceFactor = 1;
+	let queryObj = { cabin: 'Economy' };
+	if (query !== '') {
+		queryObj = JSON.parse(
+			'{"' +
+				decodeURI(query)
+					.replace(/"/g, '\\"')
+					.replace(/&/g, '","')
+					.replace(/=/g, '":"') +
+				'"}'
+		);
+		seats = queryObj.nA + queryObj.nC;
+		priceFactor = parseInt(queryObj.nA) + parseInt(queryObj.nC) * 0.8;
+		delete queryObj.nA;
+		delete queryObj.nC;
+	}
 	let flag = userType === UserType.admin;
 
 	const [flights, setFlights] = useState([]);
@@ -32,11 +38,13 @@ function Flights({ userType }) {
 	const [returnFlight, setReturnFlight] = useState(null);
 
 	const getData = async (queryString) => {
-		const res = await axios.get('/flights?' + queryString, {
+		let res;
+		res = await axios.get('/flights?' + queryString, {
 			headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
 		});
 		let flightData = res['data'];
 		setFlights(flightData);
+		console.log(flightData);
 		let currentChecks = {};
 		flightData.forEach((element) => {
 			currentChecks[element.flightNo] = false;
@@ -72,6 +80,9 @@ function Flights({ userType }) {
 					setDepartureFlight={setDepartureFlight}
 					returnFlight={returnFlight}
 					setReturnFlight={setReturnFlight}
+					cabin={queryObj.cabin}
+					seats={seats}
+					priceFactor={priceFactor}
 					getData={getData}
 				></FlightDetails>
 				<h2>
@@ -84,7 +95,7 @@ function Flights({ userType }) {
 					setChecks={setChecks}
 					getData={getData}
 					setClicked={setClicked}
-					noOfSeats={seats}
+					priceFactor={priceFactor}
 				/>
 			</div>
 		</div>

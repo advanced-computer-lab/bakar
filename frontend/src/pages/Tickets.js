@@ -38,6 +38,7 @@ function Tickets({ userType }) {
 					clicked={clicked}
 					setClicked={setClicked}
 					getData={getData}
+					select = {true}
 				></FlightDetails>
 				<MyFlightTable
 					userType={userType}
