@@ -16,13 +16,14 @@ import {
 } from '@mui/material';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import { useNavigate } from 'react-router';
+import { ValidatorForm, TextValidator } from 'react-material-ui-form-validator';
 
 export default function SearchFlightUser({ getData, detailsOnly }) {
 	const [departureTime, setDepartureTime] = React.useState(null);
 	const [arrivalTime, setArrivalTime] = React.useState(null);
 	const [departureTerminal, setDepartureTerminal] = React.useState();
 	const [arrivalTerminal, setArrivalTerminal] = React.useState();
-	const [cabin, setCabin] = React.useState();
+	const [cabin, setCabin] = React.useState('Economy');
 	const [adults, setAdults] = React.useState(1);
 	const [children, setChildren] = React.useState(0);
 
@@ -58,125 +59,129 @@ export default function SearchFlightUser({ getData, detailsOnly }) {
 	return (
 		<div>
 			<Box
-				component="form"
-				noValidate
 				onSubmit={handleSubmit}
 				sx={{
 					mt: 1,
 					backgroundColor: 'rgb(254, 239, 221, 0.7)',
 				}}
 			>
-				<DialogTitle>Book a flight</DialogTitle>
-				<DialogContent>
-					<DialogContentText>Enter flight data</DialogContentText>
-					<Grid
-						container
-						direction="row"
-						columnSpacing={{ xs: 1, sm: 2, md: 3 }}
-					>
-						<Grid item>
-							<Grid
-								container
-								direction="row"
-								rowSpacing={2}
-								columnSpacing={{ xs: 1, sm: 2, md: 3 }}
-							>
-								<Grid item xs>
-									<DateTimePicker
-										renderInput={(props) => (
-											<TextField {...props} margin="dense" fullWidth />
-										)}
-										label="Departure Time"
-										value={departureTime}
-										clearable
-										onChange={(newValue) => {
-											setDepartureTime(newValue);
-										}}
-									/>
-								</Grid>{' '}
-								<Grid item xs>
-									<DateTimePicker
-										renderInput={(props) => (
-											<TextField {...props} margin="dense" fullWidth />
-										)}
-										label="Arrival Time"
-										value={arrivalTime}
-										clearable
-										onChange={(newValue) => {
-											setArrivalTime(newValue);
-										}}
-									/>
-								</Grid>
-							</Grid>
-							<TextField
-								margin="dense"
-								name="departureTerminal"
-								id="departureTerminal"
-								label="Departure Terminal"
-								type="text"
-								onChange={(event) => {
-									setDepartureTerminal(event.target.value);
-								}}
-								fullWidth
-								variant="outlined"
-							/>
-							<TextField
-								margin="dense"
-								name="arrivalTerminal"
-								id="arrivalTerminal"
-								label="Arrival Terminal"
-								type="text"
-								onChange={(event) => {
-									setArrivalTerminal(event.target.value);
-								}}
-								fullWidth
-								variant="outlined"
-							/>
-						</Grid>
-						<Grid item>
-							<FormLabel component="legend">Cabin</FormLabel>
-							<RadioGroup
-								row
-								name="row-radio-buttons-group"
-								onChange={(event) => {
-									setCabin(event.target.value);
-								}}
-							>
-								<FormControlLabel
-									value="availableEcon"
-									control={<Radio />}
-									label="Economy"
-								/>
-								<FormControlLabel
-									value="availableBus"
-									control={<Radio />}
-									label="Business"
-								/>
-							</RadioGroup>
-							<label>Adults</label>{' '}
-							<NumberCounter
-								value={adults}
-								setValue={setAdults}
-							></NumberCounter>
-							<label>Children</label>{' '}
-							<NumberCounter
-								value={children}
-								setValue={setChildren}
-							></NumberCounter>
-						</Grid>
-					</Grid>
-					<br />
-					{!detailsOnly && (
-						<Button
-							type="submit"
-							variant="contained"
-							fullWidth
-							startIcon={<KeyboardArrowDownIcon />}
+				<ValidatorForm
+					onSubmit={handleSubmit}
+					onError={(errors) => console.log(errors)}
+				>
+					<DialogTitle>Book a flight</DialogTitle>
+					<DialogContent>
+						<DialogContentText>Enter flight data</DialogContentText>
+						<Grid
+							container
+							direction="row"
+							columnSpacing={{ xs: 1, sm: 2, md: 3 }}
 						>
-							Search flights
-						</Button>
-					)}
-				</DialogContent>
+							<Grid item>
+								<Grid
+									container
+									direction="row"
+									rowSpacing={2}
+									columnSpacing={{ xs: 1, sm: 2, md: 3 }}
+								>
+									<Grid item xs>
+										<DateTimePicker
+											renderInput={(props) => (
+												<TextField {...props} margin="dense" fullWidth />
+											)}
+											label="Departure Time"
+											value={departureTime}
+											clearable
+											onChange={(newValue) => {
+												setDepartureTime(newValue);
+											}}
+										/>
+									</Grid>{' '}
+									<Grid item xs>
+										<DateTimePicker
+											renderInput={(props) => (
+												<TextField {...props} margin="dense" fullWidth />
+											)}
+											label="Arrival Time"
+											value={arrivalTime}
+											clearable
+											onChange={(newValue) => {
+												setArrivalTime(newValue);
+											}}
+										/>
+									</Grid>
+								</Grid>
+								<TextField
+									margin="dense"
+									name="departureTerminal"
+									id="departureTerminal"
+									label="Departure Terminal"
+									type="text"
+									onChange={(event) => {
+										setDepartureTerminal(event.target.value);
+									}}
+									fullWidth
+									variant="outlined"
+								/>
+								<TextField
+									margin="dense"
+									name="arrivalTerminal"
+									id="arrivalTerminal"
+									label="Arrival Terminal"
+									type="text"
+									onChange={(event) => {
+										setArrivalTerminal(event.target.value);
+									}}
+									fullWidth
+									variant="outlined"
+								/>
+							</Grid>
+							<Grid item>
+								<FormLabel component="legend">Cabin</FormLabel>
+								<RadioGroup
+									row
+									name="row-radio-buttons-group"
+									onChange={(event) => {
+										setCabin(event.target.value);
+									}}
+									defaultValue="availableEcon"
+								>
+									<FormControlLabel
+										value="availableEcon"
+										control={<Radio />}
+										label="Economy"
+									/>
+									<FormControlLabel
+										value="availableBus"
+										control={<Radio />}
+										label="Business"
+									/>
+								</RadioGroup>
+								<label>Adults</label>{' '}
+								<NumberCounter
+									value={adults}
+									setValue={setAdults}
+								></NumberCounter>
+								<label>Children</label>{' '}
+								<NumberCounter
+									value={children}
+									setValue={setChildren}
+								></NumberCounter>
+							</Grid>
+						</Grid>
+						<br />
+						{!detailsOnly && (
+							<Button
+								type="submit"
+								variant="contained"
+								fullWidth
+								startIcon={<KeyboardArrowDownIcon />}
+							>
+								Search flights
+							</Button>
+						)}
+					</DialogContent>
+				</ValidatorForm>
 			</Box>
 		</div>
 	);

@@ -12,7 +12,7 @@ const styles = {
 	backgroundRepeat: 'no-repeat',
 	backgroundColor: (t) =>
 		t.palette.mode === 'light' ? t.palette.grey[50] : t.palette.grey[900],
-		backgroundSize: 'cover',
+	backgroundSize: 'cover',
 	height: '100vh',
 };
 
@@ -58,14 +58,35 @@ export default function Homepage({ userType }) {
 					variant="middle"
 					sx={{ height: '50px' }}
 				/>
-				{!flag && !isAdmin &&<Button
-					color="inherit"
-					name="viewFlights"
-					href="/profile"
-					sx={{ textTransform: 'none' }}
-				> 
-				Profile
-				</Button>}
+				{!flag && !isAdmin && (
+					<Button
+						color="inherit"
+						href="/tickets"
+						onclick={handleClick}
+						sx={{ textTransform: 'none' }}
+					>
+						View Reserved Flights
+					</Button>
+				)}
+				<Divider
+					orientation="vertical"
+					variant="middle"
+					sx={{ height: '50px' }}
+				/>
+				{!flag && !isAdmin && (
+					<Button
+						color="inherit"
+						href="/profile"
+						sx={{ textTransform: 'none' }}
+					>
+						Profile
+					</Button>
+				)}
+				<Divider
+					orientation="vertical"
+					variant="middle"
+					sx={{ height: '50px' }}
+				/>
 				<Button
 					name="log"
 					color="primary"

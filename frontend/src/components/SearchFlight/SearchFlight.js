@@ -6,9 +6,9 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
-import Box from '@mui/material/Box';
 import SearchIcon from '@mui/icons-material/Search';
 import { DateTimePicker } from '@mui/lab';
+import { ValidatorForm, TextValidator } from 'react-material-ui-form-validator';
 
 export default function SearchFlight({ getData }) {
 	const [open, setOpen] = React.useState(false);
@@ -23,6 +23,11 @@ export default function SearchFlight({ getData }) {
 	const [seatsBus, setSeatsBus] = React.useState();
 	const [priceEcon, setPriceEcon] = React.useState();
 	const [priceBus, setPriceBus] = React.useState();
+	const [noBagsEcon, setNoBagsEcon] = React.useState();
+	const [noBagsBus, setNoBagsBus] = React.useState();
+	const [weightEcon, setWeightEcon] = React.useState();
+	const [weightBus, setWeightBus] = React.useState();
+
 	const handleClose = () => {
 		setOpen(false);
 	};
@@ -46,6 +51,10 @@ export default function SearchFlight({ getData }) {
 				arrivalTerminal: arrivalTerminal,
 				priceEcon: priceEcon,
 				priceBus: priceBus,
+				noBagsEcon: noBagsEcon,
+				noBagsBus: noBagsBus,
+				weightEcon: weightEcon,
+				weightBus: weightBus,
 			};
 			let requested = Object.fromEntries(
 				Object.entries(data).filter(([_, v]) => v != null)
@@ -54,6 +63,21 @@ export default function SearchFlight({ getData }) {
 			let searchQuery = searchParams.toString();
 			setOpen(false);
 			getData(searchQuery);
+			setArrivalLocation(null);
+			setArrivalTerminal(null);
+			setArrivalTime(null);
+			setDepartureLocation(null);
+			setDepartureTerminal(null);
+			setDepartureTime(null);
+			setFlightNo(null);
+			setNoBagsBus(null);
+			setNoBagsEcon(null);
+			setPriceBus(null);
+			setPriceEcon(null);
+			setSeatsBus(null);
+			setSeatsEcon(null);
+			setWeightBus(null);
+			setWeightEcon(null);
 		} catch (err) {
 			console.log(err);
 		}
@@ -69,23 +93,26 @@ export default function SearchFlight({ getData }) {
 				Search
 			</Button>
 			<Dialog open={open} onClose={handleClose}>
-				<Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 1 }}>
+				<ValidatorForm
+					onSubmit={handleSubmit}
+					onError={(errors) => console.log(errors)}
+				>
 					<DialogTitle>Search</DialogTitle>
 					<DialogContent>
 						<DialogContentText>Enter flight data</DialogContentText>
-						<TextField
+						<TextValidator
 							autoFocus
 							margin="dense"
 							name="flightNo"
 							id="flightNo"
 							label="Flight Number"
-							value={flightNo}
 							type="text"
+							fullWidth
+							variant="outlined"
+							value={flightNo}
 							onChange={(event) => {
 								setFlightNo(event.target.value);
 							}}
-							fullWidth
-							variant="outlined"
 						/>
 						<DateTimePicker
 							renderInput={(props) => (
@@ -93,9 +120,10 @@ export default function SearchFlight({ getData }) {
 							)}
 							label="Departure Time"
 							value={departureTime}
-							clearable
 							onChange={(newValue) => {
-								setDepartureTime(newValue);
+								setDepartureTime(
+									new Date(new Date(newValue.setSeconds(0)).setMilliseconds(0))
+								);
 							}}
 						/>
 						<DateTimePicker
@@ -104,25 +132,26 @@ export default function SearchFlight({ getData }) {
 							)}
 							label="Arrival Time"
 							value={arrivalTime}
-							clearable
 							onChange={(newValue) => {
-								setArrivalTime(newValue);
+								setArrivalTime(
+									new Date(new Date(newValue.setSeconds(0)).setMilliseconds(0))
+								);
 							}}
 						/>
-						<TextField
+						<TextValidator
 							margin="dense"
 							name="departureLocation"
 							id="departureLocation"
 							label="Departure Location"
-							value={departureLocation}
 							type="text"
+							value={departureLocation}
 							onChange={(event) => {
 								setDepartureLocation(event.target.value);
 							}}
 							fullWidth
 							variant="outlined"
 						/>
-						<TextField
+						<TextValidator
 							margin="dense"
 							name="departureTerminal"
 							id="departureTerminal"
@@ -135,83 +164,155 @@ export default function SearchFlight({ getData }) {
 							fullWidth
 							variant="outlined"
 						/>
-						<TextField
+						<TextValidator
 							margin="dense"
 							name="arrivalLocation"
 							id="arrivalLocation"
 							label="Arrival Location"
-							value={arrivalLocation}
 							type="text"
+							value={arrivalLocation}
 							onChange={(event) => {
 								setArrivalLocation(event.target.value);
 							}}
 							fullWidth
 							variant="outlined"
 						/>
-						<TextField
+						<TextValidator
 							margin="dense"
 							name="arrivalTerminal"
 							id="arrivalTerminal"
 							label="Arrival Terminal"
-							value={arrivalTerminal}
 							type="text"
+							value={arrivalTerminal}
 							onChange={(event) => {
 								setArrivalTerminal(event.target.value);
 							}}
 							fullWidth
 							variant="outlined"
 						/>
-						<TextField
+						<TextValidator
 							margin="dense"
 							name="seatsEcon"
 							id="seatsEcon"
 							label="Number of Economy Seats"
-							value={seatsEcon}
 							type="number"
+							value={seatsEcon}
 							onChange={(event) => {
 								setSeatsEcon(event.target.value);
 							}}
 							fullWidth
 							variant="outlined"
+							validators={['isNumber']}
+							errorMessages={['must be a number']}
 						/>
-						<TextField
+						<TextValidator
 							margin="dense"
 							name="seatsBus"
 							id="seatsBus"
 							label="Number of Business Seats"
-							value={seatsBus}
 							type="number"
+							value={seatsBus}
 							onChange={(event) => {
 								setSeatsBus(event.target.value);
 							}}
 							fullWidth
 							variant="outlined"
+							validators={['isNumber']}
+							errorMessages={['must be a number']}
 						/>
-						<TextField
+						<TextValidator
 							margin="dense"
 							name="priceEcon"
 							id="priceEcon"
 							label="Price of Economy Seats"
-							value={priceEcon}
 							type="number"
+							value={priceEcon}
 							onChange={(event) => {
 								setPriceEcon(event.target.value);
 							}}
 							fullWidth
 							variant="outlined"
+							validators={['isNumber']}
+							errorMessages={['must be a number']}
 						/>
-						<TextField
+						<TextValidator
 							margin="dense"
 							name="priceBus"
 							id="priceBus"
 							label="Price of Business Seats"
-							value={priceBus}
 							type="number"
+							value={priceBus}
 							onChange={(event) => {
 								setPriceBus(event.target.value);
 							}}
 							fullWidth
 							variant="outlined"
+							validators={['isNumber']}
+							errorMessages={['must be a number']}
+						/>
+						<TextValidator
+							autoFocus
+							margin="dense"
+							name="noBagsEcon"
+							id="noBagsEcon"
+							label="Economy Bags"
+							type="tel"
+							value={noBagsEcon}
+							onChange={(event) => {
+								setNoBagsEcon(event.target.value);
+							}}
+							fullWidth
+							variant="outlined"
+							validators={['isNumber']}
+							errorMessages={['must be a number']}
+						/>
+						<TextValidator
+							autoFocus
+							margin="dense"
+							name="noBagsBus"
+							id="noBagsBus"
+							label="Business Bags"
+							type="text"
+							value={noBagsBus}
+							onChange={(event) => {
+								setNoBagsBus(event.target.value);
+							}}
+							fullWidth
+							variant="outlined"
+							validators={['isNumber']}
+							errorMessages={['must be a number']}
+						/>
+						<TextValidator
+							autoFocus
+							margin="dense"
+							name="weightEcon"
+							id="weightEcon"
+							label="Economy Bag Weight"
+							type="tel"
+							value={weightEcon}
+							onChange={(event) => {
+								setWeightEcon(event.target.value);
+							}}
+							fullWidth
+							variant="outlined"
+							validators={['isNumber']}
+							errorMessages={['must be a number']}
+						/>
+						<TextValidator
+							autoFocus
+							margin="dense"
+							name="weightBus"
+							id="weightBus"
+							label="Business Bag Weight"
+							type="text"
+							value={weightBus}
+							onChange={(event) => {
+								setWeightBus(event.target.value);
+							}}
+							fullWidth
+							variant="outlined"
+							validators={['isNumber']}
+							errorMessages={['must be a number']}
 						/>
 					</DialogContent>
 
@@ -223,7 +324,7 @@ export default function SearchFlight({ getData }) {
 							Submit
 						</Button>
 					</DialogActions>
-				</Box>
+				</ValidatorForm>
 			</Dialog>
 		</div>
 	);

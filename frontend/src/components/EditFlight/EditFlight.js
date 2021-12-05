@@ -8,9 +8,9 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import axios from '../../api';
-import Box from '@mui/material/Box';
 import EditIcon from '@mui/icons-material/Edit';
 import { DateTimePicker } from '@mui/lab';
+import { ValidatorForm, TextValidator } from 'react-material-ui-form-validator';
 
 export default function EditFlight({ flight }) {
 	const [open, setOpen] = React.useState(false);
@@ -63,6 +63,10 @@ export default function EditFlight({ flight }) {
 				arrivalTerminal: arrivalTerminal,
 				priceEcon: priceEcon,
 				priceBus: priceBus,
+				noBagsEcon: noBagsEcon,
+				noBagsBus: noBagsBus,
+				weightEcon: weightEcon,
+				weightBus: weightBus,
 			};
 			await axios.put('/flights/' + flight.flightNo, data, {
 				headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
@@ -81,23 +85,28 @@ export default function EditFlight({ flight }) {
 				<EditIcon />{' '}
 			</IconButton>
 			<Dialog open={open} onClose={handleClose}>
-				<Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 1 }}>
+				<ValidatorForm
+					onSubmit={handleSubmit}
+					onError={(errors) => console.log(errors)}
+				>
 					<DialogTitle>Edit</DialogTitle>
 					<DialogContent>
 						<DialogContentText>Enter flight data</DialogContentText>
-						<TextField
+						<TextValidator
 							autoFocus
 							margin="dense"
 							name="flightNo"
 							id="flightNo"
 							label="Flight Number"
 							type="text"
+							fullWidth
+							variant="outlined"
+							validators={['required']}
+							errorMessages={['this field is required']}
 							value={flightNo}
 							onChange={(event) => {
 								setFlightNo(event.target.value);
 							}}
-							fullWidth
-							variant="outlined"
 						/>
 						<DateTimePicker
 							renderInput={(props) => (
@@ -123,7 +132,7 @@ export default function EditFlight({ flight }) {
 								);
 							}}
 						/>
-						<TextField
+						<TextValidator
 							margin="dense"
 							name="departureLocation"
 							id="departureLocation"
@@ -135,8 +144,10 @@ export default function EditFlight({ flight }) {
 							}}
 							fullWidth
 							variant="outlined"
+							validators={['required']}
+							errorMessages={['this field is required']}
 						/>
-						<TextField
+						<TextValidator
 							margin="dense"
 							name="departureTerminal"
 							id="departureTerminal"
@@ -148,8 +159,10 @@ export default function EditFlight({ flight }) {
 							}}
 							fullWidth
 							variant="outlined"
+							validators={['required']}
+							errorMessages={['this field is required']}
 						/>
-						<TextField
+						<TextValidator
 							margin="dense"
 							name="arrivalLocation"
 							id="arrivalLocation"
@@ -161,8 +174,10 @@ export default function EditFlight({ flight }) {
 							}}
 							fullWidth
 							variant="outlined"
+							validators={['required']}
+							errorMessages={['this field is required']}
 						/>
-						<TextField
+						<TextValidator
 							margin="dense"
 							name="arrivalTerminal"
 							id="arrivalTerminal"
@@ -174,8 +189,10 @@ export default function EditFlight({ flight }) {
 							}}
 							fullWidth
 							variant="outlined"
+							validators={['required']}
+							errorMessages={['this field is required']}
 						/>
-						<TextField
+						<TextValidator
 							margin="dense"
 							name="seatsEcon"
 							id="seatsEcon"
@@ -187,8 +204,10 @@ export default function EditFlight({ flight }) {
 							}}
 							fullWidth
 							variant="outlined"
+							validators={['required', 'isNumber']}
+							errorMessages={['this field is required', 'must be a number']}
 						/>
-						<TextField
+						<TextValidator
 							margin="dense"
 							name="seatsBus"
 							id="seatsBus"
@@ -200,8 +219,10 @@ export default function EditFlight({ flight }) {
 							}}
 							fullWidth
 							variant="outlined"
+							validators={['required', 'isNumber']}
+							errorMessages={['this field is required', 'must be a number']}
 						/>
-						<TextField
+						<TextValidator
 							margin="dense"
 							name="priceEcon"
 							id="priceEcon"
@@ -213,8 +234,10 @@ export default function EditFlight({ flight }) {
 							}}
 							fullWidth
 							variant="outlined"
+							validators={['required', 'isNumber']}
+							errorMessages={['this field is required', 'must be a number']}
 						/>
-						<TextField
+						<TextValidator
 							margin="dense"
 							name="priceBus"
 							id="priceBus"
@@ -226,8 +249,10 @@ export default function EditFlight({ flight }) {
 							}}
 							fullWidth
 							variant="outlined"
+							validators={['required', 'isNumber']}
+							errorMessages={['this field is required', 'must be a number']}
 						/>
-						<TextField
+						<TextValidator
 							autoFocus
 							margin="dense"
 							name="noBagsEcon"
@@ -240,8 +265,10 @@ export default function EditFlight({ flight }) {
 							}}
 							fullWidth
 							variant="outlined"
+							validators={['required', 'isNumber']}
+							errorMessages={['this field is required', 'must be a number']}
 						/>
-						<TextField
+						<TextValidator
 							autoFocus
 							margin="dense"
 							name="noBagsBus"
@@ -254,8 +281,10 @@ export default function EditFlight({ flight }) {
 							}}
 							fullWidth
 							variant="outlined"
+							validators={['required', 'isNumber']}
+							errorMessages={['this field is required', 'must be a number']}
 						/>
-						<TextField
+						<TextValidator
 							autoFocus
 							margin="dense"
 							name="weightEcon"
@@ -268,8 +297,10 @@ export default function EditFlight({ flight }) {
 							}}
 							fullWidth
 							variant="outlined"
+							validators={['required', 'isNumber']}
+							errorMessages={['this field is required', 'must be a number']}
 						/>
-						<TextField
+						<TextValidator
 							autoFocus
 							margin="dense"
 							name="weightBus"
@@ -282,6 +313,8 @@ export default function EditFlight({ flight }) {
 							}}
 							fullWidth
 							variant="outlined"
+							validators={['required', 'isNumber']}
+							errorMessages={['this field is required', 'must be a number']}
 						/>
 					</DialogContent>
 
@@ -293,7 +326,7 @@ export default function EditFlight({ flight }) {
 							Submit
 						</Button>
 					</DialogActions>
-				</Box>
+				</ValidatorForm>
 			</Dialog>
 		</div>
 	);
