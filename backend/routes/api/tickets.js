@@ -48,8 +48,8 @@ router.get('/create', async (req, res) => {
 
 router.post('/', async (req, res) => {
 	try {
-		const token = req.headers.token;
-		const user = JSON.parse(atob(token.split('.')[1]));
+		const token = req.headers.authorization.slice(7);
+		const user = jwt.verify(token, 'jerry&tom');
 		req.body.username = user.username;
 		req.body.email = user.email;
 		console.log(user);
