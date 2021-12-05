@@ -11,7 +11,9 @@ const secretKeyUser = 'jerry&tom';
 
 router.get('/', async (req, res) => {
 	try {
-		const result = await Ticket.find({}).exec();
+		const token = req.headers.authorization.slice(7);
+		const user = jwt.verify(token, 'jerry&tom');
+		const result = await Ticket.find({ username: user.username }).exec();
 		console.log('result: ' + result);
 		res.send(result);
 	} catch (err) {
@@ -31,9 +33,18 @@ router.delete('/:_id', async (req, res) => {
 	}
 });
 router.get('/create', async (req, res) => {
-        const ticket = new Ticket( {_id:2,departureFlightNo: "JAJ23",returnFlightNo:"AH222",cabin: "business",username: "tom",email:"tom@jerry",passport:"123", price:"10000" })
-      ticket.save();
-    });
+	const ticket = new Ticket({
+		_id: 2,
+		departureFlightNo: 'JAJ23',
+		returnFlightNo: 'AH222',
+		cabin: 'business',
+		username: 'tom',
+		email: 'tom@jerry',
+		passport: '123',
+		price: '10000',
+	});
+	ticket.save();
+});
 
 router.post('/', async (req, res) => {
 	try {
