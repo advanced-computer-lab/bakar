@@ -9,11 +9,12 @@ import axios from 'axios';
 import { useLocation } from 'react-router-dom';
 import { UserType } from '../userType';
 import FlightDetails from '../components/FlightDetails/FlightDetails';
+import CheckOut from '../components/CheckOut/CheckOut';
 
 function Flights({ userType }) {
 	let query = useLocation().search.substring(1);
 	let seats = 1;
-	let priceFactor = 1;
+	const [priceFactor, setPriceFactor] = React.useState(1);
 	let queryObj = { cabin: 'Economy' };
 	if (query !== '') {
 		queryObj = JSON.parse(
@@ -24,8 +25,12 @@ function Flights({ userType }) {
 					.replace(/=/g, '":"') +
 				'"}'
 		);
-		seats = queryObj.nA + queryObj.nC;
-		priceFactor = parseInt(queryObj.nA) + parseInt(queryObj.nC) * 0.8;
+		seats = parseInt(queryObj.nA) + parseInt(queryObj.nC);
+
+		let newPriceFactor = parseInt(queryObj.nA) + parseInt(queryObj.nC) * 0.8;
+		if (priceFactor === 1) {
+			setPriceFactor(newPriceFactor);
+		}
 		delete queryObj.nA;
 		delete queryObj.nC;
 	}
@@ -36,6 +41,8 @@ function Flights({ userType }) {
 	const [clicked, setClicked] = useState(null);
 	const [departureFlight, setDepartureFlight] = useState(null);
 	const [returnFlight, setReturnFlight] = useState(null);
+	console.log(departureFlight);
+	console.log(returnFlight);
 
 	const getData = async (queryString) => {
 		let res;
@@ -54,7 +61,6 @@ function Flights({ userType }) {
 
 	// eslint-disable-next-line react-hooks/exhaustive-deps
 	React.useEffect(() => getData(query), []);
-
 	return (
 		<div>
 			<NavBar userType={userType} />
@@ -85,7 +91,16 @@ function Flights({ userType }) {
 					priceFactor={priceFactor}
 					getData={getData}
 				></FlightDetails>
-				<h2>
+				{(!(departureFlight == null || returnFlight == null) && returnFlight.seats !== undefined) ? (
+				<CheckOut
+					departureFlight={departureFlight}
+					returnFlight={returnFlight}
+					setDepartureFlight={setDepartureFlight}
+					setReturnFlight={setReturnFlight}
+					open={returnFlight.seats.length > 0}
+					priceFactor={priceFactor}
+					/>) : (
+				<div><h2>
 					{departureFlight == null ? 'Departure Flights' : 'Return Flights'}
 				</h2>
 				<FlightTable
@@ -96,7 +111,7 @@ function Flights({ userType }) {
 					getData={getData}
 					setClicked={setClicked}
 					priceFactor={priceFactor}
-				/>
+				/></div>)}
 			</div>
 		</div>
 	);

@@ -1,84 +1,22 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 /* eslint-disable no-loop-func */
-import * as React from 'react';
+import React from 'react';
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
 import { Button, IconButton } from '@mui/material';
 import Dialog from '@mui/material/Dialog';
 import Air from '@mui/icons-material/AirlineSeatReclineNormal';
 import CheckOut from '../CheckOut/CheckOut';
+import SeatItem from "./SeatItem";
 
-export default function SeatReserve(props) {
+export default function SeatReserve({seats, number, openSeats, setOpenSeats, setSeats, closeFlightDetails}) {
 	const [pickedSeats, setPickedSeats] = React.useState([]);
-	const [number, setNumber] = React.useState(props.number);
-	const [open, setOpen] = React.useState(false);
-	const [openCheck, setOpenCheck] = React.useState(false);
-	const list = [];
-	console.log(props);
+	const [requestedSeats, setRequestedSeats] = React.useState(number);
+	const reservedSeats = seats;
+	const open = openSeats;
+	const setOpen = setOpenSeats;
 
-	const drawSeats = () => {
-		for (let index = 0; index < props.seats.length; index++) {
-			if (props.seats[index] === 'Free') {
-				list.push(
-					<Grid item xs={6}>
-						<IconButton
-							key={index + 50}
-							onClick={function () {
-								if (props.seats[index] === 'Free' && number > 0) {
-									props.seats[index] = 'Picked';
-									setNumber(number - 1);
-									let s = [...pickedSeats];
-									s.push(index);
-									setPickedSeats(s);
-								} else {
-									alert('You picked your seats');
-								}
-							}}
-						>
-							<Air></Air>
-						</IconButton>
-						<label style={{ fontSize: '22px' }}>seat number {index + 1}</label>
-					</Grid>
-				);
-			} else if (props.seats[index] === 'Picked') {
-				list.push(
-					<Grid item xs={6}>
-						<IconButton
-							key={index + 50}
-							onClick={function () {
-								if (props.seats[index] === 'Picked') {
-									props.seats[index] = 'Free';
-									let s = [...pickedSeats];
-									s.splice(s.indexOf(index), 1);
-									setPickedSeats(s);
-									setNumber(number + 1);
-								} else {
-									alert('You picked your seats');
-								}
-							}}
-							color="success"
-						>
-							<Air></Air>
-						</IconButton>
-						<label style={{ fontSize: '22px', color: 'green' }}>
-							seat number {index + 1}
-						</label>{' '}
-					</Grid>
-				);
-			} else {
-				list.push(
-					<Grid item xs={6}>
-						<IconButton disabled>
-							<Air></Air>
-						</IconButton>
-						<label style={{ fontSize: '22px' }}>seat number {index + 1}</label>{' '}
-					</Grid>
-				);
-			}
-		}
-	};
 
-	React.useEffect(() => drawSeats(), []);
 
 	const handleClose = () => {
 		setOpen(false);
@@ -86,9 +24,13 @@ export default function SeatReserve(props) {
 
 	const handleSubmit = () => {
 		console.log(pickedSeats);
-		props.setSeats(pickedSeats);
-		if (props.ticket.returnSeats !== []) {
-			setOpenCheck(true);
+		if (pickedSeats.length < number) {
+			alert(`You have picked ${pickedSeats.length} seat(s)\nPlease pick ${number} seat(s)`);
+		}
+		else {
+			setSeats((flight) => ({...flight, seats: pickedSeats}));
+			setOpen(false);
+			closeFlightDetails(null) // closes flight details page since we check if it's equal to null
 		}
 	};
 
@@ -103,7 +45,8 @@ export default function SeatReserve(props) {
 						rowSpacing={1}
 						columnSpacing={{ xs: 1, sm: 1, md: 1 }}
 					>
-						{list}
+						
+						{reservedSeats.map((seat, index) => (<SeatItem seatStatus={seat} index={index} requestedSeats={requestedSeats} setRequestedSeats={setRequestedSeats} setPickedSeats={setPickedSeats}/>))}
 					</Grid>
 					<br />
 					<br />
@@ -114,15 +57,6 @@ export default function SeatReserve(props) {
 					</Grid>
 				</Box>
 			</Dialog>
-
-			{openCheck && (
-				<CheckOut
-					departureFlight={props.ticket.departureFlightNo}
-					returnFlight={props.ticket.returnFlightNo}
-					openCheck={openCheck}
-					setOpenCheck={setOpenCheck}
-				/>
-			)}
 		</div>
 	);
 }

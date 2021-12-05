@@ -37,10 +37,6 @@ export default function FlightDetails({
 }) {
 	const [data, setData] = React.useState({});
 	const [openSeats, setOpenSeats] = React.useState();
-	const [ticket, setTicket] = React.useState();
-	const [departureSeats, setDepartureSeats] = React.useState([]);
-	const [returnSeats, setReturnSeats] = React.useState([]);
-
 	const fetchData = async () => {
 		try {
 			setData((await axios.get(`/flights/${clicked}`)).data);
@@ -54,7 +50,9 @@ export default function FlightDetails({
 
 	const handleSelect = async () => {
 		try {
-			setDepartureFlight(data);
+			const departData = { ...data, cabin: cabin, seats: [] }
+			setDepartureFlight(departData);
+			
 			let search = {
 				departureLocation: data.arrivalLocation,
 				arrivalLocation: data.departureLocation,
@@ -66,16 +64,9 @@ export default function FlightDetails({
 				Object.entries(search).filter(([_, v]) => v != null)
 			);
 			let searchQuery = new URLSearchParams(requested).toString();
-			setTicket({
-				...ticket,
-				cabin: cabin,
-				departureFlightNo: data.flightNo,
-				priceDeparture:
-					cabin === 'Economy' ? data.priceEcon * seats : data.priceBus * seats,
-			});
+
 			setOpenSeats(true);
 			await getData(searchQuery);
-			setClicked(null);
 		} catch (err) {
 			console.log(err);
 		}
@@ -83,19 +74,9 @@ export default function FlightDetails({
 
 	const handleReserve = async () => {
 		try {
-			setReturnFlight(data);
+			const returnData = { ...data, cabin: cabin, seats: [] }
+			setReturnFlight(returnData);
 			setOpenSeats(true);
-			setTicket({
-				...ticket,
-				cabin: cabin,
-				returnFlightNo: data.flightNo,
-				priceReturn:
-					cabin === 'Economy'
-						? data.priceEcon * priceFactor
-						: data.priceBus * priceFactor,
-				seatsDeparture: departureSeats,
-			});
-			// setClicked(null);
 		} catch (err) {
 			console.log(err);
 		}
@@ -209,23 +190,23 @@ export default function FlightDetails({
 						{openSeats && (
 							<SeatReserve
 								seats={
-									ticket.cabin === 'Economy'
+									cabin === 'Economy'
 										? data.seatsEconView
 										: data.seatsBusView
 								}
 								number={seats}
 								openSeats={openSeats}
+								closeFlightDetails={setClicked}
 								setOpenSeats={setOpenSeats}
 								setSeats={
-									departureSeats === [] ? setDepartureSeats : setReturnSeats
+									returnFlight == null ? setDepartureFlight : setReturnFlight
 								}
-								ticket={ticket}
-								setTicket={setTicket}
 							/>
 						)}
 					</Grid>
 				</List>
 			</Dialog>
+			
 		</div>
 	);
 }

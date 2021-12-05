@@ -1,5 +1,7 @@
 const express = require('express');
 const router = express.Router();
+
+const Flight = require('../../models/Flight');
 const mongoose = require('mongoose');
 const Ticket = require('../../models/Ticket.js');
 const passport = require('passport');
@@ -48,6 +50,7 @@ router.get('/create', async (req, res) => {
 
 router.post('/', async (req, res) => {
 	try {
+		console.log(req.headers);
 		const token = req.headers.authorization.slice(7);
 		const user = jwt.verify(token, 'jerry&tom');
 		req.body.username = user.username;
@@ -56,6 +59,27 @@ router.post('/', async (req, res) => {
 		console.log(req.body);
 		const ticket = Ticket(req.body);
 		ticket.save();
+		const depFlight = Flight.findOne({ flightNo: ticket.departureFlightNo });
+		const retFlight = Flight.findOne({ flightNo: ticket.returnFlightNo });
+		for (const seat of ticket.seatsDeparture) {
+			if (ticket.cabin == 'Economy') {
+				depFlight.seatsEconView[seat - 1] = 'Not Free';
+			}
+			else {
+				depFlight.seatsBusView[seat - 1] = 'Not Free';
+			}
+		}
+		for (const seat of ticket.seatsReturn) {
+			if (ticket.cabin == 'Economy') {
+				retFlight.seatsEconView[seat - 1] = 'Not Free';
+			}
+			else {
+				retFlight.seatsBusView[seat - 1] = 'Not Free';
+			}
+		}
+		depFlight.save();
+		retFlight.save();
+		
 	} catch (err) {
 		console.log(err);
 	}

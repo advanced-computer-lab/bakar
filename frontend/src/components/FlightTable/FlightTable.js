@@ -51,7 +51,9 @@ function FlightTable(props) {
 				<TableBody>
 					{props.flights &&
 						props.flights.map((flight) => (
+
 							<FlightRow
+								
 								key={flight.flightNo}
 								userType={props.userType}
 								flightNo={flight.flightNo}
