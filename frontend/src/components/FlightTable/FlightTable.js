@@ -51,7 +51,9 @@ function FlightTable(props) {
 				<TableBody>
 					{props.flights &&
 						props.flights.map((flight) => (
+
 							<FlightRow
+								
 								key={flight.flightNo}
 								userType={props.userType}
 								flightNo={flight.flightNo}
@@ -69,7 +71,7 @@ function FlightTable(props) {
 								noBagsBus={flight.noBagsBus}
 								weightEcon={flight.weightEcon}
 								weightBus={flight.weightBus}
-								noOfSeats={props.noOfSeats}
+								priceFactor={props.priceFactor}
 								checks={props.checks}
 								setChecks={props.setChecks}
 								getData={props.getData}

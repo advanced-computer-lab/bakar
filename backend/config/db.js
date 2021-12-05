@@ -1,5 +1,6 @@
 require('dotenv').config();
 const mongoose = require('mongoose');
+const autoIncrement = require('mongoose-auto-increment');
 
 const connectDB = async () => {
 	try {
@@ -14,4 +15,5 @@ const connectDB = async () => {
 	}
 };
 
+autoIncrement.initialize(mongoose.connection);
 module.exports = connectDB;

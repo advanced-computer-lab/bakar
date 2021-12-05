@@ -8,8 +8,8 @@ import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import AddIcon from '@mui/icons-material/Add';
 import axios from '../../api';
-import Box from '@mui/material/Box';
 import { DateTimePicker } from '@mui/lab';
+import { ValidatorForm, TextValidator } from 'react-material-ui-form-validator';
 
 export default function CreateFlight({ getData }) {
 	const [open, setOpen] = React.useState(false);
@@ -17,6 +17,19 @@ export default function CreateFlight({ getData }) {
 		new Date(Date.now())
 	);
 	const [arrivalTime, setArrivalTime] = React.useState(new Date(Date.now()));
+	const [flightNo, setFlightNo] = React.useState();
+	const [departureLocation, setDepartureLocation] = React.useState();
+	const [arrivalLocation, setArrivalLocation] = React.useState();
+	const [departureTerminal, setDepartureTerminal] = React.useState();
+	const [arrivalTerminal, setArrivalTerminal] = React.useState();
+	const [seatsEcon, setSeatsEcon] = React.useState();
+	const [seatsBus, setSeatsBus] = React.useState();
+	const [priceEcon, setPriceEcon] = React.useState();
+	const [priceBus, setPriceBus] = React.useState();
+	const [noBagsEcon, setNoBagsEcon] = React.useState();
+	const [noBagsBus, setNoBagsBus] = React.useState();
+	const [weightEcon, setWeightEcon] = React.useState();
+	const [weightBus, setWeightBus] = React.useState();
 
 	const handleClickOpen = () => {
 		setOpen(true);
@@ -28,30 +41,25 @@ export default function CreateFlight({ getData }) {
 
 	const handleSubmit = async (event) => {
 		event.preventDefault();
-		const data = new FormData(event.currentTarget);
 		try {
 			await axios.post(
 				'/flights',
 				{
-					flightNo: data.get('flightNo'),
-					departureTime: new Date(
-						new Date(departureTime.setSeconds(0)).setMilliseconds(0)
-					),
-					arrivalTime: new Date(
-						new Date(arrivalTime.setSeconds(0)).setMilliseconds(0)
-					),
-					departureLocation: data.get('departureLocation'),
-					arrivalLocation: data.get('arrivalLocation'),
-					seatsEcon: data.get('seatsEcon'),
-					seatsBus: data.get('seatsBus'),
-					departureTerminal: data.get('departureTerminal'),
-					arrivalTerminal: data.get('arrivalTerminal'),
-					priceEcon: data.get('priceEcon'),
-					priceBus: data.get('priceBus'),
-					noBagsEcon: data.get('noBagsEcon'),
-					noBagsBus: data.get('noBagsBus'),
-					weightEcon: data.get('weightEcon'),
-					weightBus: data.get('weightBus'),
+					flightNo: flightNo,
+					departureTime: departureTime,
+					arrivalTime: arrivalTime,
+					departureLocation: departureLocation,
+					arrivalLocation: arrivalLocation,
+					seatsEcon: seatsEcon,
+					seatsBus: seatsBus,
+					departureTerminal: departureTerminal,
+					arrivalTerminal: arrivalTerminal,
+					priceEcon: priceEcon,
+					priceBus: priceBus,
+					noBagsEcon: noBagsEcon,
+					noBagsBus: noBagsBus,
+					weightEcon: weightEcon,
+					weightBus: weightBus,
 				},
 				{
 					headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
@@ -74,11 +82,14 @@ export default function CreateFlight({ getData }) {
 				Add a flight
 			</Button>
 			<Dialog open={open} onClose={handleClose}>
-				<Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 1 }}>
+				<ValidatorForm
+					onSubmit={handleSubmit}
+					onError={(errors) => console.log(errors)}
+				>
 					<DialogTitle>Create</DialogTitle>
 					<DialogContent>
 						<DialogContentText>Enter flight data</DialogContentText>
-						<TextField
+						<TextValidator
 							autoFocus
 							margin="dense"
 							name="flightNo"
@@ -87,6 +98,12 @@ export default function CreateFlight({ getData }) {
 							type="text"
 							fullWidth
 							variant="outlined"
+							value={flightNo}
+							onChange={(event) => {
+								setFlightNo(event.target.value);
+							}}
+							validators={['required']}
+							errorMessages={['this field is required']}
 						/>
 						<DateTimePicker
 							renderInput={(props) => (
@@ -95,7 +112,9 @@ export default function CreateFlight({ getData }) {
 							label="Departure Time"
 							value={departureTime}
 							onChange={(newValue) => {
-								setDepartureTime(newValue);
+								setDepartureTime(
+									new Date(new Date(newValue.setSeconds(0)).setMilliseconds(0))
+								);
 							}}
 						/>
 						<DateTimePicker
@@ -105,132 +124,194 @@ export default function CreateFlight({ getData }) {
 							label="Arrival Time"
 							value={arrivalTime}
 							onChange={(newValue) => {
-								setArrivalTime(newValue);
+								setArrivalTime(
+									new Date(new Date(newValue.setSeconds(0)).setMilliseconds(0))
+								);
 							}}
 						/>
-						<TextField
-							autoFocus
+						<TextValidator
 							margin="dense"
 							name="departureLocation"
 							id="departureLocation"
 							label="Departure Location"
 							type="text"
+							value={departureLocation}
+							onChange={(event) => {
+								setDepartureLocation(event.target.value);
+							}}
 							fullWidth
 							variant="outlined"
+							validators={['required']}
+							errorMessages={['this field is required']}
 						/>
-						<TextField
-							autoFocus
+						<TextValidator
 							margin="dense"
 							name="departureTerminal"
 							id="departureTerminal"
 							label="Departure Terminal"
 							type="text"
+							value={departureTerminal}
+							onChange={(event) => {
+								setDepartureTerminal(event.target.value);
+							}}
 							fullWidth
 							variant="outlined"
+							validators={['required']}
+							errorMessages={['this field is required']}
 						/>
-						<TextField
-							autoFocus
+						<TextValidator
 							margin="dense"
 							name="arrivalLocation"
 							id="arrivalLocation"
 							label="Arrival Location"
 							type="text"
+							value={arrivalLocation}
+							onChange={(event) => {
+								setArrivalLocation(event.target.value);
+							}}
 							fullWidth
 							variant="outlined"
+							validators={['required']}
+							errorMessages={['this field is required']}
 						/>
-						<TextField
-							autoFocus
+						<TextValidator
 							margin="dense"
 							name="arrivalTerminal"
 							id="arrivalTerminal"
 							label="Arrival Terminal"
 							type="text"
+							value={arrivalTerminal}
+							onChange={(event) => {
+								setArrivalTerminal(event.target.value);
+							}}
 							fullWidth
 							variant="outlined"
+							validators={['required']}
+							errorMessages={['this field is required']}
 						/>
-						<TextField
-							autoFocus
+						<TextValidator
 							margin="dense"
 							name="seatsEcon"
 							id="seatsEcon"
 							label="Number of Economy Seats"
-							type="tel"
+							type="number"
+							value={seatsEcon}
+							onChange={(event) => {
+								setSeatsEcon(event.target.value);
+							}}
 							fullWidth
 							variant="outlined"
-							onWheel={(event) => event.preventDefault}
+							validators={['required', 'isNumber']}
+							errorMessages={['this field is required', 'must be a number']}
 						/>
-						<TextField
-							autoFocus
+						<TextValidator
 							margin="dense"
 							name="seatsBus"
 							id="seatsBus"
 							label="Number of Business Seats"
-							type="tel"
+							type="number"
+							value={seatsBus}
+							onChange={(event) => {
+								setSeatsBus(event.target.value);
+							}}
 							fullWidth
 							variant="outlined"
-							onWheel={(event) => event.preventDefault}
+							validators={['required', 'isNumber']}
+							errorMessages={['this field is required', 'must be a number']}
 						/>
-						<TextField
-							autoFocus
+						<TextValidator
 							margin="dense"
 							name="priceEcon"
 							id="priceEcon"
 							label="Price of Economy Seats"
-							type="tel"
+							type="number"
+							value={priceEcon}
+							onChange={(event) => {
+								setPriceEcon(event.target.value);
+							}}
 							fullWidth
 							variant="outlined"
-							onWheel={(event) => event.preventDefault}
+							validators={['required', 'isNumber']}
+							errorMessages={['this field is required', 'must be a number']}
 						/>
-						<TextField
-							autoFocus
+						<TextValidator
 							margin="dense"
 							name="priceBus"
 							id="priceBus"
 							label="Price of Business Seats"
-							type="tel"
+							type="number"
+							value={priceBus}
+							onChange={(event) => {
+								setPriceBus(event.target.value);
+							}}
 							fullWidth
 							variant="outlined"
-							onWheel={(event) => event.preventDefault}
+							validators={['required', 'isNumber']}
+							errorMessages={['this field is required', 'must be a number']}
 						/>
-						<TextField
+						<TextValidator
 							autoFocus
 							margin="dense"
 							name="noBagsEcon"
 							id="noBagsEcon"
 							label="Economy Bags"
 							type="tel"
+							value={noBagsEcon}
+							onChange={(event) => {
+								setNoBagsEcon(event.target.value);
+							}}
 							fullWidth
 							variant="outlined"
+							validators={['required', 'isNumber']}
+							errorMessages={['this field is required', 'must be a number']}
 						/>
-						<TextField
+						<TextValidator
 							autoFocus
 							margin="dense"
 							name="noBagsBus"
 							id="noBagsBus"
 							label="Business Bags"
 							type="text"
+							value={noBagsBus}
+							onChange={(event) => {
+								setNoBagsBus(event.target.value);
+							}}
 							fullWidth
 							variant="outlined"
+							validators={['required', 'isNumber']}
+							errorMessages={['this field is required', 'must be a number']}
 						/>
-						<TextField
+						<TextValidator
 							autoFocus
 							margin="dense"
 							name="weightEcon"
 							id="weightEcon"
 							label="Economy Bag Weight"
 							type="tel"
+							value={weightEcon}
+							onChange={(event) => {
+								setWeightEcon(event.target.value);
+							}}
 							fullWidth
 							variant="outlined"
+							validators={['required', 'isNumber']}
+							errorMessages={['this field is required', 'must be a number']}
 						/>
-						<TextField
+						<TextValidator
 							autoFocus
 							margin="dense"
 							name="weightBus"
 							id="weightBus"
 							label="Business Bag Weight"
 							type="text"
+							value={weightBus}
+							onChange={(event) => {
+								setWeightBus(event.target.value);
+							}}
 							fullWidth
 							variant="outlined"
+							validators={['required', 'isNumber']}
+							errorMessages={['this field is required', 'must be a number']}
 						/>
 					</DialogContent>
 
@@ -242,7 +323,7 @@ export default function CreateFlight({ getData }) {
 							Submit
 						</Button>
 					</DialogActions>
-				</Box>
+				</ValidatorForm>
 			</Dialog>
 		</div>
 	);

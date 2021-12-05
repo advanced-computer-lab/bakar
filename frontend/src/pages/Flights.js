@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import NavBar from '../components/NavBar/NavBar';
 import { Grid } from '@mui/material';
 import FlightTable from '../components/FlightTable/FlightTable';
-import MyFlight from '../components/MyFlight/MyFlightTable';
 import CreateFlight from '../components/CreateFlight/CreateFlight';
 import DeleteFlight from '../components/DeleteFlight/DeleteFlight';
 import SearchFlight from '../components/SearchFlight/SearchFlight';
@@ -10,19 +9,31 @@ import axios from 'axios';
 import { useLocation } from 'react-router-dom';
 import { UserType } from '../userType';
 import FlightDetails from '../components/FlightDetails/FlightDetails';
+import CheckOut from '../components/CheckOut/CheckOut';
 
 function Flights({ userType }) {
 	let query = useLocation().search.substring(1);
-	const queryObj = JSON.parse(
-		'{"' +
-			decodeURI(query)
-				.replace(/"/g, '\\"')
-				.replace(/&/g, '","')
-				.replace(/=/g, '":"') +
-			'"}'
-	);
-	let seats = queryObj.n;
-	delete queryObj.n;
+	let seats = 1;
+	const [priceFactor, setPriceFactor] = React.useState(1);
+	let queryObj = { cabin: 'Economy' };
+	if (query !== '') {
+		queryObj = JSON.parse(
+			'{"' +
+				decodeURI(query)
+					.replace(/"/g, '\\"')
+					.replace(/&/g, '","')
+					.replace(/=/g, '":"') +
+				'"}'
+		);
+		seats = parseInt(queryObj.nA) + parseInt(queryObj.nC);
+
+		let newPriceFactor = parseInt(queryObj.nA) + parseInt(queryObj.nC) * 0.8;
+		if (priceFactor === 1) {
+			setPriceFactor(newPriceFactor);
+		}
+		delete queryObj.nA;
+		delete queryObj.nC;
+	}
 	let flag = userType === UserType.admin;
 
 	const [flights, setFlights] = useState([]);
@@ -30,13 +41,17 @@ function Flights({ userType }) {
 	const [clicked, setClicked] = useState(null);
 	const [departureFlight, setDepartureFlight] = useState(null);
 	const [returnFlight, setReturnFlight] = useState(null);
+	console.log(departureFlight);
+	console.log(returnFlight);
 
 	const getData = async (queryString) => {
-		const res = await axios.get('/flights?' + queryString, {
+		let res;
+		res = await axios.get('/flights?' + queryString, {
 			headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
 		});
 		let flightData = res['data'];
 		setFlights(flightData);
+		console.log(flightData);
 		let currentChecks = {};
 		flightData.forEach((element) => {
 			currentChecks[element.flightNo] = false;
@@ -46,7 +61,6 @@ function Flights({ userType }) {
 
 	// eslint-disable-next-line react-hooks/exhaustive-deps
 	React.useEffect(() => getData(query), []);
-
 	return (
 		<div>
 			<NavBar userType={userType} />
@@ -72,9 +86,21 @@ function Flights({ userType }) {
 					setDepartureFlight={setDepartureFlight}
 					returnFlight={returnFlight}
 					setReturnFlight={setReturnFlight}
+					cabin={queryObj.cabin}
+					seats={seats}
+					priceFactor={priceFactor}
 					getData={getData}
 				></FlightDetails>
-				<h2>
+				{(!(departureFlight == null || returnFlight == null) && returnFlight.seats !== undefined) ? (
+				<CheckOut
+					departureFlight={departureFlight}
+					returnFlight={returnFlight}
+					setDepartureFlight={setDepartureFlight}
+					setReturnFlight={setReturnFlight}
+					open={returnFlight.seats.length > 0}
+					priceFactor={priceFactor}
+					/>) : (
+				<div><h2>
 					{departureFlight == null ? 'Departure Flights' : 'Return Flights'}
 				</h2>
 				<FlightTable
@@ -84,8 +110,8 @@ function Flights({ userType }) {
 					setChecks={setChecks}
 					getData={getData}
 					setClicked={setClicked}
-					noOfSeats={seats}
-				/>
+					priceFactor={priceFactor}
+				/></div>)}
 			</div>
 		</div>
 	);

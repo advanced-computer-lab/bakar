@@ -22,7 +22,7 @@ export default function NavBar({ userType }) {
 			}
 		} else {
 			console.log('hoho');
-			navigate('/flights');
+			navigate('/flights?');
 			document.location.reload();
 		}
 	}
@@ -47,13 +47,14 @@ export default function NavBar({ userType }) {
 				<Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
 					<Button
 						color="inherit"
-						name="viewFlights"
+						name="home"
 						href="/"
 						sx={{ textTransform: 'none' }}
 					>
 						Home
 					</Button>
 				</Typography>
+
 				<Button
 					color="inherit"
 					name="viewFlights"
@@ -62,15 +63,26 @@ export default function NavBar({ userType }) {
 				>
 					View Available Flights
 				</Button>
-				{!flag && !isAdmin &&(
+				{!flag && !isAdmin && (
 					<Button
-					color="inherit"
-					name="viewFlights"
-					onclick={handleClick}
-					sx={{ textTransform: 'none' }}
-				>
-					View Reserved Flights
-				</Button>)}
+						color="inherit"
+						href="/tickets"
+						onclick={handleClick}
+						sx={{ textTransform: 'none' }}
+					>
+						View Reserved Flights
+					</Button>
+				)}
+
+				{!flag && !isAdmin && (
+					<Button
+						color="inherit"
+						href="/profile"
+						sx={{ textTransform: 'none' }}
+					>
+						Profile
+					</Button>
+				)}
 				<Button
 					name="log"
 					startIcon={flag ? <LoginIcon /> : <LogoutIcon />}

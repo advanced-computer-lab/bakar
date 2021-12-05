@@ -1,4 +1,4 @@
-import { React } from 'react';
+import { React, useState } from 'react';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
@@ -10,27 +10,37 @@ import Typography from '@mui/material/Typography';
 import Copyright from '../components/Login/Login';
 import axios from '../api';
 import { useNavigate } from 'react-router';
+import { ValidatorForm, TextValidator } from 'react-material-ui-form-validator';
 
 export default function SignUpSide() {
 	let navigate = useNavigate();
+	const [firstName, setFirstName] = useState();
+	const [lastName, setLastName] = useState();
+	const [username, setUsername] = useState();
+	const [password, setPassword] = useState();
+	const [email, setEmail] = useState();
+	const [homeAddress, setHomeAddress] = useState();
+	const [passport, setPassport] = useState();
+	const [countryCode, setCountryCode] = useState();
+	const [phoneNumber, setPhoneNumber] = useState();
+
 	const handleSubmit = async (event) => {
 		event.preventDefault();
-		const data = new FormData(event.currentTarget);
 		// eslint-disable-next-line no-console
 		let response = await axios.post('/users/register', {
-			firstName: data.get('firstName'),
-			lastName: data.get('lastName'),
-			username: data.get('username'),
-			password: data.get('password'),
-			email: data.get('email'),
-			homeAddress: data.get('homeAddress'),
-			passport: data.get('passport'),
-			countryCode: data.get('countryCode'),
-			phone: data.get('phoneNumber'),
+			firstName: firstName,
+			lastName: lastName,
+			username: username,
+			password: password,
+			email: email,
+			homeAddress: homeAddress,
+			passport: passport,
+			countryCode: countryCode,
+			phone: phoneNumber,
 		});
-		localStorage.setItem('token', response.data);
 		if (response.status === 200) {
-			navigate('/flights');
+			navigate('/');
+			localStorage.setItem('token', response.data);
 		} else {
 			navigate('/');
 		}
@@ -53,11 +63,9 @@ export default function SignUpSide() {
 					<Typography component="h1" variant="h5">
 						Sign up
 					</Typography>
-					<Box
-						component="form"
-						noValidate
+					<ValidatorForm
 						onSubmit={handleSubmit}
-						sx={{ mt: 1 }}
+						onError={(errors) => console.log(errors)}
 					>
 						<Grid
 							container
@@ -66,7 +74,7 @@ export default function SignUpSide() {
 							columnSpacing={{ xs: 1, sm: 2, md: 3 }}
 						>
 							<Grid item xs>
-								<TextField
+								<TextValidator
 									margin="normal"
 									fullWidth
 									required
@@ -75,16 +83,28 @@ export default function SignUpSide() {
 									name="firstName"
 									autoComplete="firstName"
 									autoFocus
+									value={firstName}
+									onChange={(event) => {
+										setFirstName(event.target.value);
+									}}
+									validators={['required']}
+									errorMessages={['this field is required']}
 								/>
 							</Grid>
 							<Grid item xs>
-								<TextField
+								<TextValidator
 									margin="normal"
 									fullWidth
 									required
 									id="lastName"
 									name="lastName"
 									label="Last Name"
+									value={lastName}
+									onChange={(event) => {
+										setLastName(event.target.value);
+									}}
+									validators={['required']}
+									errorMessages={['this field is required']}
 								/>
 							</Grid>
 						</Grid>
@@ -95,17 +115,23 @@ export default function SignUpSide() {
 							columnSpacing={{ xs: 1, sm: 2, md: 3 }}
 						>
 							<Grid item xs>
-								<TextField
+								<TextValidator
 									margin="normal"
 									required
 									fullWidth
 									name="username"
 									label="Username"
 									id="username"
+									value={username}
+									onChange={(event) => {
+										setUsername(event.target.value);
+									}}
+									validators={['required']}
+									errorMessages={['this field is required']}
 								/>
 							</Grid>
 							<Grid item xs>
-								<TextField
+								<TextValidator
 									margin="normal"
 									required
 									fullWidth
@@ -113,32 +139,56 @@ export default function SignUpSide() {
 									label="Password"
 									type="password"
 									id="password"
+									value={password}
+									onChange={(event) => {
+										setPassword(event.target.value);
+									}}
+									validators={['required']}
+									errorMessages={['this field is required']}
 								/>
 							</Grid>
 						</Grid>
-						<TextField
+						<TextValidator
 							margin="normal"
 							required
 							fullWidth
 							name="email"
 							label="Email"
 							id="email"
+							value={email}
+							onChange={(event) => {
+								setEmail(event.target.value);
+							}}
+							validators={['required', 'isEmail']}
+							errorMessages={['this field is required', 'not a valid email']}
 						/>
-						<TextField
+						<TextValidator
 							margin="normal"
 							required
 							fullWidth
 							name="homeAddress"
 							label="Home Address"
 							id="homeAddress"
+							value={homeAddress}
+							onChange={(event) => {
+								setHomeAddress(event.target.value);
+							}}
+							validators={['required']}
+							errorMessages={['this field is required']}
 						/>
-						<TextField
+						<TextValidator
 							margin="normal"
 							required
 							fullWidth
 							name="passport"
 							label="Passport Number"
 							id="passport"
+							value={passport}
+							onChange={(event) => {
+								setPassport(event.target.value);
+							}}
+							validators={['required']}
+							errorMessages={['this field is required']}
 						/>
 						<Grid
 							container
@@ -147,23 +197,38 @@ export default function SignUpSide() {
 							columnSpacing={{ xs: 1, sm: 2, md: 3 }}
 						>
 							<Grid item xs={4}>
-								<TextField
+								<TextValidator
 									margin="normal"
 									fullWidth
 									required
 									name="countryCode"
 									label="Country Code"
 									id="countryCode"
+									value={countryCode}
+									onChange={(event) => {
+										setCountryCode(event.target.value);
+									}}
+									validators={['required']}
+									errorMessages={['this field is required']}
 								/>
 							</Grid>
 							<Grid item xs>
-								<TextField
+								<TextValidator
 									margin="normal"
 									required
 									fullWidth
 									name="phoneNumber"
 									label="Phone Number"
 									id="phoneNumber"
+									value={phoneNumber}
+									onChange={(event) => {
+										setPhoneNumber(event.target.value);
+									}}
+									validators={['required', 'isNumber']}
+									errorMessages={[
+										'this field is required',
+										'not a valid number',
+									]}
 								/>
 							</Grid>
 						</Grid>
@@ -176,7 +241,7 @@ export default function SignUpSide() {
 							Sign Up
 						</Button>
 						<Copyright />
-					</Box>
+					</ValidatorForm>
 				</Box>
 			</Grid>
 			<Grid

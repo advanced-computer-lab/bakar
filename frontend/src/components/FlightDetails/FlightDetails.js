@@ -15,7 +15,7 @@ import {
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import axios from '../../api';
-import CheckOut from '../CheckOut/CheckOut';
+import SeatReserve from '../seatReserve/SeatReserve';
 
 const Transition = React.forwardRef(function Transition(props, ref) {
 	return <Slide direction="up" ref={ref} {...props} />;
@@ -31,9 +31,12 @@ export default function FlightDetails({
 	setDepartureFlight,
 	returnFlight,
 	setReturnFlight,
+	cabin,
+	seats,
+	priceFactor,
 }) {
 	const [data, setData] = React.useState({});
-	const [openCheck, setOpenCheck] = React.useState();
+	const [openSeats, setOpenSeats] = React.useState();
 	const fetchData = async () => {
 		try {
 			setData((await axios.get(`/flights/${clicked}`)).data);
@@ -47,7 +50,9 @@ export default function FlightDetails({
 
 	const handleSelect = async () => {
 		try {
-			setDepartureFlight(data);
+			const departData = { ...data, cabin: cabin, seats: [] }
+			setDepartureFlight(departData);
+			
 			let search = {
 				departureLocation: data.arrivalLocation,
 				arrivalLocation: data.departureLocation,
@@ -59,8 +64,9 @@ export default function FlightDetails({
 				Object.entries(search).filter(([_, v]) => v != null)
 			);
 			let searchQuery = new URLSearchParams(requested).toString();
+
+			setOpenSeats(true);
 			await getData(searchQuery);
-			setClicked(null);
 		} catch (err) {
 			console.log(err);
 		}
@@ -68,9 +74,9 @@ export default function FlightDetails({
 
 	const handleReserve = async () => {
 		try {
-			setReturnFlight(data);
-			// setClicked(null);
-			setOpenCheck(true);
+			const returnData = { ...data, cabin: cabin, seats: [] }
+			setReturnFlight(returnData);
+			setOpenSeats(true);
 		} catch (err) {
 			console.log(err);
 		}
@@ -181,17 +187,26 @@ export default function FlightDetails({
 								{departureFlight == null ? 'Select' : 'Reserve'}
 							</Button>
 						)}
-						{returnFlight != null && (
-							<CheckOut
-								departureFlight={departureFlight}
-								returnFlight={returnFlight}
-								openCheck={openCheck}
-								setOpenCheck={setOpenCheck}
+						{openSeats && (
+							<SeatReserve
+								seats={
+									cabin === 'Economy'
+										? data.seatsEconView
+										: data.seatsBusView
+								}
+								number={seats}
+								openSeats={openSeats}
+								closeFlightDetails={setClicked}
+								setOpenSeats={setOpenSeats}
+								setSeats={
+									returnFlight == null ? setDepartureFlight : setReturnFlight
+								}
 							/>
 						)}
 					</Grid>
 				</List>
 			</Dialog>
+			
 		</div>
 	);
 }
