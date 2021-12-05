@@ -50,7 +50,6 @@ router.get('/create', async (req, res) => {
 
 router.post('/', async (req, res) => {
 	try {
-		console.log(req.headers);
 		const token = req.headers.authorization.slice(7);
 		const user = jwt.verify(token, 'jerry&tom');
 		req.body.username = user.username;

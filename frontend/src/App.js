@@ -32,38 +32,41 @@ function App() {
 			}
 		}
 	}
-	const [userType, setUserType] = useState(getToken());
-	return (
-		<LocalizationProvider dateAdapter={AdapterDateFns}>
-			<ThemeProvider theme={generalTheme}>
-				<CssBaseline />
-				<Router>
-					<div>
-						<Routes>
-							<Route path="/" element={<Homepage userType={userType} />} />
-							<Route
-								path="/login"
-								element={<Login setUserType={setUserType} />}
-							/>
-							<Route
-								path="/register"
-								element={<Register setUserType={setUserType} />}
-							/>
-							<Route
-								path="/flights"
-								element={<Flights userType={userType} />}
-							/>
-							<Route
-								path="/tickets"
-								element={<Tickets userType={userType} />}
-							/>
-						</Routes>
-						
-					</div>
-				</Router>
-			</ThemeProvider>
-		</LocalizationProvider>
-	);
+  const [userType, setUserType] = useState(getToken());
+  return (
+    <LocalizationProvider dateAdapter={AdapterDateFns}>
+      <ThemeProvider theme={generalTheme}>
+        <CssBaseline />
+        <Router>
+          <div>
+            <Routes>
+              <Route path="/" element={<Homepage userType={userType} />} />
+              <Route
+                path="/login"
+                element={<Login setUserType={setUserType} />}
+              />
+              <Route
+                path="/register"
+                element={<Register setUserType={setUserType} />}
+              />
+              <Route
+                path="/flights"
+                element={<Flights userType={userType} />}
+              />
+              <Route
+                path="/tickets"
+                element={<Tickets userType={userType} />}
+              />
+              <Route
+                path="/profile"
+                element={<Profile userType={userType} />}
+              />
+            </Routes>
+          </div>
+        </Router>
+      </ThemeProvider>
+    </LocalizationProvider>
+  );
 }
 
 export default App;
