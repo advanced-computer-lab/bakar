@@ -8,6 +8,7 @@ const JwtStrategy = require('passport-jwt').Strategy;
 const ExtractJwt = require('passport-jwt').ExtractJwt;
 const secretKeyAdmin = 'tom&jerry';
 const secretKeyUser = 'jerry&tom';
+const sendMessage = require('./nodemailer.js');
 
 router.get('/', async (req, res) => {
 	try {
@@ -23,10 +24,19 @@ router.get('/', async (req, res) => {
 
 router.delete('/:_id', async (req, res) => {
 	try {
-		const dbResult = await Ticket.deleteOne({
+		const token = req.headers.authorization.slice(7);
+		const user = jwt.verify(token, 'jerry&tom');
+		const dbResult = await Ticket.findOneAndDelete({
 			_id: req.params._id,
 		}).exec();
-		res.status(200).send(dbResult);
+		sendMessage(user.email);
+		res
+			.status(200)
+			.send(
+				dbResult,
+				req.params._id,
+				dbResult.pricedeparture + dbResult.priceReturn
+			);
 	} catch (err) {
 		console.log(err);
 		res.status(500).send('Error deleting request');
