@@ -23,7 +23,7 @@ export default function SearchFlightUser({ getData, detailsOnly }) {
 	const [arrivalTime, setArrivalTime] = React.useState(null);
 	const [departureTerminal, setDepartureTerminal] = React.useState();
 	const [arrivalTerminal, setArrivalTerminal] = React.useState();
-	const [cabin, setCabin] = React.useState('Economy');
+	const [cabin, setCabin] = React.useState('availableEcon');
 	const [adults, setAdults] = React.useState(1);
 	const [children, setChildren] = React.useState(0);
 
@@ -39,7 +39,14 @@ export default function SearchFlightUser({ getData, detailsOnly }) {
 				arrivalTerminal: arrivalTerminal,
 				cabin: cabin === 'availableEcon' ? 'Economy' : 'Business',
 			};
-			data[cabin] = adults + children;
+			const requestedSeats = adults + children;
+			if (data.cabin === 'Economy') {
+				data = { ...data, availableEcon: requestedSeats };
+			} else {
+				data = { ...data, availableBus: requestedSeats };
+			}
+			console.log(cabin);
+			//data[cabin] = adults + children;
 			let requested = Object.fromEntries(
 				Object.entries(data).filter(([_, v]) => v != null)
 			);
@@ -50,7 +57,12 @@ export default function SearchFlightUser({ getData, detailsOnly }) {
 			setDepartureTerminal(null);
 			setArrivalTime(null);
 			setCabin(null);
-			navigate(`/flights?nA=${adults}&nC=${children}&` + searchQuery);
+			navigate(`/flights?` + searchQuery, {
+				state: {
+					adults: adults,
+					children: children,
+				},
+			});
 		} catch (err) {
 			console.log(err);
 		}
@@ -144,7 +156,7 @@ export default function SearchFlightUser({ getData, detailsOnly }) {
 									onChange={(event) => {
 										setCabin(event.target.value);
 									}}
-									defaultValue="availableEcon"
+									value={cabin}
 								>
 									<FormControlLabel
 										value="availableEcon"

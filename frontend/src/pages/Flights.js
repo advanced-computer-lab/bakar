@@ -12,9 +12,14 @@ import FlightDetails from '../components/FlightDetails/FlightDetails';
 import CheckOut from '../components/CheckOut/CheckOut';
 
 function Flights({ userType }) {
-	let query = useLocation().search.substring(1);
-	let seats = 1;
-	const [priceFactor, setPriceFactor] = React.useState(1);
+	const [flights, setFlights] = useState([]);
+	const [checks, setChecks] = useState({});
+	const [clicked, setClicked] = useState(null);
+	const [departureFlight, setDepartureFlight] = useState(null);
+	const [returnFlight, setReturnFlight] = useState(null);
+
+	let location = useLocation();
+	let query = location.search.substring(1);
 	let queryObj = { cabin: 'Economy' };
 	if (query !== '') {
 		queryObj = JSON.parse(
@@ -25,24 +30,22 @@ function Flights({ userType }) {
 					.replace(/=/g, '":"') +
 				'"}'
 		);
-		seats = parseInt(queryObj.nA) + parseInt(queryObj.nC);
-
-		let newPriceFactor = parseInt(queryObj.nA) + parseInt(queryObj.nC) * 0.8;
-		if (priceFactor === 1) {
-			setPriceFactor(newPriceFactor);
-		}
-		delete queryObj.nA;
-		delete queryObj.nC;
 	}
-	let flag = userType === UserType.admin;
+	console.log(queryObj);
 
-	const [flights, setFlights] = useState([]);
-	const [checks, setChecks] = useState({});
-	const [clicked, setClicked] = useState(null);
-	const [departureFlight, setDepartureFlight] = useState(null);
-	const [returnFlight, setReturnFlight] = useState(null);
-	console.log(departureFlight);
-	console.log(returnFlight);
+	let adults = 1;
+	let children = 0;
+	try {
+		adults = location.state.adults;
+		children = location.state.children;
+	} catch (err) {
+		console.log(err);
+	}
+	let seats = adults + children;
+	console.log(seats);
+	let priceFactor = adults + children * 0.8;
+
+	let flag = userType === UserType.admin;
 
 	const getData = async (queryString) => {
 		let res;
@@ -51,7 +54,6 @@ function Flights({ userType }) {
 		});
 		let flightData = res['data'];
 		setFlights(flightData);
-		console.log(flightData);
 		let currentChecks = {};
 		flightData.forEach((element) => {
 			currentChecks[element.flightNo] = false;
@@ -91,27 +93,32 @@ function Flights({ userType }) {
 					priceFactor={priceFactor}
 					getData={getData}
 				></FlightDetails>
-				{(!(departureFlight == null || returnFlight == null) && returnFlight.seats !== undefined) ? (
-				<CheckOut
-					departureFlight={departureFlight}
-					returnFlight={returnFlight}
-					setDepartureFlight={setDepartureFlight}
-					setReturnFlight={setReturnFlight}
-					open={returnFlight.seats.length > 0}
-					priceFactor={priceFactor}
-					/>) : (
-				<div><h2>
-					{departureFlight == null ? 'Departure Flights' : 'Return Flights'}
-				</h2>
-				<FlightTable
-					userType={userType}
-					flights={flights}
-					checks={checks}
-					setChecks={setChecks}
-					getData={getData}
-					setClicked={setClicked}
-					priceFactor={priceFactor}
-				/></div>)}
+				{!(departureFlight == null || returnFlight == null) &&
+				returnFlight.seats !== undefined ? (
+					<CheckOut
+						departureFlight={departureFlight}
+						returnFlight={returnFlight}
+						setDepartureFlight={setDepartureFlight}
+						setReturnFlight={setReturnFlight}
+						open={returnFlight.seats.length > 0}
+						priceFactor={priceFactor}
+					/>
+				) : (
+					<div>
+						<h2>
+							{departureFlight == null ? 'Departure Flights' : 'Return Flights'}
+						</h2>
+						<FlightTable
+							userType={userType}
+							flights={flights}
+							checks={checks}
+							setChecks={setChecks}
+							getData={getData}
+							setClicked={setClicked}
+							priceFactor={priceFactor}
+						/>
+					</div>
+				)}
 			</div>
 		</div>
 	);

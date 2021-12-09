@@ -40,7 +40,7 @@ export default function SignInSide({ setUserType }) {
 		}
 
 		if (response.status === 200) {
-			navigate('/flights');
+			navigate('/');
 		} else {
 			navigate('/');
 		}

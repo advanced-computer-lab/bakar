@@ -10,6 +10,7 @@ const JwtStrategy = require('passport-jwt').Strategy;
 const ExtractJwt = require('passport-jwt').ExtractJwt;
 const secretKeyAdmin = 'tom&jerry';
 const secretKeyUser = 'jerry&tom';
+const sendMessage = require('./nodemailer.js');
 
 router.get('/', async (req, res) => {
 	try {
@@ -25,10 +26,18 @@ router.get('/', async (req, res) => {
 
 router.delete('/:_id', async (req, res) => {
 	try {
-		const dbResult = await Ticket.deleteOne({
+		const token = req.headers.authorization.slice(7);
+		const user = jwt.verify(token, 'jerry&tom');
+		const dbResult = await Ticket.findOneAndDelete({
 			_id: req.params._id,
 		}).exec();
 		res.status(200).send(dbResult);
+		console.log('deleted ticket\n' + dbResult);
+		sendMessage(
+			user.email,
+			req.params._id,
+			dbResult.priceReturn + dbResult.priceDeparture
+		);
 	} catch (err) {
 		console.log(err);
 		res.status(500).send('Error deleting request');
@@ -58,27 +67,28 @@ router.post('/', async (req, res) => {
 		console.log(req.body);
 		const ticket = Ticket(req.body);
 		ticket.save();
-		const depFlight = Flight.findOne({ flightNo: ticket.departureFlightNo });
-		const retFlight = Flight.findOne({ flightNo: ticket.returnFlightNo });
+		const depFlight = await Flight.findOne({
+			flightNo: ticket.departureFlightNo,
+		}).exec();
+		const retFlight = await Flight.findOne({
+			flightNo: ticket.returnFlightNo,
+		}).exec();
 		for (const seat of ticket.seatsDeparture) {
 			if (ticket.cabin == 'Economy') {
-				depFlight.seatsEconView[seat - 1] = 'Not Free';
-			}
-			else {
-				depFlight.seatsBusView[seat - 1] = 'Not Free';
+				depFlight.seatsEconView[seat - 1] = 'Adult';
+			} else {
+				depFlight.seatsBusView[seat - 1] = 'Adult';
 			}
 		}
 		for (const seat of ticket.seatsReturn) {
 			if (ticket.cabin == 'Economy') {
-				retFlight.seatsEconView[seat - 1] = 'Not Free';
-			}
-			else {
-				retFlight.seatsBusView[seat - 1] = 'Not Free';
+				retFlight.seatsEconView[seat - 1] = 'Adult';
+			} else {
+				retFlight.seatsBusView[seat - 1] = 'Adult';
 			}
 		}
 		depFlight.save();
 		retFlight.save();
-		
 	} catch (err) {
 		console.log(err);
 	}

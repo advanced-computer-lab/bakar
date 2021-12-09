@@ -6,6 +6,8 @@ import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import { DialogActions, Divider } from '@mui/material';
 import axios from '../../api';
+import { useNavigate } from 'react-router';
+
 export default function CheckOut({
 	departureFlight,
 	returnFlight,
@@ -18,14 +20,20 @@ export default function CheckOut({
 	if (!openCheck && open) {
 		setOpenCheck(open);
 	}
+	console.log(departureFlight.seats);
+	console.log(returnFlight.seats);
+	let navigate = useNavigate();
+
 	const handleSubmit = async () => {
-		const cabin = departureFlight.cabin
-		const priceDep = cabin === 'Economy'
-		? departureFlight.priceEcon * priceFactor * departureFlight.seats.length
-			: departureFlight.priceBus * priceFactor * departureFlight.seats.length;
-		const priceRet = cabin === 'Economy'
-			? returnFlight.priceEcon * priceFactor * returnFlight.seats.length
-			: returnFlight.priceBus * priceFactor * returnFlight.seats.length;
+		const cabin = departureFlight.cabin;
+		const priceDep =
+			cabin === 'Economy'
+				? departureFlight.priceEcon * priceFactor
+				: departureFlight.priceBus * priceFactor;
+		const priceRet =
+			cabin === 'Economy'
+				? returnFlight.priceEcon * priceFactor
+				: returnFlight.priceBus * priceFactor;
 
 		const payload = {
 			departureFlightNo: departureFlight.flightNo,
@@ -35,17 +43,26 @@ export default function CheckOut({
 			seatsReturn: returnFlight.seats,
 			priceDeparture: priceDep,
 			priceReturn: priceRet,
-		}
-		const res = await axios.post('/tickets', payload, { headers: { Authorization: `Bearer ${localStorage.getItem("token")}` }, });
+		};
+		const res = await axios.post('/tickets', payload, {
+			headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
+		});
+		navigate('/');
+		console.log(res);
 		setOpenCheck(false);
 		setDepartureFlight(null);
 		setReturnFlight(null);
+		navigate('/');
 	};
-
 
 	return (
 		<div>
-			<Dialog open={openCheck} onClose={() => { setOpenCheck(false) }}>
+			<Dialog
+				open={openCheck}
+				onClose={() => {
+					setOpenCheck(false);
+				}}
+			>
 				<DialogTitle>Check out</DialogTitle>
 				<DialogContent>
 					<DialogTitle>Departure flight</DialogTitle>
@@ -65,8 +82,12 @@ export default function CheckOut({
 					<DialogContentText>
 						Price :{' '}
 						{departureFlight.cabin === 'Economy'
-							? departureFlight.priceEcon * priceFactor * departureFlight.seats.length
-							: departureFlight.priceBus * priceFactor * departureFlight.seats.length}
+							? departureFlight.priceEcon *
+							  priceFactor *
+							  departureFlight.seats.length
+							: departureFlight.priceBus *
+							  priceFactor *
+							  departureFlight.seats.length}
 					</DialogContentText>
 					<DialogTitle>Return flight</DialogTitle>
 					<DialogContentText>
@@ -85,8 +106,12 @@ export default function CheckOut({
 					<DialogContentText>
 						Price :{' '}
 						{returnFlight.cabin === 'Economy'
-							? returnFlight.priceEcon * priceFactor * departureFlight.seats.length
-							: returnFlight.priceBus * priceFactor * departureFlight.seats.length}
+							? returnFlight.priceEcon *
+							  priceFactor *
+							  departureFlight.seats.length
+							: returnFlight.priceBus *
+							  priceFactor *
+							  departureFlight.seats.length}
 					</DialogContentText>
 				</DialogContent>
 				<DialogActions>
