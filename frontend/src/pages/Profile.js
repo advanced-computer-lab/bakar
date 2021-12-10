@@ -201,7 +201,7 @@ export default function Profile() {
               color="primary"
               sx={{ ":hover": { backgroundColor: "#CD5334" } }}
             >
-              Edit
+              Submit
             </Button>
           </Grid>
         </Grid>

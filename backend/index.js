@@ -6,6 +6,7 @@ const bodyParser = require("body-parser");
 const session = require("express-session");
 const passport = require("passport");
 const LocalStrategy = require('passport-local').Strategy;
+require('dotenv').config();
 
 // Routes
 // require any routes here if needed. e.g: `const books = require('./routes/api/books');`
@@ -27,7 +28,7 @@ app.use(
 
 //session
 app.use(session({
-  secret: "tom&jerry",
+  secret: process.env.secretSession,
   resave: false,
   saveUninitialized: false
 }));
