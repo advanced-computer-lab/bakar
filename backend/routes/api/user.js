@@ -7,8 +7,7 @@ const passport = require("passport");
 const jwt = require("jsonwebtoken");
 const JwtStrategy = require("passport-jwt").Strategy;
 const ExtractJwt = require("passport-jwt").ExtractJwt;
-const secretKeyAdmin = "tom&jerry";
-const secretKeyUser = "jerry&tom";
+require('dotenv').config();
 
 //Admin's entry
 const admin = new User({
@@ -41,7 +40,7 @@ router.post("/login", async (req, res) => {
               passport: user.passport,
               isAdmin: user.isAdmin,
             },
-            secretKeyAdmin,
+            process.env.secretKeyAdmin,
             {
               noTimestamp: true,
               expiresIn: "24h",
@@ -61,7 +60,7 @@ router.post("/login", async (req, res) => {
               passport: user.passport,
               isAdmin: user.isAdmin,
             },
-            secretKeyUser,
+            process.env.secretKeyUser,
             {
               expiresIn: "24h",
             }
@@ -103,7 +102,7 @@ router.post("/register", (req, res) => {
                 passport: user.passport,
                 isAdmin: user.isAdmin,
               },
-              secretKeyUser,
+              process.env.secretKeyUser,
               {
                 expiresIn: "24h",
               }
@@ -121,7 +120,7 @@ router.put("/", async (req, res) => {
   console.log(req.headers)
   const token = req.headers.authorization.slice(7);
   console.log(token);
-  const user = jwt.verify(token, "jerry&tom");
+  const user = jwt.verify(token, process.env.secretKeyUser);
   try {
     if(!user.isAdmin){
       console.log(user);
@@ -134,7 +133,7 @@ router.put("/", async (req, res) => {
         email:req.body.email,
         passport: req.body.passport,
         isAdmin: false,
-      },secretKeyUser,
+      },process.env.secretKeyUser,
       {
         expiresIn: "24h",
       })
