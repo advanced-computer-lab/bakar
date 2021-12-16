@@ -1,16 +1,17 @@
 import { React, useState } from 'react';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
-import TextField from '@mui/material/TextField';
 import Paper from '@mui/material/Paper';
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
+import HomeOutlinedIcon from '@mui/icons-material/HomeOutlined';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Copyright from '../components/Login/Login';
 import axios from '../api';
 import { useNavigate } from 'react-router';
 import { ValidatorForm, TextValidator } from 'react-material-ui-form-validator';
+import { IconButton, Link } from '@mui/material';
 
 export default function SignUpSide() {
 	let navigate = useNavigate();
@@ -61,7 +62,7 @@ export default function SignUpSide() {
 						<LockOutlinedIcon />
 					</Avatar>
 					<Typography component="h1" variant="h5">
-						Sign up
+						Sign Up
 					</Typography>
 					<ValidatorForm
 						onSubmit={handleSubmit}
@@ -240,8 +241,23 @@ export default function SignUpSide() {
 						>
 							Sign Up
 						</Button>
-						<Copyright />
+						<Grid
+							container
+							sx={{ textAlign: 'center', justifyContent: 'center' }}
+						>
+							<Link href="/register" variant="body2">
+								{"Don't have an account? Sign Up"}
+							</Link>
+						</Grid>
 					</ValidatorForm>
+					<br></br>
+					<br></br>
+					<Avatar sx={{ backgroundColor: '#CD5334', m: 1 }}>
+						<IconButton href="/">
+							<HomeOutlinedIcon sx={{ color: '#ffffff' }}></HomeOutlinedIcon>
+						</IconButton>
+					</Avatar>
+					<Copyright sx={{ mt: 5 }} />
 				</Box>
 			</Grid>
 			<Grid

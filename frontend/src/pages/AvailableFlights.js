@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import NavBar from '../components/NavBar/NavBar';
 import { Grid } from '@mui/material';
-import FlightList from '../components/FlightList/FlightList';
+import FlightTable from '../components/FlightList/FlightTable';
 import CreateFlight from '../components/CreateFlight/CreateFlight';
 import DeleteFlight from '../components/DeleteFlight/DeleteFlight';
 import SearchFlight from '../components/SearchFlight/SearchFlight';
@@ -12,16 +12,6 @@ import FlightDetails from '../components/FlightDetails/FlightDetails';
 import CheckOut from '../components/CheckOut/CheckOut';
 
 function Flights({ userType }) {
-	const styles = {
-		backgroundImage:
-			'url(https://images.unsplash.com/photo-1532364158125-02d75a0f7fb9?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1074&q=80)',
-		backgroundRepeat: 'no-repeat',
-		backgroundColor: (t) =>
-			t.palette.mode === 'light' ? t.palette.grey[50] : t.palette.grey[900],
-		backgroundSize: 'cover',
-		height: '100vh',
-	};
-
 	const [flights, setFlights] = useState([]);
 	const [checks, setChecks] = useState({});
 	const [clicked, setClicked] = useState(null);
@@ -74,7 +64,7 @@ function Flights({ userType }) {
 	// eslint-disable-next-line react-hooks/exhaustive-deps
 	React.useEffect(() => getData(query), []);
 	return (
-		<div style={styles}>
+		<div>
 			<NavBar userType={userType} />
 			<div style={{ padding: '10px' }}>
 				<Grid container spacing={2}>
@@ -115,10 +105,7 @@ function Flights({ userType }) {
 					/>
 				) : (
 					<div>
-						<h2 style={{ textAlign: 'center' }}>
-							{departureFlight == null ? 'Departure Flights' : 'Return Flights'}
-						</h2>
-						<FlightList
+						<FlightTable
 							userType={userType}
 							flights={flights}
 							checks={checks}

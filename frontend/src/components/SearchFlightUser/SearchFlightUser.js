@@ -19,8 +19,12 @@ import { useNavigate } from 'react-router';
 import { ValidatorForm, TextValidator } from 'react-material-ui-form-validator';
 
 export default function SearchFlightUser({ getData, detailsOnly }) {
-	const [departureTime, setDepartureTime] = React.useState(null);
-	const [arrivalTime, setArrivalTime] = React.useState(null);
+	const [departureTime, setDepartureTime] = React.useState(
+		new Date(Date.now() + 3600 * 1000 * 3)
+	);
+	const [returnTime, setReturnTime] = React.useState(
+		new Date(Date.now() + 3600 * 1000 * 24)
+	);
 	const [departureTerminal, setDepartureTerminal] = React.useState();
 	const [arrivalTerminal, setArrivalTerminal] = React.useState();
 	const [cabin, setCabin] = React.useState('availableEcon');
@@ -34,7 +38,7 @@ export default function SearchFlightUser({ getData, detailsOnly }) {
 		try {
 			let data = {
 				departureTime: departureTime,
-				arrivalTime: arrivalTime,
+				returnTime: returnTime,
 				departureTerminal: departureTerminal,
 				arrivalTerminal: arrivalTerminal,
 				cabin: cabin === 'availableEcon' ? 'Economy' : 'Business',
@@ -55,7 +59,7 @@ export default function SearchFlightUser({ getData, detailsOnly }) {
 			setDepartureTime(null);
 			setArrivalTerminal(null);
 			setDepartureTerminal(null);
-			setArrivalTime(null);
+			setReturnTime(null);
 			setCabin(null);
 			navigate(`/flights?` + searchQuery, {
 				state: {
@@ -68,10 +72,16 @@ export default function SearchFlightUser({ getData, detailsOnly }) {
 		}
 	};
 
+	ValidatorForm.addValidationRule('isHabd', (value) => {
+		if (value === 'habd') {
+			return false;
+		}
+		return true;
+	});
+
 	return (
 		<div>
 			<Box
-				onSubmit={handleSubmit}
 				sx={{
 					mt: 1,
 					backgroundColor: 'rgb(254, 239, 221, 0.7)',
@@ -84,6 +94,7 @@ export default function SearchFlightUser({ getData, detailsOnly }) {
 					<DialogTitle>Book a flight</DialogTitle>
 					<DialogContent>
 						<DialogContentText>Enter flight data</DialogContentText>
+						<br></br>
 						<Grid
 							container
 							direction="row"
@@ -107,6 +118,7 @@ export default function SearchFlightUser({ getData, detailsOnly }) {
 											onChange={(newValue) => {
 												setDepartureTime(newValue);
 											}}
+											minDateTime={new Date()}
 										/>
 									</Grid>{' '}
 									<Grid item xs>
@@ -114,38 +126,45 @@ export default function SearchFlightUser({ getData, detailsOnly }) {
 											renderInput={(props) => (
 												<TextField {...props} margin="dense" fullWidth />
 											)}
-											label="Arrival Time"
-											value={arrivalTime}
+											label="Return Time"
+											value={returnTime}
 											clearable
 											onChange={(newValue) => {
-												setArrivalTime(newValue);
+												setReturnTime(newValue);
 											}}
+											minDateTime={departureTime}
 										/>
 									</Grid>
 								</Grid>
-								<TextField
+								<TextValidator
 									margin="dense"
 									name="departureTerminal"
 									id="departureTerminal"
 									label="Departure Terminal"
 									type="text"
+									value={departureTerminal}
 									onChange={(event) => {
 										setDepartureTerminal(event.target.value);
 									}}
-									fullWidth
 									variant="outlined"
+									validators={['required']}
+									errorMessages={['this field is required']}
+									fullWidth
 								/>
-								<TextField
+								<TextValidator
 									margin="dense"
 									name="arrivalTerminal"
 									id="arrivalTerminal"
 									label="Arrival Terminal"
 									type="text"
+									value={arrivalTerminal}
 									onChange={(event) => {
 										setArrivalTerminal(event.target.value);
 									}}
-									fullWidth
 									variant="outlined"
+									validators={['required']}
+									errorMessages={['this field is required']}
+									fullWidth
 								/>
 							</Grid>
 							<Grid item>
