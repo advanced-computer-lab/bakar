@@ -4,10 +4,6 @@ import { UserType } from '../../userType';
 import FlightItem from './FlightItem';
 
 function FlightList(props) {
-	const style = {
-		fontSize: 16,
-		fontWeight: 'bold',
-	};
 	let flag = props.userType !== UserType.admin;
 
 	return (
@@ -19,22 +15,23 @@ function FlightList(props) {
 				rowSpacing={3}
 				sx={{
 					mt: 1,
-					backgroundColor: 'rgb(254, 239, 221, 0.25)',
+					backgroundColor: 'rgb(254, 239, 221, .50)',
 					maxWidth: '700px',
 					p: 2,
 				}}
 				alignItems="center"
 				justifyContent="center"
 			>
-				<Grid item>
-					<FlightItem></FlightItem>
-				</Grid>
-				<Grid item>
-					<FlightItem></FlightItem>
-				</Grid>
-				<Grid item>
-					<FlightItem></FlightItem>
-				</Grid>
+				{props.flights &&
+					props.flights.map((flight) => (
+						<Grid item>
+							<FlightItem
+								flight={flight}
+								cabin={props.cabin}
+								priceFactor={props.priceFactor}
+							></FlightItem>
+						</Grid>
+					))}
 			</Grid>
 		</Grid>
 	);

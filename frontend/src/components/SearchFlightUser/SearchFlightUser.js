@@ -18,7 +18,7 @@ import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import { useNavigate } from 'react-router';
 import { ValidatorForm, TextValidator } from 'react-material-ui-form-validator';
 
-export default function SearchFlightUser({ getData, detailsOnly }) {
+export default function SearchFlightUser({ detailsOnly }) {
 	const [departureTime, setDepartureTime] = React.useState(
 		new Date(Date.now() + 3600 * 1000 * 3)
 	);
@@ -27,7 +27,7 @@ export default function SearchFlightUser({ getData, detailsOnly }) {
 	);
 	const [departureTerminal, setDepartureTerminal] = React.useState();
 	const [arrivalTerminal, setArrivalTerminal] = React.useState();
-	const [cabin, setCabin] = React.useState('availableEcon');
+	const [cabin, setCabin] = React.useState('Economy');
 	const [adults, setAdults] = React.useState(1);
 	const [children, setChildren] = React.useState(0);
 
@@ -41,43 +41,28 @@ export default function SearchFlightUser({ getData, detailsOnly }) {
 				returnTime: returnTime,
 				departureTerminal: departureTerminal,
 				arrivalTerminal: arrivalTerminal,
-				cabin: cabin === 'availableEcon' ? 'Economy' : 'Business',
+				cabin: cabin,
+				adults: adults,
+				children: children,
 			};
+
 			const requestedSeats = adults + children;
+
 			if (data.cabin === 'Economy') {
-				data = { ...data, availableEcon: requestedSeats };
+				data.availableEcon = requestedSeats;
 			} else {
-				data = { ...data, availableBus: requestedSeats };
+				data.availableBus = requestedSeats;
 			}
-			console.log(cabin);
-			//data[cabin] = adults + children;
-			let requested = Object.fromEntries(
-				Object.entries(data).filter(([_, v]) => v != null)
-			);
-			let searchParams = new URLSearchParams(requested);
-			let searchQuery = searchParams.toString();
-			setDepartureTime(null);
-			setArrivalTerminal(null);
-			setDepartureTerminal(null);
-			setReturnTime(null);
-			setCabin(null);
-			navigate(`/flights?` + searchQuery, {
+
+			navigate(`/flights`, {
 				state: {
-					adults: adults,
-					children: children,
+					...data,
 				},
 			});
 		} catch (err) {
 			console.log(err);
 		}
 	};
-
-	ValidatorForm.addValidationRule('isHabd', (value) => {
-		if (value === 'habd') {
-			return false;
-		}
-		return true;
-	});
 
 	return (
 		<div>
@@ -178,12 +163,12 @@ export default function SearchFlightUser({ getData, detailsOnly }) {
 									value={cabin}
 								>
 									<FormControlLabel
-										value="availableEcon"
+										value="Economy"
 										control={<Radio />}
 										label="Economy"
 									/>
 									<FormControlLabel
-										value="availableBus"
+										value="Business"
 										control={<Radio />}
 										label="Business"
 									/>

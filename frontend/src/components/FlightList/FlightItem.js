@@ -1,37 +1,33 @@
-import React from 'react';
-import { useTheme } from '@mui/material/styles';
+import { React, useState } from 'react';
 import {
 	Card,
 	Divider,
 	Typography,
 	Box,
 	IconButton,
-	Checkbox,
 	Grid,
+	Collapse,
+	Button,
 } from '@mui/material';
 import FlightTakeoffIcon from '@mui/icons-material/FlightTakeoff';
 import FlightLandIcon from '@mui/icons-material/FlightLand';
-import EditFlight from '../EditFlight/EditFlight';
-import { UserType } from '../../userType';
-import './style.css';
 import KeyboardArrowDown from '@mui/icons-material/KeyboardArrowDown';
-import LuggageIcon from '@mui/icons-material/Luggage';
-import PaymentsIcon from '@mui/icons-material/Payments';
-import Masonry from '@mui/lab/Masonry';
+import KeyboardArrowUp from '@mui/icons-material/KeyboardArrowUp';
+import PriceTag from './PriceTag';
 
-export default function FlightItem(props) {
-	const theme = useTheme();
+export default function FlightItem({ flight, cabin, priceFactor }) {
+	const [expanded, setExpanded] = useState(false);
+	const [selectedCabin, setSelectedCabin] = useState();
 
-	let flag = props.userType !== UserType.admin;
-
-	function handleChange(event) {
-		let newChecks = { ...props.checks, [props.flightNo]: event.target.checked };
-		props.setChecks(newChecks);
-		console.log(newChecks);
+	function formatHHMM(date) {
+		function z(n) {
+			return (n < 10 ? '0' : '') + n;
+		}
+		var h = date.getHours();
+		return (
+			z(h % 12) + ':' + z(date.getMinutes()) + ' ' + (h < 12 ? 'AM' : 'PM')
+		);
 	}
-
-	const departureTime = new Date(props.departureTime);
-	const arrivalTime = new Date(props.arrivalTime);
 
 	return (
 		<Grid
@@ -41,241 +37,306 @@ export default function FlightItem(props) {
 			sx={{ alignItems: 'stretch' }}
 		>
 			<Grid item>
-				<Card
-					sx={{
-						display: 'flex',
-						backgroundColor: 'rgb(254, 239, 221, 0.5)',
-						padding: '10px',
-					}}
-				>
-					<Box sx={{ display: 'flex', alignItems: 'center' }}>
-						<Grid
-							container
-							direction="column"
-							alignItems="center"
-							justifyContent="center"
-						>
-							<Typography component="div" variant="h6" color="#183642">
-								3:15 AM
-							</Typography>
-							<Typography variant="h6" color="#183642" component="div">
-								BER
-							</Typography>
-							<Typography
-								variant="subtitle2"
-								color="text.secondary"
-								component="div"
-							>
-								Berlin
-							</Typography>
-							<IconButton aria-label="previous">
-								<FlightTakeoffIcon
-									sx={{ height: 38, width: 38, color: '#183642' }}
-								/>
-							</IconButton>
-						</Grid>
-						<hr
-							style={{
-								color: '#183642',
-								backgroundColor: '#183642',
-								height: 5,
-								width: 100,
-							}}
-						/>
-						<Grid
-							container
-							direction="column"
-							alignItems="center"
-							justifyContent="center"
-						>
-							<Typography component="div" variant="h6" color="#183642">
-								12:30 PM
-							</Typography>
-							<Typography variant="h6" color="#183642" component="div">
-								ALX
-							</Typography>
-							<Typography
-								variant="subtitle2"
-								color="text.secondary"
-								component="div"
-							>
-								Alexandria
-							</Typography>
-							<IconButton aria-label="Arrival Time">
-								<FlightLandIcon
-									sx={{
-										height: 38,
-										width: 38,
-										color: '#183642',
-									}}
-								/>
-							</IconButton>
-						</Grid>
-						<Divider orientation="vertical" variant="middle" sx={{}} />
-						<IconButton>
-							<KeyboardArrowDown></KeyboardArrowDown>
-						</IconButton>
-					</Box>
-				</Card>
-			</Grid>
-			<Grid item>
 				<Grid container direction="column" rowSpacing={1}>
-					<Grid item>
+					<Grid item xs>
 						<Card
 							sx={{
 								display: 'flex',
 								backgroundColor: 'rgb(254, 239, 221, 0.5)',
-								pl: 2,
-								pr: 2,
+								padding: '10px',
 							}}
 						>
 							<Box sx={{ display: 'flex', alignItems: 'center' }}>
-								<Grid container alignItems="center" justifyContent="center">
-									<Typography
-										component="div"
-										variant="subtitle1"
-										color="#183642"
-									>
-										Economy
-									</Typography>
-								</Grid>
-
 								<Grid
 									container
 									direction="column"
 									alignItems="center"
 									justifyContent="center"
 								>
-									<IconButton aria-label="previous">
-										<LuggageIcon
-											sx={{ height: 38, width: 38, color: '#183642' }}
-										/>
-									</IconButton>
+									<Typography component="div" variant="h6" color="#183642">
+										{formatHHMM(new Date(flight.departureTime))}
+									</Typography>
+									<Typography variant="h6" color="#183642" component="div">
+										{flight.departureTerminal}
+									</Typography>
 									<Typography
 										variant="subtitle2"
 										color="text.secondary"
 										component="div"
 									>
-										3 bags
+										{flight.departureLocation}
 									</Typography>
+									<FlightTakeoffIcon
+										sx={{ height: 38, width: 38, color: '#183642' }}
+									/>
 								</Grid>
-
-								<Grid container>
+								<hr
+									style={{
+										color: '#183642',
+										backgroundColor: '#183642',
+										height: 5,
+										width: 100,
+									}}
+								/>
+								<Grid
+									container
+									direction="column"
+									alignItems="center"
+									justifyContent="center"
+								>
+									<Typography component="div" variant="h6" color="#183642">
+										{formatHHMM(new Date(flight.arrivalTime))}{' '}
+									</Typography>
+									<Typography variant="h6" color="#183642" component="div">
+										{flight.arrivalTerminal}
+									</Typography>
 									<Typography
-										variant="body2"
+										variant="subtitle2"
 										color="text.secondary"
 										component="div"
-										align="center"
 									>
-										25 KG/Bag
+										{flight.arrivalLocation}
 									</Typography>
+									<FlightLandIcon
+										sx={{
+											height: 38,
+											width: 38,
+											color: '#183642',
+										}}
+									/>
 								</Grid>
 								<Divider
 									orientation="vertical"
 									variant="middle"
-									sx={{ height: '20px' }}
+									sx={{ margin: '0 10px 0 10px' }}
 								/>
-
-								<Grid
-									container
-									direction="column"
-									alignItems="center"
-									justifyContent="center"
-								>
-									<IconButton aria-label="previous">
-										<PaymentsIcon
-											sx={{ height: 38, width: 38, color: '#183642' }}
-										/>
-									</IconButton>
-									<Typography
-										variant="subtitle2"
-										color="text.secondary"
-										component="div"
+								<Grid item>
+									<Grid
+										container
+										direction="column"
+										rowSpacing={1}
+										alignItems="stretch"
+										justify="space-between"
 									>
-										1000$
-									</Typography>
+										<Button
+											onClick={() => {
+												setSelectedCabin('Economy');
+												setExpanded(true);
+											}}
+										>
+											<PriceTag
+												cabin="Economy"
+												flight={flight}
+												priceFactor={priceFactor}
+												selected={selectedCabin === 'Economy' ? true : false}
+											></PriceTag>
+										</Button>
+
+										<Button
+											onClick={() => {
+												setSelectedCabin('Business');
+												setExpanded(true);
+											}}
+										>
+											<PriceTag
+												cabin="Business"
+												flight={flight}
+												priceFactor={priceFactor}
+												selected={selectedCabin === 'Business' ? true : false}
+											></PriceTag>
+										</Button>
+									</Grid>
 								</Grid>
+								<Divider
+									orientation="vertical"
+									variant="middle"
+									sx={{ margin: '0 10px 0 10px' }}
+								/>
+								<IconButton onClick={() => setExpanded(!expanded)}>
+									{expanded ? <KeyboardArrowUp /> : <KeyboardArrowDown />}
+								</IconButton>
 							</Box>
 						</Card>
 					</Grid>
 
-					<Grid item>
-						<Card
-							sx={{
-								display: 'flex',
-								backgroundColor: 'rgb(254, 239, 221, 0.5)',
-								pl: 2,
-								pr: 2,
-							}}
-						>
-							<Box sx={{ display: 'flex', alignItems: 'center' }}>
-								<Grid container alignItems="center" justifyContent="center">
-									<Typography
-										component="div"
-										variant="subtitle1"
-										color="#183642"
-									>
-										Economy
-									</Typography>
-								</Grid>
+					<Grid item xs>
+						<Collapse in={expanded} unmountOnExit>
+							<Card
+								sx={{
+									display: 'flex',
+									backgroundColor: 'rgb(254, 239, 221, 0.5)',
+									padding: '10px',
+									justifyContent: 'center',
+									alignContent: 'center',
+									textAlign: 'center',
+								}}
+							>
+								<Box sx={{ display: 'flex', alignItems: 'center' }}>
+									<Grid container direction="row" columnSpacing={1}>
+										<Grid item justifyContent="center" alignContent="center">
+											<Typography component="div" variant="h6" color="#183642">
+												Flight Number
+											</Typography>
+											<Typography
+												variant="subtitle2"
+												color="#183642"
+												component="div"
+											>
+												{flight.flightNo}
+											</Typography>
+											<Typography
+												component="div"
+												variant="subtitle1"
+												color="#183642"
+											>
+												Time in air
+											</Typography>
+											<Typography
+												variant="subtitle2"
+												color="#183642"
+												component="div"
+											>
+												{Math.ceil(
+													(new Date(flight.arrivalTime).getTime() -
+														new Date(flight.departureTime).getTime()) /
+														(1000 * 3600)
+												) + ' Hour(s)'}
+											</Typography>
+										</Grid>
+										<Grid item>
+											<Card
+												sx={{
+													backgroundColor: 'rgb(254, 239, 221, 0.5)',
+													pl: 2,
+													pr: 2,
+												}}
+											>
+												<Typography
+													component="div"
+													variant="h6"
+													color="#183642"
+												>
+													Departure Date
+												</Typography>
+												<Typography
+													variant="subtitle2"
+													color="#183642"
+													component="div"
+													noWrap
+												>
+													{new Date(flight.departureTime).toUTCString()}
+												</Typography>
 
-								<Grid
-									container
-									direction="column"
-									alignItems="center"
-									justifyContent="center"
-								>
-									<IconButton aria-label="previous">
-										<LuggageIcon
-											sx={{ height: 38, width: 38, color: '#183642' }}
-										/>
-									</IconButton>
-									<Typography
-										variant="subtitle2"
-										color="text.secondary"
-										component="div"
-									>
-										3 bags
-									</Typography>
-								</Grid>
+												<Divider
+													orientation="vertical"
+													variant="middle"
+													sx={{ margin: '10px' }}
+												/>
 
-								<Grid container>
-									<Typography
-										variant="body2"
-										color="text.secondary"
-										component="div"
-										align="center"
-									>
-										25 KG/Bag
-									</Typography>
-								</Grid>
-								<Divider
-									orientation="vertical"
-									variant="middle"
-									sx={{ height: '20px' }}
-								/>
+												<Typography
+													component="div"
+													variant="h6"
+													color="#183642"
+												>
+													Arrival Date
+												</Typography>
+												<Typography
+													variant="subtitle2"
+													color="#183642"
+													component="div"
+													noWrap
+												>
+													{new Date(flight.arrivalTime).toUTCString()}
+												</Typography>
 
-								<Grid
-									container
-									direction="column"
-									alignItems="center"
-									justifyContent="center"
-								>
-									<IconButton aria-label="previous">
-										<PaymentsIcon
-											sx={{ height: 38, width: 38, color: '#183642' }}
-										/>
-									</IconButton>
-									<Typography
-										variant="subtitle2"
-										color="text.secondary"
-										component="div"
-									>
-										1000$
-									</Typography>
-								</Grid>
-							</Box>
-						</Card>
+												<Divider
+													orientation="vertical"
+													variant="middle"
+													sx={{ margin: '0 10px 0 10px' }}
+												/>
+											</Card>
+										</Grid>
+
+										<Grid item>
+											<Card
+												sx={{
+													backgroundColor: 'rgb(254, 239, 221, 0.5)',
+													pl: 2,
+													pr: 2,
+												}}
+											>
+												<Typography
+													component="div"
+													variant="h6"
+													color="#183642"
+												>
+													Price per person
+												</Typography>
+												<Typography
+													variant="subtitle2"
+													color="#183642"
+													component="div"
+													noWrap
+												>
+													{selectedCabin === 'Economy'
+														? flight.priceEcon
+														: flight.priceBus}
+													$
+												</Typography>
+
+												<Divider
+													orientation="vertical"
+													variant="middle"
+													sx={{ margin: '10px' }}
+												/>
+
+												<Typography
+													component="div"
+													variant="h6"
+													color="#183642"
+												>
+													Bag(s) per person
+												</Typography>
+												<Typography
+													variant="subtitle2"
+													color="#183642"
+													component="div"
+													noWrap
+												>
+													{selectedCabin === 'Economy'
+														? flight.noBagsEcon
+														: flight.noBagsBus}
+												</Typography>
+											</Card>
+										</Grid>
+										{/* 
+										<Grid
+											item
+											sx={{
+												textAlign: 'center',
+												p: 1,
+											}}
+										>
+											<Card>
+												<Button
+													variant="contained"
+													color="primary"
+													sx={{
+														':hover': { backgroundColor: '#CD5334' },
+														alignContent: 'center',
+														justifyContent: 'center',
+														textAlign: 'center',
+													}}
+													onClick={() => {}}
+												>
+													reserve
+												</Button>
+											</Card>
+										</Grid> */}
+									</Grid>
+								</Box>
+							</Card>
+						</Collapse>
 					</Grid>
 				</Grid>
 			</Grid>

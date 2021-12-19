@@ -19,8 +19,11 @@ function Flights({ userType }) {
 		backgroundColor: (t) =>
 			t.palette.mode === 'light' ? t.palette.grey[50] : t.palette.grey[900],
 		backgroundSize: 'cover',
+		backgroundAttachment: 'fixed',
 		height: '100vh',
 	};
+
+	let flag = userType === UserType.admin;
 
 	const [flights, setFlights] = useState([]);
 	const [checks, setChecks] = useState({});
@@ -29,19 +32,6 @@ function Flights({ userType }) {
 	const [returnFlight, setReturnFlight] = useState(null);
 
 	let location = useLocation();
-	let query = location.search.substring(1);
-	let queryObj = { cabin: 'Economy' };
-	if (query !== '') {
-		queryObj = JSON.parse(
-			'{"' +
-				decodeURI(query)
-					.replace(/"/g, '\\"')
-					.replace(/&/g, '","')
-					.replace(/=/g, '":"') +
-				'"}'
-		);
-	}
-	console.log(queryObj);
 
 	let adults = 1;
 	let children = 0;
@@ -52,44 +42,45 @@ function Flights({ userType }) {
 		console.log(err);
 	}
 	let seats = adults + children;
-	console.log(seats);
 	let priceFactor = adults + children * 0.8;
 
-	let flag = userType === UserType.admin;
-
-	const getData = async (queryString) => {
-		let res;
-		res = await axios.get('/flights?' + queryString, {
-			headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
-		});
-		let flightData = res['data'];
-		setFlights(flightData);
-		let currentChecks = {};
-		flightData.forEach((element) => {
-			currentChecks[element.flightNo] = false;
-		});
-		setChecks(currentChecks);
+	const getData = async (queryObj) => {
+		let queryString = Object.keys(queryObj)
+			.map((key) => key + '=' + queryObj[key])
+			.join('&');
+		try {
+			let res = await axios.get('/flights?' + queryString);
+			let flightData = res['data'];
+			setFlights(flightData);
+			let currentChecks = {};
+			flightData.forEach((element) => {
+				currentChecks[element.flightNo] = false;
+			});
+			setChecks(currentChecks);
+		} catch (err) {
+			console.log(err);
+		}
 	};
 
-	// eslint-disable-next-line react-hooks/exhaustive-deps
-	React.useEffect(() => getData(query), []);
+	React.useEffect(() => getData(location.state), []);
+
 	return (
 		<div style={styles}>
 			<NavBar userType={userType} />
 			<div style={{ padding: '10px' }}>
-				<Grid container spacing={2}>
-					{flag && (
+				{flag && (
+					<Grid container spacing={2}>
 						<Grid item>
 							<CreateFlight getData={getData} />
 						</Grid>
-					)}
-					{flag && (
 						<Grid item>
 							<DeleteFlight checks={checks} getData={getData} />
 						</Grid>
-					)}
-					<Grid item>{flag && <SearchFlight getData={getData} />}</Grid>
-				</Grid>
+						<Grid item>
+							<SearchFlight getData={getData} />
+						</Grid>
+					</Grid>
+				)}
 				<FlightDetails
 					open={clicked !== null ? true : false}
 					clicked={clicked}
@@ -98,7 +89,7 @@ function Flights({ userType }) {
 					setDepartureFlight={setDepartureFlight}
 					returnFlight={returnFlight}
 					setReturnFlight={setReturnFlight}
-					cabin={queryObj.cabin}
+					cabin={location.state.cabin}
 					seats={seats}
 					priceFactor={priceFactor}
 					getData={getData}
@@ -121,10 +112,7 @@ function Flights({ userType }) {
 						<FlightList
 							userType={userType}
 							flights={flights}
-							checks={checks}
-							setChecks={setChecks}
-							getData={getData}
-							setClicked={setClicked}
+							cabin={location.state.cabin}
 							priceFactor={priceFactor}
 						/>
 					</div>
