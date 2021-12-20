@@ -50,9 +50,15 @@ export default function Homepage({ userType }) {
 					component="div"
 					sx={{ flexGrow: 1 }}
 				></Typography>
-				<Button color="inherit" href="/flights" sx={{ textTransform: 'none' }}>
-					View Available Flights
-				</Button>
+				{isAdmin && (
+					<Button
+						color="inherit"
+						href="/flights"
+						sx={{ textTransform: 'none' }}
+					>
+						View Available Flights
+					</Button>
+				)}
 				<Divider
 					orientation="vertical"
 					variant="middle"
@@ -97,12 +103,20 @@ export default function Homepage({ userType }) {
 					{flag ? 'Login' : 'Logout'}
 				</Button>
 			</Toolbar>
-			<TypeAnimation
-				item
-				cursor={false}
-				sequence={['Book a flight', 1000, 'It is simple with us.']}
-				wrapper="h2"
-			/>
+			<Grid container style={{ paddingLeft: '50px', minHeight: '100px' }}>
+				<TypeAnimation
+					item
+					cursor={false}
+					sequence={[
+						'Book a flight',
+						1000,
+						'It is simple with us.',
+						1000,
+						'Bakar, the #1 airline in the world.',
+					]}
+					wrapper="h2"
+				/>
+			</Grid>
 			<Grid container alignItems="center" justifyContent="center">
 				<Grid item>
 					<SearchFlightUser></SearchFlightUser>

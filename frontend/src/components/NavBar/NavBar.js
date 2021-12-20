@@ -29,7 +29,7 @@ export default function NavBar({ userType }) {
 	return (
 		<AppBar
 			item="true"
-			position="static"
+			position="sticky"
 			color="inherit"
 			sx={{ marginBottom: '20px' }}
 		>
@@ -55,14 +55,16 @@ export default function NavBar({ userType }) {
 					</Button>
 				</Typography>
 
-				<Button
-					color="inherit"
-					name="viewFlights"
-					onClick={handleClick}
-					sx={{ textTransform: 'none' }}
-				>
-					View Available Flights
-				</Button>
+				{isAdmin && (
+					<Button
+						color="inherit"
+						name="viewFlights"
+						onClick={handleClick}
+						sx={{ textTransform: 'none' }}
+					>
+						View Available Flights
+					</Button>
+				)}
 				{!flag && !isAdmin && (
 					<Button
 						color="inherit"

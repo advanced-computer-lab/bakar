@@ -17,13 +17,10 @@ function Tickets({ userType }) {
 
 	const getData = async (queryString) => {
 		console.log(queryString);
-		const res = await axios.get('/tickets?' + queryString, {
-			headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
-		});
+		const res = await axios.get('/tickets?' + queryString);
 		console.log(res);
 		let ticketData = res['data'];
 		setTickets(ticketData);
-		
 	};
 
 	React.useEffect(() => getData(query), []);
@@ -38,7 +35,7 @@ function Tickets({ userType }) {
 					clicked={clicked}
 					setClicked={setClicked}
 					getData={getData}
-					select = {true}
+					select={true}
 				></FlightDetails>
 				<MyFlightTable
 					userType={userType}

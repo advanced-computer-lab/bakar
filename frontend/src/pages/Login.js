@@ -7,16 +7,17 @@ import {
 	Checkbox,
 	FormControlLabel,
 	Grid,
+	IconButton,
 	Link,
 	Paper,
 	TextField,
 	Typography,
 } from '@mui/material';
+import HomeIcon from '@mui/icons-material/Home';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Copyright from '../components/Login/Login';
 import axios from '../api';
 import { UserType } from '../userType';
-const jwt = require('jsonwebtoken');
 
 export default function SignInSide({ setUserType }) {
 	let navigate = useNavigate();
@@ -131,8 +132,15 @@ export default function SignInSide({ setUserType }) {
 								</Link>
 							</Grid>
 						</Grid>
-						<Copyright sx={{ mt: 5 }} />
 					</Box>
+					<br></br>
+					<br></br>
+					<Avatar sx={{ backgroundColor: '#CD5334', m: 1 }}>
+						<IconButton href="/">
+							<HomeIcon sx={{ color: '#ffffff' }}></HomeIcon>
+						</IconButton>
+					</Avatar>
+					<Copyright sx={{ mt: 5 }} />
 				</Box>
 			</Grid>
 		</Grid>
