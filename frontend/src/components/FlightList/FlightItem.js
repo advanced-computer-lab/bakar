@@ -14,10 +14,11 @@ import FlightLandIcon from '@mui/icons-material/FlightLand';
 import KeyboardArrowDown from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUp from '@mui/icons-material/KeyboardArrowUp';
 import PriceTag from './PriceTag';
+import FlightTimeline from './FlightTimeline';
 
 export default function FlightItem({ flight, cabin, priceFactor }) {
 	const [expanded, setExpanded] = useState(false);
-	const [selectedCabin, setSelectedCabin] = useState();
+	const [selectedCabin, setSelectedCabin] = useState(cabin);
 
 	function formatHHMM(date) {
 		function z(n) {
@@ -173,166 +174,111 @@ export default function FlightItem({ flight, cabin, priceFactor }) {
 							>
 								<Box sx={{ display: 'flex', alignItems: 'center' }}>
 									<Grid container direction="row" columnSpacing={1}>
-										<Grid item justifyContent="center" alignContent="center">
-											<Typography component="div" variant="h6" color="#183642">
-												Flight Number
-											</Typography>
-											<Typography
-												variant="subtitle2"
-												color="#183642"
-												component="div"
-											>
-												{flight.flightNo}
-											</Typography>
-											<Typography
-												component="div"
-												variant="subtitle1"
-												color="#183642"
-											>
-												Time in air
-											</Typography>
-											<Typography
-												variant="subtitle2"
-												color="#183642"
-												component="div"
-											>
-												{Math.ceil(
-													(new Date(flight.arrivalTime).getTime() -
-														new Date(flight.departureTime).getTime()) /
-														(1000 * 3600)
-												) + ' Hour(s)'}
-											</Typography>
-										</Grid>
 										<Grid item>
 											<Card
 												sx={{
 													backgroundColor: 'rgb(254, 239, 221, 0.5)',
-													pl: 2,
-													pr: 2,
 												}}
 											>
-												<Typography
-													component="div"
-													variant="h6"
-													color="#183642"
-												>
-													Departure Date
-												</Typography>
-												<Typography
-													variant="subtitle2"
-													color="#183642"
-													component="div"
-													noWrap
-												>
-													{new Date(flight.departureTime).toUTCString()}
-												</Typography>
-
-												<Divider
-													orientation="vertical"
-													variant="middle"
-													sx={{ margin: '10px' }}
-												/>
-
-												<Typography
-													component="div"
-													variant="h6"
-													color="#183642"
-												>
-													Arrival Date
-												</Typography>
-												<Typography
-													variant="subtitle2"
-													color="#183642"
-													component="div"
-													noWrap
-												>
-													{new Date(flight.arrivalTime).toUTCString()}
-												</Typography>
-
-												<Divider
-													orientation="vertical"
-													variant="middle"
-													sx={{ margin: '0 10px 0 10px' }}
-												/>
+												<FlightTimeline flight={flight} />
 											</Card>
 										</Grid>
 
 										<Grid item>
-											<Card
-												sx={{
-													backgroundColor: 'rgb(254, 239, 221, 0.5)',
-													pl: 2,
-													pr: 2,
-												}}
-											>
-												<Typography
-													component="div"
-													variant="h6"
-													color="#183642"
-												>
-													Price per person
-												</Typography>
-												<Typography
-													variant="subtitle2"
-													color="#183642"
-													component="div"
-													noWrap
-												>
-													{selectedCabin === 'Economy'
-														? flight.priceEcon
-														: flight.priceBus}
-													$
-												</Typography>
+											<Grid container direction="column" rowSpacing={2}>
+												<Grid item>
+													<Card
+														sx={{
+															backgroundColor: 'rgb(254, 239, 221, 0.5)',
+															pl: 2,
+															pr: 2,
+														}}
+													>
+														<Typography
+															component="div"
+															variant="subtitle1"
+															color="#183642"
+															sx={{ mt: 0.5 }}
+														>
+															Price per person
+														</Typography>
+														<Typography
+															variant="subtitle2"
+															color="#183642"
+															component="div"
+															noWrap
+														>
+															{selectedCabin === 'Economy'
+																? flight.priceEcon
+																: flight.priceBus}
+															$
+														</Typography>
 
-												<Divider
-													orientation="vertical"
-													variant="middle"
-													sx={{ margin: '10px' }}
-												/>
+														<Divider
+															orientation="vertical"
+															variant="middle"
+															sx={{ margin: '10px' }}
+														/>
 
-												<Typography
-													component="div"
-													variant="h6"
-													color="#183642"
+														<Typography
+															component="div"
+															variant="subtitle1"
+															color="#183642"
+														>
+															Bag(s) per person
+														</Typography>
+														<Typography
+															variant="subtitle2"
+															color="#183642"
+															component="div"
+															sx={{ mb: 1 }}
+														>
+															{selectedCabin === 'Economy'
+																? flight.noBagsEcon
+																: flight.noBagsBus}
+														</Typography>
+													</Card>
+												</Grid>
+												<Grid
+													item
+													justifyContent="center"
+													alignContent="center"
 												>
-													Bag(s) per person
-												</Typography>
-												<Typography
-													variant="subtitle2"
-													color="#183642"
-													component="div"
-													noWrap
-												>
-													{selectedCabin === 'Economy'
-														? flight.noBagsEcon
-														: flight.noBagsBus}
-												</Typography>
-											</Card>
+													<Card
+														sx={{
+															backgroundColor: 'rgb(254, 239, 221, 0.5)',
+														}}
+													>
+														<Typography
+															component="div"
+															variant="subtitle1"
+															color="#183642"
+															sx={{ mt: 0.5 }}
+														>
+															Flight Number
+														</Typography>
+														<Typography
+															variant="subtitle2"
+															color="#183642"
+															component="div"
+														>
+															{flight.flightNo}
+														</Typography>
+														<Button
+															variant="contained"
+															color="primary"
+															sx={{
+																':hover': { backgroundColor: '#CD5334' },
+																mt: 2,
+																mb: 1.5,
+															}}
+														>
+															{'Select'}
+														</Button>
+													</Card>
+												</Grid>
+											</Grid>
 										</Grid>
-										{/* 
-										<Grid
-											item
-											sx={{
-												textAlign: 'center',
-												p: 1,
-											}}
-										>
-											<Card>
-												<Button
-													variant="contained"
-													color="primary"
-													sx={{
-														':hover': { backgroundColor: '#CD5334' },
-														alignContent: 'center',
-														justifyContent: 'center',
-														textAlign: 'center',
-													}}
-													onClick={() => {}}
-												>
-													reserve
-												</Button>
-											</Card>
-										</Grid> */}
 									</Grid>
 								</Box>
 							</Card>

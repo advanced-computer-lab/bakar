@@ -20,7 +20,7 @@ function Flights({ userType }) {
 			t.palette.mode === 'light' ? t.palette.grey[50] : t.palette.grey[900],
 		backgroundSize: 'cover',
 		backgroundAttachment: 'fixed',
-		height: '100vh',
+		position: 'sticky',
 	};
 
 	let flag = userType === UserType.admin;
