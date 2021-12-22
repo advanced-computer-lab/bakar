@@ -2,8 +2,9 @@ const express = require('express');
 const router = express.Router();
 const Flight = require('../../models/Flight');
 const jwt = require('jsonwebtoken');
+const auth = require("../../authorization/authorization");
 
-router.post('/', async (req, res) => {
+router.post('/', auth, async (req, res) => {
 	if (req.body.departureTime < req.body.arrivalTime) {
 		if (req.body.seatsEcon >= 0 && req.body.seatsBus >= 0) {
 			if (req.body.departureLocation != req.body.arrivalLocation) {
@@ -33,6 +34,8 @@ router.post('/', async (req, res) => {
 });
 
 router.get('/', async (req, res) => {
+	console.log("hello");
+	console.log(req.headers);
 	try {
 		const myQuery = {
 			...req.query,
@@ -61,7 +64,7 @@ router.get('/:flightNo', async (req, res) => {
 	}
 });
 
-router.put('/:flightNo', async (req, res) => {
+router.put('/:flightNo', auth, async (req, res) => {
 	try {
 		if (req.body.arrivalTime > req.body.departureTime) {
 			await Flight.updateOne(
@@ -78,7 +81,7 @@ router.put('/:flightNo', async (req, res) => {
 	}
 });
 
-router.delete('/:flightNo', async (req, res) => {
+router.delete('/:flightNo', auth, async (req, res) => {
 	try {
 		const dbResult = await Flight.deleteOne({
 			flightNo: req.params.flightNo,
@@ -102,7 +105,7 @@ router.get('/:flightNo', async (req, res) => {
 	}
 });
 
-router.post('/delete', async (req, res) => {
+router.post('/delete', auth, async (req, res) => {
 	const flights = req.body.deleteQuery;
 	try {
 		const dbResult = await Flight.deleteMany(flights).exec();

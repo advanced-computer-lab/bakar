@@ -8,14 +8,13 @@ const passport = require('passport');
 const jwt = require('jsonwebtoken');
 const JwtStrategy = require('passport-jwt').Strategy;
 const ExtractJwt = require('passport-jwt').ExtractJwt;
-const secretKeyAdmin = 'tom&jerry';
-const secretKeyUser = 'jerry&tom';
 const sendMessage = require('./nodemailer.js');
+require('dotenv').config();
 
 router.get('/', async (req, res) => {
 	try {
 		const token = req.headers.authorization.slice(7);
-		const user = jwt.verify(token, 'jerry&tom');
+		const user = jwt.verify(token, process.env.secretKey);
 		const result = await Ticket.find({ username: user.username }).exec();
 		console.log('result: ' + result);
 		res.send(result);
@@ -27,7 +26,7 @@ router.get('/', async (req, res) => {
 router.delete('/:_id', async (req, res) => {
 	try {
 		const token = req.headers.authorization.slice(7);
-		const user = jwt.verify(token, 'jerry&tom');
+		const user = jwt.verify(token, process.env.secretKey);
 		const dbResult = await Ticket.findOneAndDelete({
 			_id: req.params._id,
 		}).exec();
@@ -60,7 +59,7 @@ router.get('/create', async (req, res) => {
 router.post('/', async (req, res) => {
 	try {
 		const token = req.headers.authorization.slice(7);
-		const user = jwt.verify(token, 'jerry&tom');
+		const user = jwt.verify(token, process.env.secretKey);
 		req.body.username = user.username;
 		req.body.email = user.email;
 		console.log(user);

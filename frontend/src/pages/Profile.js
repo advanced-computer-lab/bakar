@@ -18,6 +18,7 @@ export default function Profile() {
   //const [user, setUser] = React.useState();
   console.log("test1");
   let token = localStorage.getItem("token");
+  console.log(token);
   let test = JSON.parse(atob(token.split(".")[1]));
   let username = test.username;
   let firstName = test.firstName;

@@ -8,6 +8,7 @@ const jwt = require("jsonwebtoken");
 const JwtStrategy = require("passport-jwt").Strategy;
 const ExtractJwt = require("passport-jwt").ExtractJwt;
 require('dotenv').config();
+const auth = require("../../authorization/authorization");
 
 //Admin's entry
 const admin = new User({
@@ -28,27 +29,6 @@ router.post("/login", async (req, res) => {
     if (!user) {
       console.log("Incorrect username or password");
     } else {
-      if (user.isAdmin) {
-        console.log('waddap')
-        req.login(user, function (err) {
-          const token = jwt.sign(
-            {
-              username: user.username,
-              firstName: user.firstName,
-              lastName: user.lastName,
-              email: user.email,
-              passport: user.passport,
-              isAdmin: user.isAdmin,
-            },
-            process.env.secretKeyAdmin,
-            {
-              noTimestamp: true,
-              expiresIn: "24h",
-            }
-          );
-          res.send(token);
-        });
-      } else {
         console.log("user");
         req.login(user, function (err) {
           const token = jwt.sign(
@@ -60,7 +40,7 @@ router.post("/login", async (req, res) => {
               passport: user.passport,
               isAdmin: user.isAdmin,
             },
-            process.env.secretKeyUser,
+            process.env.secretKey,
             {
               expiresIn: "24h",
             }
@@ -68,7 +48,6 @@ router.post("/login", async (req, res) => {
           res.send(token);
         });
       }
-    }
   })(req, res);
 });
 
@@ -102,7 +81,7 @@ router.post("/register", (req, res) => {
                 passport: user.passport,
                 isAdmin: user.isAdmin,
               },
-              process.env.secretKeyUser,
+              process.env.secretKey,
               {
                 expiresIn: "24h",
               }
@@ -115,12 +94,8 @@ router.post("/register", (req, res) => {
   });
 });
 
-router.put("/", async (req, res) => {
-  console.log(req.body);
-  console.log(req.headers)
-  const token = req.headers.authorization.slice(7);
-  console.log(token);
-  const user = jwt.verify(token, process.env.secretKeyUser);
+router.put("/", auth, async (req, res) => {
+  const user = auth.toString().slice(221,262);
   try {
     if(!user.isAdmin){
       console.log(user);
@@ -133,7 +108,7 @@ router.put("/", async (req, res) => {
         email:req.body.email,
         passport: req.body.passport,
         isAdmin: false,
-      },process.env.secretKeyUser,
+      },process.env.secretKey,
       {
         expiresIn: "24h",
       })

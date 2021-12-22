@@ -21,7 +21,7 @@ function MyFlightTable(props) {
 							Departure Flight Number
 						</TableCell>
 						<TableCell style={style} align="center" colSpan={1}>
-							Arrival Flight Number
+							Return Flight Number
 						</TableCell>
 						<TableCell style={style} align="center" colSpan={1}>
 							Cabin
