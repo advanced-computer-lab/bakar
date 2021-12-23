@@ -1,4 +1,4 @@
-import { React } from 'react';
+import { React, useState, useEffect } from 'react';
 import { useNavigate } from 'react-router';
 import {
 	Avatar,
@@ -10,40 +10,45 @@ import {
 	IconButton,
 	Link,
 	Paper,
-	TextField,
 	Typography,
 } from '@mui/material';
 import HomeIcon from '@mui/icons-material/Home';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
-import Copyright from '../components/Login/Login';
+import Copyright from '../components/Copyrights/Copyrights';
 import axios from '../api';
 import { UserType } from '../userType';
+import { ValidatorForm, TextValidator } from 'react-material-ui-form-validator';
 
 export default function SignInSide({ setUserType }) {
 	let navigate = useNavigate();
+
+	const [username, setUsername] = useState();
+	const [password, setPassword] = useState();
+	const [error, setError] = useState(false);
+
 	const handleSubmit = async (event) => {
 		event.preventDefault();
-		const data = new FormData(event.currentTarget);
-		// eslint-disable-next-line no-console
-		let response = await axios.post('/users/login', {
-			username: data.get('username'),
-			password: data.get('password'),
-		});
-		localStorage.setItem('token', response.data);
-		const token = localStorage.getItem('token');
 
-		const test = JSON.parse(atob(token.split('.')[1]));
-		console.log(test);
-		if (test.isAdmin) {
-			setUserType(UserType.admin);
-		} else {
-			setUserType(UserType.user);
-		}
+		try {
+			let response = await axios.post('/users/login', {
+				username: username,
+				password: password,
+			});
+			localStorage.setItem('token', response.data);
+			const token = localStorage.getItem('token');
 
-		if (response.status === 200) {
+			const test = JSON.parse(atob(token.split('.')[1]));
+			if (test.isAdmin) {
+				setUserType(UserType.admin);
+			} else {
+				setUserType(UserType.user);
+			}
+
 			navigate('/');
-		} else {
-			navigate('/');
+		} catch (err) {
+			if (err.response.status === 401) {
+				setError(true);
+			}
 		}
 	};
 
@@ -74,6 +79,7 @@ export default function SignInSide({ setUserType }) {
 						display: 'flex',
 						flexDirection: 'column',
 						alignItems: 'center',
+						alignContent: 'center',
 					}}
 				>
 					<Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
@@ -82,30 +88,45 @@ export default function SignInSide({ setUserType }) {
 					<Typography component="h1" variant="h5">
 						Sign in
 					</Typography>
-					<Box
-						component="form"
-						noValidate
+					<ValidatorForm
 						onSubmit={handleSubmit}
-						sx={{ mt: 1 }}
+						onError={(errors) => console.log(errors)}
+						fullWidth
 					>
-						<TextField
+						<TextValidator
 							margin="normal"
-							required
 							fullWidth
 							id="username"
 							label="Username"
 							name="username"
 							autoComplete="username"
 							autoFocus
+							value={username}
+							onChange={(event) => {
+								setUsername(event.target.value);
+								setError(false);
+							}}
+							error={error}
+							validators={['required']}
+							errorMessages={['this field is required']}
+							sx={{ width: '550px' }}
 						/>
-						<TextField
+						<TextValidator
 							margin="normal"
-							required
 							fullWidth
 							name="password"
 							label="Password"
 							type="password"
 							id="password"
+							value={password}
+							onChange={(event) => {
+								setPassword(event.target.value);
+								setError(false);
+							}}
+							error={error}
+							helperText={error ? 'incorrect username or password' : ''}
+							validators={['required']}
+							errorMessages={['this field is required']}
 							autoComplete="current-password"
 						/>
 						<FormControlLabel
@@ -132,7 +153,7 @@ export default function SignInSide({ setUserType }) {
 								</Link>
 							</Grid>
 						</Grid>
-					</Box>
+					</ValidatorForm>
 					<br></br>
 					<br></br>
 					<Avatar sx={{ backgroundColor: '#CD5334', m: 1 }}>

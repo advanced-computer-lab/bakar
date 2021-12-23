@@ -26,7 +26,7 @@ const admin = new User({
 router.post('/login', async (req, res) => {
 	passport.authenticate('local', function (err, user, info) {
 		if (!user) {
-			console.log('Incorrect username or password');
+			res.sendStatus(401);
 		} else {
 			if (user.isAdmin) {
 				console.log('waddap');
@@ -86,7 +86,7 @@ router.post('/register', (req, res) => {
 	});
 	User.register(register, req.body.password, (err, user) => {
 		if (err) {
-			console.log(err);
+			console.log(err.index);
 		} else {
 			passport.authenticate('local')(req, res, function () {
 				if (!user) {
@@ -166,16 +166,5 @@ router.get('/', async (req, res) => {
 		res.send(400);
 	}
 });
-
-// router.get('/', async (req, res) => {
-//   try{
-//     const result = await User.find({username:"tom"}).exec();
-//     console.log("result: " + result);
-//     res.send(result);
-//   }catch (err) {
-//     console.log(err);
-//     res.send(400);
-//   }
-// });
 
 module.exports = router;

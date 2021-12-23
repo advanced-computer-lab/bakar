@@ -41,8 +41,9 @@ export default function FlightTimeline({ flight }) {
 						noWrap
 					>
 						{Math.ceil(
-							(new Date(flight.arrivalTime).getTime() -
-								new Date(flight.departureTime).getTime()) /
+							new Date(
+								new Date(flight.arrivalTime) - new Date(flight.departureTime)
+							).getTime() /
 								(1000 * 3600)
 						) + ' Hour(s)'}
 					</Typography>

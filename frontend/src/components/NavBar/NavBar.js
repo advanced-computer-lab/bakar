@@ -69,7 +69,7 @@ export default function NavBar({ userType }) {
 					<Button
 						color="inherit"
 						href="/tickets"
-						onclick={handleClick}
+						onClick={handleClick}
 						sx={{ textTransform: 'none' }}
 					>
 						View Reserved Flights

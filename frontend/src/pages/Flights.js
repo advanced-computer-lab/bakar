@@ -8,8 +8,8 @@ import SearchFlight from '../components/SearchFlight/SearchFlight';
 import axios from 'axios';
 import { useLocation } from 'react-router-dom';
 import { UserType } from '../userType';
-import FlightDetails from '../components/FlightDetails/FlightDetails';
 import CheckOut from '../components/CheckOut/CheckOut';
+import Copyright from '../components/Copyrights/Copyrights';
 
 function Flights({ userType }) {
 	const styles = {
@@ -20,7 +20,6 @@ function Flights({ userType }) {
 			t.palette.mode === 'light' ? t.palette.grey[50] : t.palette.grey[900],
 		backgroundSize: 'cover',
 		backgroundAttachment: 'fixed',
-		position: 'sticky',
 	};
 
 	let flag = userType === UserType.admin;
@@ -32,6 +31,7 @@ function Flights({ userType }) {
 	const [returnFlight, setReturnFlight] = useState(null);
 
 	let location = useLocation();
+	let { transaction } = location.state;
 
 	let adults = 1;
 	let children = 0;
@@ -41,14 +41,16 @@ function Flights({ userType }) {
 	} catch (err) {
 		console.log(err);
 	}
-	let seats = adults + children;
+
 	let priceFactor = adults + children * 0.8;
+	let noOfSeats = adults + children;
 
 	const getData = async (queryObj) => {
-		let queryString = Object.keys(queryObj)
-			.map((key) => key + '=' + queryObj[key])
-			.join('&');
 		try {
+			let queryString = Object.keys(queryObj)
+				.map((key) => key + '=' + queryObj[key])
+				.join('&');
+			console.log(queryString);
 			let res = await axios.get('/flights?' + queryString);
 			let flightData = res['data'];
 			setFlights(flightData);
@@ -81,19 +83,6 @@ function Flights({ userType }) {
 						</Grid>
 					</Grid>
 				)}
-				<FlightDetails
-					open={clicked !== null ? true : false}
-					clicked={clicked}
-					setClicked={setClicked}
-					departureFlight={departureFlight}
-					setDepartureFlight={setDepartureFlight}
-					returnFlight={returnFlight}
-					setReturnFlight={setReturnFlight}
-					cabin={location.state.cabin}
-					seats={seats}
-					priceFactor={priceFactor}
-					getData={getData}
-				></FlightDetails>
 				{!(departureFlight == null || returnFlight == null) &&
 				returnFlight.seats !== undefined ? (
 					<CheckOut
@@ -106,18 +95,18 @@ function Flights({ userType }) {
 					/>
 				) : (
 					<div>
-						<h2 style={{ textAlign: 'center' }}>
-							{departureFlight == null ? 'Departure Flights' : 'Return Flights'}
-						</h2>
 						<FlightList
 							userType={userType}
 							flights={flights}
 							cabin={location.state.cabin}
 							priceFactor={priceFactor}
+							noOfSeats={noOfSeats}
+							transaction={transaction}
 						/>
 					</div>
 				)}
 			</div>
+			<Copyright />
 		</div>
 	);
 }

@@ -68,7 +68,7 @@ export default function Homepage({ userType }) {
 					<Button
 						color="inherit"
 						href="/tickets"
-						onclick={handleClick}
+						onClick={handleClick}
 						sx={{ textTransform: 'none' }}
 					>
 						View Reserved Flights
@@ -119,7 +119,9 @@ export default function Homepage({ userType }) {
 			</Grid>
 			<Grid container alignItems="center" justifyContent="center">
 				<Grid item>
-					<SearchFlightUser></SearchFlightUser>
+					<SearchFlightUser
+						searchSteps={['departure', 'return']}
+					></SearchFlightUser>
 				</Grid>
 			</Grid>
 		</div>
