@@ -9,8 +9,9 @@ const auth = (req, res, next) => {
     if(!token){
         return res.status(403).send("User does not have a token issued.");
     }
-        jwt.verify(token, process.env.secretKey);
-        next();
+        const decoded = jwt.verify(token, process.env.secretKey);
+        req.user = decoded;
+        return next();
     } catch(err){
         console.log(err);
     }

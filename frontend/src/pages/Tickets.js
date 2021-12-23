@@ -17,12 +17,16 @@ function Tickets({ userType }) {
 
 	const getData = async (queryString) => {
 		console.log(queryString);
+		try{
 		const res = await axios.get('/tickets?' + queryString, {
 			headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
 		});
-		console.log(res);
+		console.log(res.status);
 		let ticketData = res['data'];
 		setTickets(ticketData);
+	} catch(err){
+		console.log(err);
+	}
 		
 	};
 

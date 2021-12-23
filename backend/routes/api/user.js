@@ -10,20 +10,6 @@ const ExtractJwt = require("passport-jwt").ExtractJwt;
 require('dotenv').config();
 const auth = require("../../authorization/authorization");
 
-//Admin's entry
-const admin = new User({
-  username: "boatymcboatfaced",
-  password: "youshallnothash",
-  firstName: "Boaty",
-  lastName: "McBoatface",
-  homeAddress: "2 McBoatfacing Street, River Thames",
-  countryCode: 20,
-  phone: "1006043322",
-  email: "jerry@gmail.com",
-  passport: "3000",
-  isAdmin: true,
-});
-
 router.post("/login", async (req, res) => {
   passport.authenticate("local", function (err, user, info) {
     if (!user) {
@@ -95,14 +81,14 @@ router.post("/register", (req, res) => {
 });
 
 router.put("/", auth, async (req, res) => {
-  const user = auth.toString().slice(221,262);
   try {
-    if(!user.isAdmin){
-      console.log(user);
-      const updatedUser = await User.updateOne({ username: user.username }, req.body).exec();
+    if(!req.user.isAdmin){
+      console.log(req.user);
+      const updatedUser = await User.updateOne({ username: req.user.username }, req.body).exec();
       console.log("The user is Updated successfully !");
+      console.log(req.user.username);
       const updatedToken = jwt.sign( {
-        username: user.username,
+        username: req.user.username,
         firstName: req.body.firstName,
         lastName: req.body.lastName,
         email:req.body.email,
@@ -122,16 +108,5 @@ router.put("/", auth, async (req, res) => {
     console.log(err);
   }
 });
-
-// router.get('/', async (req, res) => {
-//   try{
-//     const result = await User.find({username:"tom"}).exec();
-//     console.log("result: " + result);
-//     res.send(result);
-//   }catch (err) {
-//     console.log(err);
-//     res.send(400);
-//   }
-// });
 
 module.exports = router;

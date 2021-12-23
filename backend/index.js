@@ -56,7 +56,7 @@ app.get("/", (req, res) => res.send("Server running..."));
 // Use the routes here. e.g: `app.use('/api/books', books);`
 app.use("/users", user);
 app.use("/flights", flights);
-app.use("/tickets", auth, tickets)
+app.use("/tickets", tickets)
 
 const port = process.env.PORT || 8000;
 

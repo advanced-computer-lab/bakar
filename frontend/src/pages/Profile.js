@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/rules-of-hooks */
 import {
   Button,
   Grid,
@@ -12,14 +13,21 @@ import axios from "../api";
 import React, { useState } from "react";
 import NavBar from "../components/NavBar/NavBar";
 import { UserType } from "../userType";
+import { useNavigate } from 'react-router';
 const jwt = require("jsonwebtoken");
 
 export default function Profile() {
   //const [user, setUser] = React.useState();
-  console.log("test1");
+    let navigate = useNavigate();
+    let test;
   let token = localStorage.getItem("token");
   console.log(token);
-  let test = JSON.parse(atob(token.split(".")[1]));
+  try{
+    test = JSON.parse(atob(token.split(".")[1]));
+    console.log(test);
+  } catch(err){
+    console.log(err);
+  }
   let username = test.username;
   let firstName = test.firstName;
   let lastName = test.lastName;
@@ -36,8 +44,10 @@ export default function Profile() {
 
   const handleClick = async () => {
 	  
-  console.log("test");
+  console.log(test);
+  console.log(username);
     let data = {
+      username: test.username,
       firstName: firstNameValue,
       lastName: lastNameValue,
       email: emailValue,
@@ -58,7 +68,7 @@ export default function Profile() {
 	 lastName = test.lastName;
 	 email = test.email;
 	 passport = test.passport;
-	document.location.reload();
+  document.location.reload();
   };
 
   const handleSubmit = (event) => {
