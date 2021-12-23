@@ -6,6 +6,7 @@ import {
   Paper,
   TextField,
   InputAdornment,
+  Typography,
 } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import { grid } from "@mui/system";
@@ -14,6 +15,7 @@ import React, { useState } from "react";
 import NavBar from "../components/NavBar/NavBar";
 import { UserType } from "../userType";
 import { useNavigate } from 'react-router';
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 const jwt = require("jsonwebtoken");
 
 export default function Profile() {
@@ -54,9 +56,7 @@ export default function Profile() {
       passport: passportValue,
     };
 	console.log(data);
-   let res = await axios.put("/users", data, {
-      headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
-    });
+   let res = await axios.put("/users", data);
 	console.log(res);
 	localStorage.setItem("token", res.data);
 	
@@ -70,18 +70,6 @@ export default function Profile() {
 	 passport = test.passport;
   document.location.reload();
   };
-
-
-		token = localStorage.getItem('token');
-		test = JSON.parse(atob(token.split('.')[1]));
-		username = test.username;
-		firstName = test.firstName;
-		console.log(test);
-		lastName = test.lastName;
-		email = test.email;
-		passport = test.passport;
-		document.location.reload();
-	};
 
 	const handleSubmit = (event) => {
 		if (event.currentTarget.name === 'firstName') {

@@ -38,11 +38,12 @@ export default function SearchFlightUser({ detailsOnly }) {
 		try {
 			let data = {
 				departureTime: departureTime,
-				arrivalTime: arrivalTime,
+				returnTime: returnTime,
 				departureTerminal: departureTerminal == null ? departureTerminal:departureTerminal.toUpperCase(),
-				arrivalTerminal: arrivalTerminal == null ? arrivalTerminal:arrivalTerminal.toUpperCase(),
-				cabin: cabin === 'availableEcon' ? 'Economy' : 'Business',
-
+                arrivalTerminal: arrivalTerminal == null ? arrivalTerminal:arrivalTerminal.toUpperCase(),
+				cabin: cabin,
+				adults: adults,
+				children: children,
 			};
 
 			const requestedSeats = adults + children;
