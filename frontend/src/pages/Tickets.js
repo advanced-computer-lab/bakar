@@ -1,52 +1,38 @@
 import React, { useState } from 'react';
 import NavBar from '../components/NavBar/NavBar';
-import { Grid } from '@mui/material';
-import MyFlightTable from '../components/MyFlight/MyFlightTable';
-import axios from 'axios';
-import { useLocation } from 'react-router-dom';
-import { UserType } from '../userType';
-import FlightDetails from '../components/FlightDetails/FlightDetails';
+import TicketsList from '../components/Tickets/TicketsList';
+import axios from '../api';
 
 function Tickets({ userType }) {
-	let query = useLocation().search;
-	query = query.slice(1, query.length);
-	let flag = userType === UserType.admin;
-
-	const [tickets, setTickets] = useState([]);
-	const [clicked, setClicked] = useState(null);
-
-	const getData = async (queryString) => {
-		console.log(queryString);
-		try {
-			const res = await axios.get('/tickets?' + queryString);
-			console.log(res);
-			let ticketData = res['data'];
-			setTickets(ticketData);
-		} catch (err) {
-			console.log(err);
-		}
+	const styles = {
+		backgroundImage:
+			'url(https://images.unsplash.com/photo-1559474185-bf13da814ef5?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1935&q=80)',
+		backgroundRepeat: 'no-repeat',
+		backgroundColor: (t) =>
+			t.palette.mode === 'light' ? t.palette.grey[50] : t.palette.grey[900],
+		backgroundSize: 'cover',
+		backgroundAttachment: 'fixed',
+		position: 'sticky',
+		height: '100vh',
 	};
 
-	React.useEffect(() => getData(query), []);
+	const [tickets, setTickets] = useState([]);
+
+	const getData = async () => {
+		const res = await axios.get('/tickets');
+		console.log(res);
+		let ticketData = res['data'];
+		setTickets(ticketData);
+	};
+
+	React.useEffect(() => getData(), []);
 
 	return (
-		<div>
+		<div style={styles}>
 			<NavBar userType={userType} />
 			<div style={{ padding: '10px', paddingTop: '100px' }}>
 				<br />
-				<FlightDetails
-					open={clicked !== null ? true : false}
-					clicked={clicked}
-					setClicked={setClicked}
-					getData={getData}
-					select={true}
-				></FlightDetails>
-				<MyFlightTable
-					userType={userType}
-					tickets={tickets}
-					getData={getData}
-					setClicked={setClicked}
-				/>
+				<TicketsList userType={userType} tickets={tickets} getData={tickets} />
 			</div>
 		</div>
 	);

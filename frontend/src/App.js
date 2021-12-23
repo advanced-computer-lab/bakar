@@ -27,7 +27,6 @@ function App() {
 			return UserType.guest;
 		} else {
 			const test = JSON.parse(atob(token.split('.')[1]));
-			console.log(test);
 			if (test.isAdmin) {
 				return UserType.admin;
 			} else {

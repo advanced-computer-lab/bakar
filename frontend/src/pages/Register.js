@@ -7,7 +7,7 @@ import Grid from '@mui/material/Grid';
 import HomeOutlinedIcon from '@mui/icons-material/HomeOutlined';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
-import Copyright from '../components/Login/Login';
+import Copyright from '../components/Copyrights/Copyrights';
 import axios from '../api';
 import { useNavigate } from 'react-router';
 import { ValidatorForm, TextValidator } from 'react-material-ui-form-validator';
@@ -27,23 +27,25 @@ export default function SignUpSide() {
 
 	const handleSubmit = async (event) => {
 		event.preventDefault();
-		// eslint-disable-next-line no-console
-		let response = await axios.post('/users/register', {
-			firstName: firstName,
-			lastName: lastName,
-			username: username,
-			password: password,
-			email: email,
-			homeAddress: homeAddress,
-			passport: passport,
-			countryCode: countryCode,
-			phone: phoneNumber,
-		});
-		if (response.status === 200) {
+
+		try {
+			let response = await axios.post('/users/register', {
+				firstName: firstName,
+				lastName: lastName,
+				username: username,
+				password: password,
+				email: email,
+				homeAddress: homeAddress,
+				passport: passport,
+				countryCode: countryCode,
+				phone: phoneNumber,
+			});
 			navigate('/');
 			localStorage.setItem('token', response.data);
-		} else {
-			navigate('/');
+		} catch (err) {
+			console.log(err);
+			if (err.response.status === 401) {
+			}
 		}
 	};
 	return (
@@ -245,8 +247,8 @@ export default function SignUpSide() {
 							container
 							sx={{ textAlign: 'center', justifyContent: 'center' }}
 						>
-							<Link href="/register" variant="body2">
-								{"Don't have an account? Sign Up"}
+							<Link href="/login" variant="body2">
+								{'Have an account? Sign In'}
 							</Link>
 						</Grid>
 					</ValidatorForm>

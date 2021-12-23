@@ -81,7 +81,7 @@ export default function NavBar({ userType }) {
 					<Button
 						color="primary"
 						href="/tickets"
-						onclick={handleClick}
+						onClick={handleClick}
 						sx={{ textTransform: 'none' }}
 						variant="contained"
 						startIcon={<AirplaneTicketIcon />}

@@ -18,7 +18,7 @@ import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import { useNavigate } from 'react-router';
 import { ValidatorForm, TextValidator } from 'react-material-ui-form-validator';
 
-export default function SearchFlightUser({ detailsOnly }) {
+export default function SearchFlightUser({ detailsOnly, searchSteps }) {
 	const [departureTime, setDepartureTime] = React.useState(
 		new Date(Date.now() + 3600 * 1000 * 3)
 	);
@@ -64,6 +64,9 @@ export default function SearchFlightUser({ detailsOnly }) {
 				state: {
 					search: true,
 					...data,
+					transaction: {
+						searchSteps: searchSteps, // searchSteps = ['return'] or ['departure', 'return']
+					},
 				},
 			});
 		} catch (err) {

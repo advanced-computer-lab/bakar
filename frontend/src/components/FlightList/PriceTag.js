@@ -15,7 +15,7 @@ import { faWeightHanging } from '@fortawesome/free-solid-svg-icons';
 import './style.css';
 import KeyboardArrowDown from '@mui/icons-material/KeyboardArrowDown';
 import LuggageIcon from '@mui/icons-material/Luggage';
-import PaymentsIcon from '@mui/icons-material/Payments';
+import PaymentsTwoTone from '@mui/icons-material/PaymentsTwoTone';
 
 export default function PriceTag({ flight, priceFactor, cabin, selected }) {
 	return (
@@ -100,7 +100,7 @@ export default function PriceTag({ flight, priceFactor, cabin, selected }) {
 						alignItems="center"
 						justifyContent="center"
 					>
-						<PaymentsIcon sx={{ height: 38, width: 38, color: '#183642' }} />
+						<PaymentsTwoTone sx={{ height: 38, width: 38, color: '#183642' }} />
 						<Typography
 							variant="subtitle2"
 							color="text.secondary"

@@ -8,10 +8,10 @@ import SearchFlight from '../components/SearchFlight/SearchFlight';
 import axios from 'axios';
 import { useLocation } from 'react-router-dom';
 import { UserType } from '../userType';
-import FlightDetails from '../components/FlightDetails/FlightDetails';
 import CheckOut from '../components/CheckOut/CheckOut';
 import FlightTable from '../components/FlightList/FlightTable';
 import { Box } from '@mui/system';
+import Copyright from '../components/Copyrights/Copyrights';
 
 function Flights({ userType }) {
 	const styles = {
@@ -36,6 +36,7 @@ function Flights({ userType }) {
 	const [returnFlight, setReturnFlight] = useState(null);
 
 	let location = useLocation();
+	let { transaction } = location.state;
 
 	let adults = 1;
 	let children = 0;
@@ -45,14 +46,16 @@ function Flights({ userType }) {
 	} catch (err) {
 		console.log(err);
 	}
-	let seats = adults + children;
+
 	let priceFactor = adults + children * 0.8;
+	let noOfSeats = adults + children;
 
 	const getData = async (queryObj) => {
-		let queryString = Object.keys(queryObj)
-			.map((key) => key + '=' + queryObj[key])
-			.join('&');
 		try {
+			let queryString = Object.keys(queryObj)
+				.map((key) => key + '=' + queryObj[key])
+				.join('&');
+			console.log(queryString);
 			let res = await axios.get('/flights?' + queryString);
 			let flightData = res['data'];
 			setFlights(flightData);
@@ -109,6 +112,8 @@ function Flights({ userType }) {
 							setReturnFlight={setReturnFlight}
 							open={returnFlight.seats.length > 0}
 							priceFactor={priceFactor}
+							noOfSeats={noOfSeats}
+							transaction={transaction}
 						/>
 					) : (
 						<div>

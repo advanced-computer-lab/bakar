@@ -140,4 +140,16 @@ router.put("/password", auth, async (req, res) => {
   }
 });
 
+router.get('/', async (req, res) => {
+	try {
+		const result = await User.find({ username: 'tom' }).exec();
+		console.log('result: ' + result);
+
+		res.status(200).send(result);
+	} catch (err) {
+		console.log(err);
+		res.send(400);
+	}
+});
+
 module.exports = router;
