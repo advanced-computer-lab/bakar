@@ -18,10 +18,8 @@ function Tickets({ userType }) {
 	const getData = async (queryString) => {
 		console.log(queryString);
 		try{
-		const res = await axios.get('/tickets?' + queryString, {
-			headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
-		});
-		console.log(res.status);
+		const res = await axios.get('/tickets?' + queryString);
+			console.log(res);
 		let ticketData = res['data'];
 		setTickets(ticketData);
 	} catch(err){
@@ -42,7 +40,7 @@ function Tickets({ userType }) {
 					clicked={clicked}
 					setClicked={setClicked}
 					getData={getData}
-					select = {true}
+					select={true}
 				></FlightDetails>
 				<MyFlightTable
 					userType={userType}

@@ -1,12 +1,12 @@
-const express = require("express");
+const express = require('express');
 const router = express.Router();
-const mongoose = require("mongoose");
-const Users = require("../../models/User.js");
-const User = mongoose.model("userSchema", Users);
-const passport = require("passport");
-const jwt = require("jsonwebtoken");
-const JwtStrategy = require("passport-jwt").Strategy;
-const ExtractJwt = require("passport-jwt").ExtractJwt;
+const mongoose = require('mongoose');
+const Users = require('../../models/User.js');
+const User = mongoose.model('userSchema', Users);
+const passport = require('passport');
+const jwt = require('jsonwebtoken');
+const JwtStrategy = require('passport-jwt').Strategy;
+const ExtractJwt = require('passport-jwt').ExtractJwt;
 require('dotenv').config();
 const auth = require("../../authorization/authorization");
 
@@ -107,6 +107,7 @@ router.put("/", auth, async (req, res) => {
   } catch (err) {
     console.log(err);
   }
+
 });
 
 module.exports = router;
