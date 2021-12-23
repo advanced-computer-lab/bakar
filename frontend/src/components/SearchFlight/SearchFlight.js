@@ -40,15 +40,15 @@ export default function SearchFlight({ getData }) {
 		event.preventDefault();
 		try {
 			let data = {
-				flightNo: flightNo,
+				flightNo: flightNo == null ? flightNo:flightNo.toUpperCase(),
 				departureTime: departureTime,
 				arrivalTime: arrivalTime,
-				departureLocation: departureLocation,
-				arrivalLocation: arrivalLocation,
+				departureLocation: departureLocation == null? departureLocation:departureLocation.charAt(0).toUpperCase()+departureLocation.slice(1).toLowerCase(),
+				arrivalLocation: arrivalLocation == null? arrivalLocation:arrivalLocation.charAt(0).toUpperCase()+arrivalLocation.slice(1).toLowerCase(),
 				seatsEcon: seatsEcon,
 				seatsBus: seatsBus,
-				departureTerminal: departureTerminal,
-				arrivalTerminal: arrivalTerminal,
+				departureTerminal: departureTerminal == null ? departureTerminal:departureTerminal.toUpperCase(),
+				arrivalTerminal: arrivalTerminal == null ? arrivalTerminal:arrivalTerminal.toUpperCase(),
 				priceEcon: priceEcon,
 				priceBus: priceBus,
 				noBagsEcon: noBagsEcon,
