@@ -12,27 +12,30 @@ import Tickets from "./pages/Tickets";
 import Register from "./pages/Register";
 import Profile from "./pages/Profile";
 import { UserType } from "./userType";
+import ProtectedRoute from "./components/protectedRoutes/protectedRoute";
+import { useNavigate } from "react-router";
 const jwt = require("jsonwebtoken");
 
 const generalTheme = createTheme(theme);
 
 function App() {
-	let token = '';
-	function getToken() {
-		token = localStorage.getItem('token');
-		if (token == null) {
-			return UserType.guest;
-		} else{
-			const test = JSON.parse(atob(token.split('.')[1]));
-			console.log(test);
-			if(test.isAdmin){
-				return UserType.admin;
-			} else{
-				return UserType.user;
-			}
-		}
-	}
+  let token = "";
+  function getToken() {
+    token = localStorage.getItem("token");
+    if (token == null) {
+      return UserType.guest;
+    } else {
+      const test = JSON.parse(atob(token.split(".")[1]));
+      console.log(test);
+      if (test.isAdmin) {
+        return UserType.admin;
+      } else {
+        return UserType.user;
+      }
+    }
+  }
   const [userType, setUserType] = useState(getToken());
+
   return (
     <LocalizationProvider dateAdapter={AdapterDateFns}>
       <ThemeProvider theme={generalTheme}>
@@ -55,12 +58,22 @@ function App() {
               />
               <Route
                 path="/tickets"
-                element={<Tickets userType={userType} />}
-              />
+                element={<ProtectedRoute />}
+              > 
+              <Route
+                  path="/tickets"
+                  element={<Tickets userType={userType} />}
+                />
+              </Route>
               <Route
                 path="/profile"
-                element={<Profile userType={userType} />}
-              />
+                element={<ProtectedRoute />}
+              >
+                <Route
+                  path="/profile"
+                  element={<Profile userType={userType} />}
+                />
+              </Route>
             </Routes>
           </div>
         </Router>

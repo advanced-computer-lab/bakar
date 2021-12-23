@@ -7,6 +7,7 @@ const session = require('express-session');
 const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
 require('dotenv').config();
+const auth = require("./authorization/authorization");
 
 // Routes
 // require any routes here if needed. e.g: `const books = require('./routes/api/books');`

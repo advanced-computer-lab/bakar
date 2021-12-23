@@ -1,52 +1,76 @@
+/* eslint-disable react-hooks/rules-of-hooks */
 import {
-	Button,
-	Grid,
-	IconButton,
-	Paper,
-	TextField,
-	InputAdornment,
-	Typography,
-} from '@mui/material';
-import EditIcon from '@mui/icons-material/Edit';
-import axios from '../api';
-import React, { useState } from 'react';
-import NavBar from '../components/NavBar/NavBar';
-import { UserType } from '../userType';
-import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+  Button,
+  Grid,
+  IconButton,
+  Paper,
+  TextField,
+  InputAdornment,
+} from "@mui/material";
+import EditIcon from "@mui/icons-material/Edit";
+import { grid } from "@mui/system";
+import axios from "../api";
+import React, { useState } from "react";
+import NavBar from "../components/NavBar/NavBar";
+import { UserType } from "../userType";
+import { useNavigate } from 'react-router';
+const jwt = require("jsonwebtoken");
 
 export default function Profile() {
-	//const [user, setUser] = React.useState();
-	console.log('test1');
-	let token = localStorage.getItem('token');
-	let test = JSON.parse(atob(token.split('.')[1]));
-	let username = test.username;
-	let firstName = test.firstName;
-	let lastName = test.lastName;
-	let email = test.email;
-	let passport = test.passport;
-	const [firstNameEdit, setFirstNameEdit] = React.useState(true);
-	const [lastNameEdit, setLastNameEdit] = React.useState(true);
-	const [emailEdit, setEmailEdit] = React.useState(true);
-	const [passportEdit, setPassportEdit] = React.useState(true);
-	const [firstNameValue, setFirstNameValue] = React.useState(firstName);
-	const [lastNameValue, setLastNameValue] = React.useState(lastName);
-	const [emailValue, setEmailValue] = React.useState(email);
-	const [passportValue, setPassportValue] = React.useState(passport);
+  //const [user, setUser] = React.useState();
+    let navigate = useNavigate();
+    let test;
+  let token = localStorage.getItem("token");
+  console.log(token);
+  try{
+    test = JSON.parse(atob(token.split(".")[1]));
+    console.log(test);
+  } catch(err){
+    console.log(err);
+  }
+  let username = test.username;
+  let firstName = test.firstName;
+  let lastName = test.lastName;
+  let email = test.email;
+  let passport = test.passport;
+  const [firstNameEdit, setFirstNameEdit] = React.useState(true);
+  const [lastNameEdit, setLastNameEdit] = React.useState(true);
+  const [emailEdit, setEmailEdit] = React.useState(true);
+  const [passportEdit, setPassportEdit] = React.useState(true);
+  const [firstNameValue, setFirstNameValue] = React.useState(firstName);
+  const [lastNameValue, setLastNameValue] = React.useState(lastName);
+  const [emailValue, setEmailValue] = React.useState(email);
+  const [passportValue, setPassportValue] = React.useState(passport);
 
-	const handleClick = async () => {
-		console.log('test');
-		let data = {
-			firstName: firstNameValue,
-			lastName: lastNameValue,
-			email: emailValue,
-			passport: passportValue,
-		};
-		console.log(data);
-		let res = await axios.put('/users', data, {
-			headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
-		});
-		console.log(res);
-		localStorage.setItem('token', res.data);
+  const handleClick = async () => {
+	  
+  console.log(test);
+  console.log(username);
+    let data = {
+      username: test.username,
+      firstName: firstNameValue,
+      lastName: lastNameValue,
+      email: emailValue,
+      passport: passportValue,
+    };
+	console.log(data);
+   let res = await axios.put("/users", data, {
+      headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+    });
+	console.log(res);
+	localStorage.setItem("token", res.data);
+	
+	 token = localStorage.getItem("token");
+	 test = JSON.parse(atob(token.split(".")[1]));
+	 username = test.username;
+	 firstName = test.firstName;
+	 console.log(test);
+	 lastName = test.lastName;
+	 email = test.email;
+	 passport = test.passport;
+  document.location.reload();
+  };
+
 
 		token = localStorage.getItem('token');
 		test = JSON.parse(atob(token.split('.')[1]));

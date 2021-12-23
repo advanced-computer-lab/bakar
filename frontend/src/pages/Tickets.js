@@ -17,10 +17,15 @@ function Tickets({ userType }) {
 
 	const getData = async (queryString) => {
 		console.log(queryString);
+		try{
 		const res = await axios.get('/tickets?' + queryString);
-		console.log(res);
+			console.log(res);
 		let ticketData = res['data'];
 		setTickets(ticketData);
+	} catch(err){
+		console.log(err);
+	}
+		
 	};
 
 	React.useEffect(() => getData(query), []);
