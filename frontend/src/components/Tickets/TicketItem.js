@@ -29,6 +29,7 @@ import FlightDetails from '../FlightList/FlightDetails';
 import axios from '../../api';
 import MailIcon from '@mui/icons-material/Mail';
 import EditIcon from '@mui/icons-material/Edit';
+import MarkEmailReadIcon from '@mui/icons-material/MarkEmailRead';
 
 function FlightNoButton({ flightNo, type }) {
 	return (
@@ -81,6 +82,14 @@ export default function TicketItem({ ticket }) {
 	const [expandedReturn, setExpandedReturn] = useState(false);
 
 	const [open, setOpen] = useState(false);
+
+	const [mail, setMail] = useState(false);
+
+	const handleMail = async () => {
+		setMail(true);
+		await axios.post(`/tickets/${ticket._id}`);
+		setTimeout(() => setMail(false), 3000);
+	};
 
 	const getFlights = async () => {
 		let flightDeparture = (
@@ -345,14 +354,22 @@ export default function TicketItem({ ticket }) {
 											//height: '60x',
 											color: 'primary.main',
 											':hover': { color: 'background.paper' },
+											':disabled': {
+												backgroundColor: 'info.main',
+											},
 										}}
-										onClick={() => {
-											setOpen(true);
-										}}
+										onClick={handleMail}
+										disabled={mail}
 									>
-										<MailIcon
-											sx={{ height: 50, width: 50, color: 'inherit' }}
-										/>
+										{!mail ? (
+											<MailIcon
+												sx={{ height: 50, width: 50, color: 'inherit' }}
+											/>
+										) : (
+											<MarkEmailReadIcon
+												sx={{ height: 50, width: 50, color: 'inherit' }}
+											/>
+										)}
 									</Button>
 								</Grid>
 								<Divider
