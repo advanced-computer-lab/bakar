@@ -21,7 +21,6 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 	return <Slide direction="up" ref={ref} {...props} />;
 });
 
-
 export default function FlightDetails({
 	open,
 	setClicked,
@@ -51,9 +50,9 @@ export default function FlightDetails({
 
 	const handleSelect = async () => {
 		try {
-			const departData = { ...data, cabin: cabin, seats: [] }
+			const departData = { ...data, cabin: cabin, seats: [] };
 			setDepartureFlight(departData);
-			
+
 			let search = {
 				departureLocation: data.arrivalLocation,
 				arrivalLocation: data.departureLocation,
@@ -75,7 +74,7 @@ export default function FlightDetails({
 
 	const handleReserve = async () => {
 		try {
-			const returnData = { ...data, cabin: cabin, seats: [] }
+			const returnData = { ...data, cabin: cabin, seats: [] };
 			setReturnFlight(returnData);
 			setOpenSeats(true);
 		} catch (err) {
@@ -175,39 +174,9 @@ export default function FlightDetails({
 						container
 						sx={{ alignItems: 'center', justifyContent: 'center' }}
 						position=""
-					>
-						{!isDetails && (
-							<Button
-								variant="contained"
-								color="primary"
-								sx={{ ':hover': { backgroundColor: '#CD5334' } }}
-								onClick={() => {
-									departureFlight == null ? handleSelect() : handleReserve();
-								}}
-							>
-								{departureFlight == null ? 'Select' : 'Reserve'}
-							</Button>
-						)}
-						{openSeats && (
-							<SeatReserve
-								seats={
-									cabin === 'Economy'
-										? data.seatsEconView
-										: data.seatsBusView
-								}
-								number={seats}
-								openSeats={openSeats}
-								closeFlightDetails={setClicked}
-								setOpenSeats={setOpenSeats}
-								setSeats={
-									returnFlight == null ? setDepartureFlight : setReturnFlight
-								}
-							/>
-						)}
-					</Grid>
+					></Grid>
 				</List>
 			</Dialog>
-			
 		</div>
 	);
 }

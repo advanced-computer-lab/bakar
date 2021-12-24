@@ -17,15 +17,14 @@ function Tickets({ userType }) {
 
 	const getData = async (queryString) => {
 		console.log(queryString);
-		try{
-		const res = await axios.get('/tickets?' + queryString);
+		try {
+			const res = await axios.get('/tickets?' + queryString);
 			console.log(res);
-		let ticketData = res['data'];
-		setTickets(ticketData);
-	} catch(err){
-		console.log(err);
-	}
-		
+			let ticketData = res['data'];
+			setTickets(ticketData);
+		} catch (err) {
+			console.log(err);
+		}
 	};
 
 	React.useEffect(() => getData(query), []);
@@ -33,7 +32,7 @@ function Tickets({ userType }) {
 	return (
 		<div>
 			<NavBar userType={userType} />
-			<div style={{ padding: '10px' }}>
+			<div style={{ padding: '10px', paddingTop: '100px' }}>
 				<br />
 				<FlightDetails
 					open={clicked !== null ? true : false}

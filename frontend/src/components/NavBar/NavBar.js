@@ -1,10 +1,13 @@
 import { React } from 'react';
 import { useNavigate } from 'react-router';
-import { AppBar, Button, Toolbar, Typography } from '@mui/material';
+import { AppBar, Button, IconButton, Toolbar, Typography } from '@mui/material';
 import LoginIcon from '@mui/icons-material/Login';
 import LogoutIcon from '@mui/icons-material/Logout';
-import Logo from '../../assets/Logo.svg';
+import Logo from '../../assets/Bakar-Logo.svg';
 import { UserType } from '../../userType';
+import AccountBoxIcon from '@mui/icons-material/AccountBox';
+import AirplaneTicketIcon from '@mui/icons-material/AirplaneTicket';
+import HomeOutlinedIcon from '@mui/icons-material/HomeOutlined';
 
 export default function NavBar({ userType }) {
 	let navigate = useNavigate();
@@ -29,32 +32,41 @@ export default function NavBar({ userType }) {
 	return (
 		<AppBar
 			item="true"
-			position="sticky"
 			color="inherit"
-			sx={{ marginBottom: '20px' }}
+			sx={{
+				marginBottom: '20px',
+				position: 'fixed',
+				top: 0,
+			}}
 		>
 			<Toolbar>
-				<img
-					alt="logo"
-					src={Logo}
-					style={{
-						height: '75px',
-						width: '75px',
-						padding: '15px 0 0 0',
-						boxSizing: 'content-box',
-					}}
-				/>
-				<Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-					<Button
-						color="inherit"
-						name="home"
-						href="/"
-						sx={{ textTransform: 'none' }}
-					>
+				<Button href="/">
+					<img
+						alt="logo"
+						src={Logo}
+						style={{
+							height: '60px',
+							padding: '10px 0',
+							boxSizing: 'content-box',
+						}}
+					/>
+				</Button>
+				<Button
+					color="inherit"
+					name="viewFlights"
+					href="/"
+					sx={{ textTransform: 'none', mx: 1 }}
+				>
+					<Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
 						Home
-					</Button>
-				</Typography>
+					</Typography>
+				</Button>
 
+				<Typography
+					variant="h6"
+					component="div"
+					sx={{ flexGrow: 1 }}
+				></Typography>
 				{isAdmin && (
 					<Button
 						color="inherit"
@@ -67,10 +79,12 @@ export default function NavBar({ userType }) {
 				)}
 				{!flag && !isAdmin && (
 					<Button
-						color="inherit"
+						color="primary"
 						href="/tickets"
 						onclick={handleClick}
 						sx={{ textTransform: 'none' }}
+						variant="contained"
+						startIcon={<AirplaneTicketIcon />}
 					>
 						View Reserved Flights
 					</Button>
@@ -78,9 +92,11 @@ export default function NavBar({ userType }) {
 
 				{!flag && !isAdmin && (
 					<Button
-						color="inherit"
+						color="primary"
 						href="/profile"
-						sx={{ textTransform: 'none' }}
+						sx={{ textTransform: 'none', mx: 1.5 }}
+						variant="contained"
+						startIcon={<AccountBoxIcon />}
 					>
 						Profile
 					</Button>

@@ -40,15 +40,29 @@ export default function SearchFlight({ getData }) {
 		event.preventDefault();
 		try {
 			let data = {
-				flightNo: flightNo == null ? flightNo:flightNo.toUpperCase(),
+				flightNo: flightNo == null ? flightNo : flightNo.toUpperCase(),
 				departureTime: departureTime,
 				arrivalTime: arrivalTime,
-				departureLocation: departureLocation == null? departureLocation:departureLocation.charAt(0).toUpperCase()+departureLocation.slice(1).toLowerCase(),
-				arrivalLocation: arrivalLocation == null? arrivalLocation:arrivalLocation.charAt(0).toUpperCase()+arrivalLocation.slice(1).toLowerCase(),
+				departureLocation:
+					departureLocation == null
+						? departureLocation
+						: departureLocation.charAt(0).toUpperCase() +
+						  departureLocation.slice(1).toLowerCase(),
+				arrivalLocation:
+					arrivalLocation == null
+						? arrivalLocation
+						: arrivalLocation.charAt(0).toUpperCase() +
+						  arrivalLocation.slice(1).toLowerCase(),
 				seatsEcon: seatsEcon,
 				seatsBus: seatsBus,
-				departureTerminal: departureTerminal == null ? departureTerminal:departureTerminal.toUpperCase(),
-				arrivalTerminal: arrivalTerminal == null ? arrivalTerminal:arrivalTerminal.toUpperCase(),
+				departureTerminal:
+					departureTerminal == null
+						? departureTerminal
+						: departureTerminal.toUpperCase(),
+				arrivalTerminal:
+					arrivalTerminal == null
+						? arrivalTerminal
+						: arrivalTerminal.toUpperCase(),
 				priceEcon: priceEcon,
 				priceBus: priceBus,
 				noBagsEcon: noBagsEcon,
@@ -59,10 +73,8 @@ export default function SearchFlight({ getData }) {
 			let requested = Object.fromEntries(
 				Object.entries(data).filter(([_, v]) => v != null)
 			);
-			let searchParams = new URLSearchParams(requested);
-			let searchQuery = searchParams.toString();
 			setOpen(false);
-			getData(searchQuery);
+			getData(requested);
 			setArrivalLocation(null);
 			setArrivalTerminal(null);
 			setArrivalTime(null);

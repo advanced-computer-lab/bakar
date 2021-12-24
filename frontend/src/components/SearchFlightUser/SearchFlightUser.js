@@ -39,8 +39,14 @@ export default function SearchFlightUser({ detailsOnly }) {
 			let data = {
 				departureTime: departureTime,
 				returnTime: returnTime,
-				departureTerminal: departureTerminal == null ? departureTerminal:departureTerminal.toUpperCase(),
-                arrivalTerminal: arrivalTerminal == null ? arrivalTerminal:arrivalTerminal.toUpperCase(),
+				departureTerminal:
+					departureTerminal == null
+						? departureTerminal
+						: departureTerminal.toUpperCase(),
+				arrivalTerminal:
+					arrivalTerminal == null
+						? arrivalTerminal
+						: arrivalTerminal.toUpperCase(),
 				cabin: cabin,
 				adults: adults,
 				children: children,
@@ -56,6 +62,7 @@ export default function SearchFlightUser({ detailsOnly }) {
 
 			navigate(`/flights`, {
 				state: {
+					search: true,
 					...data,
 				},
 			});
