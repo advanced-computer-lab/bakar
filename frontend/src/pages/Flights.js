@@ -10,6 +10,8 @@ import { useLocation } from 'react-router-dom';
 import { UserType } from '../userType';
 import FlightDetails from '../components/FlightDetails/FlightDetails';
 import CheckOut from '../components/CheckOut/CheckOut';
+import FlightTable from '../components/FlightList/FlightTable';
+import { Box } from '@mui/system';
 
 function Flights({ userType }) {
 	const styles = {
@@ -20,7 +22,9 @@ function Flights({ userType }) {
 			t.palette.mode === 'light' ? t.palette.grey[50] : t.palette.grey[900],
 		backgroundSize: 'cover',
 		backgroundAttachment: 'fixed',
-		position: 'sticky',
+		minHeight: '100vh',
+		overflowY: 'hidden',
+		'&::-webkit-scrollbar': { width: '100px' },
 	};
 
 	let flag = userType === UserType.admin;
@@ -62,62 +66,79 @@ function Flights({ userType }) {
 		}
 	};
 
+	React.useEffect(() => console.log(flights), [flights]);
 	React.useEffect(() => getData(location.state), []);
 
 	return (
 		<div style={styles}>
-			<NavBar userType={userType} />
-			<div style={{ padding: '10px' }}>
-				{flag && (
-					<Grid container spacing={2}>
-						<Grid item>
-							<CreateFlight getData={getData} />
+			<Box>
+				<NavBar userType={userType} />
+				<div style={{ padding: '10px', paddingTop: '100px' }}>
+					{flag && (
+						<Grid container spacing={2}>
+							<Grid item>
+								<CreateFlight getData={getData} />
+							</Grid>
+							<Grid item>
+								<DeleteFlight checks={checks} getData={getData} />
+							</Grid>
+							<Grid item>
+								<SearchFlight getData={getData} />
+							</Grid>
 						</Grid>
-						<Grid item>
-							<DeleteFlight checks={checks} getData={getData} />
-						</Grid>
-						<Grid item>
-							<SearchFlight getData={getData} />
-						</Grid>
-					</Grid>
-				)}
-				<FlightDetails
-					open={clicked !== null ? true : false}
-					clicked={clicked}
-					setClicked={setClicked}
-					departureFlight={departureFlight}
-					setDepartureFlight={setDepartureFlight}
-					returnFlight={returnFlight}
-					setReturnFlight={setReturnFlight}
-					cabin={location.state.cabin}
-					seats={seats}
-					priceFactor={priceFactor}
-					getData={getData}
-				></FlightDetails>
-				{!(departureFlight == null || returnFlight == null) &&
-				returnFlight.seats !== undefined ? (
-					<CheckOut
+					)}
+					<FlightDetails
+						open={clicked !== null ? true : false}
+						clicked={clicked}
+						setClicked={setClicked}
 						departureFlight={departureFlight}
-						returnFlight={returnFlight}
 						setDepartureFlight={setDepartureFlight}
+						returnFlight={returnFlight}
 						setReturnFlight={setReturnFlight}
-						open={returnFlight.seats.length > 0}
+						cabin={'economy'}
+						seats={seats}
 						priceFactor={priceFactor}
-					/>
-				) : (
-					<div>
-						<h2 style={{ textAlign: 'center' }}>
-							{departureFlight == null ? 'Departure Flights' : 'Return Flights'}
-						</h2>
-						<FlightList
-							userType={userType}
-							flights={flights}
-							cabin={location.state.cabin}
+						getData={getData}
+					></FlightDetails>
+					{!(departureFlight == null || returnFlight == null) &&
+					returnFlight.seats !== undefined ? (
+						<CheckOut
+							departureFlight={departureFlight}
+							returnFlight={returnFlight}
+							setDepartureFlight={setDepartureFlight}
+							setReturnFlight={setReturnFlight}
+							open={returnFlight.seats.length > 0}
 							priceFactor={priceFactor}
 						/>
-					</div>
-				)}
-			</div>
+					) : (
+						<div>
+							<h2 style={{ textAlign: 'center' }}>
+								{departureFlight == null
+									? 'Departure Flights'
+									: 'Return Flights'}
+							</h2>
+							{location.state.search === true ? (
+								<FlightList
+									userType={userType}
+									flights={flights}
+									cabin={location.state.cabin}
+									priceFactor={priceFactor}
+								/>
+							) : (
+								<FlightTable
+									userType={userType}
+									flights={flights}
+									checks={checks}
+									setChecks={setChecks}
+									getData={getData}
+									setClicked={setClicked}
+									priceFactor={1}
+								/>
+							)}
+						</div>
+					)}
+				</div>
+			</Box>
 		</div>
 	);
 }

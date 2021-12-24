@@ -2,7 +2,7 @@ import { Button, Divider, Grid, Toolbar, Typography } from '@mui/material';
 import { React } from 'react';
 import { useNavigate } from 'react-router';
 import TypeAnimation from 'react-type-animation';
-import Logo from '../assets/Logo.svg';
+import Logo from '../assets/Bakar-Logo.svg';
 import SearchFlightUser from '../components/SearchFlightUser/SearchFlightUser';
 import { UserType } from '../userType';
 
@@ -14,6 +14,7 @@ const styles = {
 		t.palette.mode === 'light' ? t.palette.grey[50] : t.palette.grey[900],
 	backgroundSize: 'cover',
 	height: '100vh',
+	overflowY: 'hidden',
 };
 
 export default function Homepage({ userType }) {
@@ -53,7 +54,13 @@ export default function Homepage({ userType }) {
 				{isAdmin && (
 					<Button
 						color="inherit"
-						href="/flights"
+						onClick={() => {
+							navigate('/flights', {
+								state: {
+									search: false,
+								},
+							});
+						}}
 						sx={{ textTransform: 'none' }}
 					>
 						View Available Flights
@@ -68,7 +75,7 @@ export default function Homepage({ userType }) {
 					<Button
 						color="inherit"
 						href="/tickets"
-						onclick={handleClick}
+						onClick={handleClick}
 						sx={{ textTransform: 'none' }}
 					>
 						View Reserved Flights
