@@ -65,6 +65,7 @@ export default function CreateFlight({ getData }) {
 					headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
 				}
 			);
+			console.log(departureTime);
 			setOpen(false);
 			getData('');
 		} catch (err) {
