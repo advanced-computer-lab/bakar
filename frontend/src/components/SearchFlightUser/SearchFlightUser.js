@@ -17,18 +17,31 @@ import {
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import { useNavigate } from 'react-router-dom';
 import { ValidatorForm, TextValidator } from 'react-material-ui-form-validator';
+import Tickets from '../../pages/Tickets';
 
-export default function SearchFlightUser({ detailsOnly, flag}) {
+export default function SearchFlightUser({ detailsOnly, ticket }) {
+	console.log(ticket);
+	let oldFlight = {};
+	if (ticket && ticket.oldDepartureFlight) {
+		oldFlight = ticket.oldDepartureFlight;
+	}
+	else if(ticket &&ticket.oldReturnFlight) {
+		oldFlight = ticket.oldReturnFlight;
+	}
 	const [departureTime, setDepartureTime] = React.useState(
-		new Date(Date.now() + 3600 * 1000 * 3)
+		oldFlight.departureTime || new Date(Date.now() + 3600 * 1000 * 3)
 	);
 	const [returnTime, setReturnTime] = React.useState(
-		new Date(Date.now() + 3600 * 1000 * 24)
+		oldFlight.arrivalTime || new Date(Date.now() + 3600 * 1000 * 24)
 	);
-	const [departureTerminal, setDepartureTerminal] = React.useState();
-	const [arrivalTerminal, setArrivalTerminal] = React.useState();
-	const [cabin, setCabin] = React.useState('Economy');
-	const [adults, setAdults] = React.useState(1);
+	if (ticket && ticket.adults) {
+		oldFlight.adults = ticket.adults;
+	}
+
+	const [departureTerminal, setDepartureTerminal] = React.useState(oldFlight.departureTerminal);
+	const [arrivalTerminal, setArrivalTerminal] = React.useState(oldFlight.arrivalTerminal);
+	const [cabin, setCabin] = React.useState(oldFlight.cabin || 'Economy');
+	const [adults, setAdults] = React.useState(oldFlight.adults || 1);
 	const [children, setChildren] = React.useState(0);
 	const navigate = useNavigate();
 
@@ -52,10 +65,19 @@ export default function SearchFlightUser({ detailsOnly, flag}) {
 			} else {
 				data.availableBus = requestedSeats;
 			}
+			if (ticket.departureFlight) {
+				data.departureFlight = ticket.departureFlight;
+			}
+			else if (ticket.returnFlight) {
+				data.returnFlight = ticket.returnFlight;
+			}
+			if (ticket) {
+				data.ticket = ticket;
+			}
 			navigate(
 				"/flights", {
 				state: { ...data, search: true },
-				replace:true,
+				replace: true,
 			});
 
 		} catch (err) {
@@ -100,6 +122,7 @@ export default function SearchFlightUser({ detailsOnly, flag}) {
 											value={departureTime}
 											clearable
 											onChange={(newValue) => {
+												if (ticket.departureFlight) return;
 												setDepartureTime(newValue);
 											}}
 											minDateTime={new Date()}
@@ -114,6 +137,7 @@ export default function SearchFlightUser({ detailsOnly, flag}) {
 											value={returnTime}
 											clearable
 											onChange={(newValue) => {
+												if (ticket.returnFlight) return;
 												setReturnTime(newValue);
 											}}
 											minDateTime={departureTime}
@@ -128,6 +152,7 @@ export default function SearchFlightUser({ detailsOnly, flag}) {
 									type="text"
 									value={departureTerminal}
 									onChange={(event) => {
+										if (ticket.departureTerminal) return;
 										setDepartureTerminal(event.target.value);
 									}}
 									variant="outlined"
@@ -143,6 +168,7 @@ export default function SearchFlightUser({ detailsOnly, flag}) {
 									type="text"
 									value={arrivalTerminal}
 									onChange={(event) => {
+										if (ticket.arrivalTerminal) return;
 										setArrivalTerminal(event.target.value);
 									}}
 									variant="outlined"

@@ -2,7 +2,7 @@ import { Grid } from '@mui/material';
 import SeatItem from './SeatItem';
 import { useState } from 'react';
 
-function Seats({ row, reqSeats, setReqSeats, pickedSeats }) {
+function Seats({ row, reqSeats, setReqSeats, pickedSeats, departureFlight, returnFlight, flight, ticket }) {
 	return row.map(({ seatStatus, seatNo }, index) => {
 		return (
 			<Grid
@@ -16,12 +16,16 @@ function Seats({ row, reqSeats, setReqSeats, pickedSeats }) {
 					requestedSeats={reqSeats}
 					setRequestedSeats={setReqSeats}
 					pickedSeats={pickedSeats}
+					ticket={ticket}
+					flight={flight}
+					departureFlight={departureFlight}
+					returnFlight={returnFlight}
 				/>
 			</Grid>
 		);
 	});
 }
-export default function SeatList({ seats, reqSeats, pickedSeats }) {
+export default function SeatList({ seats, reqSeats, pickedSeats, departureFlight, returnFlight, flight, ticket }) {
 	const [totalSeats, setTotalSeats] = useState(reqSeats);
 	console.log(pickedSeats.current);
 	return (
@@ -34,6 +38,10 @@ export default function SeatList({ seats, reqSeats, pickedSeats }) {
 							reqSeats={totalSeats}
 							setReqSeats={setTotalSeats}
 							pickedSeats={pickedSeats}
+							ticket={ticket}
+							flight={flight}
+							departureFlight={departureFlight}
+							returnFlight={returnFlight}
 						/>
 					</Grid>
 				);

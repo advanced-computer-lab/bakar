@@ -8,11 +8,19 @@ export default function SeatItem({
 	setRequestedSeats,
 	index,
 	pickedSeats,
+	departureFlight, returnFlight, flight, ticket
 }) {
 	const [picked, setPicked] = React.useState(false);
 
 	const canReserve = seatStatus === 'Free';
-
+	if (!canReserve) {
+		//     const checkArray = departureFlight !== null ? ticket.seatsDeparture : ticket.seatsReturn;
+		//     if ((departureFlight && flight.flightNo == departureFlight.flightNo) ||
+		//         (returnFlight && flight.flightNo == returnFlight.flightNo)) {
+		//         return checkArray.includes(index + 1);
+		//     }
+		// }
+	}
 	const handleClick = () => {
 		if (canReserve) {
 			console.log('old picked', picked);

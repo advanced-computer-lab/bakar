@@ -48,15 +48,7 @@ function Flights({ userType }) {
 	);
 	const [returnFlight, setReturnFlight] = useState(location.state.returnFlight);
 
-	const {
-		adults,
-		children,
-		cabin,
-		departureTime,
-		arrivalTime,
-		arrivalTerminal,
-		departureTerminal,
-	} = location.state;
+	const { adults, children, cabin, departureTime, arrivalTime, arrivalTerminal, departureTerminal, ticket } = location.state;
 	console.log(location.state);
 	console.log(children);
 	let priceFactor = 0;
@@ -150,7 +142,7 @@ function Flights({ userType }) {
 								setDepartureFlight={setDepartureFlight}
 								returnFlight={returnFlight}
 								setReturnFlight={setReturnFlight}
-								cabin={'economy'}
+								cabin={'Economy'}
 								seats={noOfSeats}
 								priceFactor={priceFactor}
 								getData={getData}
@@ -181,6 +173,7 @@ function Flights({ userType }) {
 									returnFlight={returnFlight}
 									setDepartureFlight={setDepartureFlight}
 									setReturnFlight={setReturnFlight}
+									ticket={ticket}
 								/>
 							) : (
 								<FlightTable

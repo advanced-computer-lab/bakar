@@ -30,6 +30,7 @@ import axios from '../../api';
 import MailIcon from '@mui/icons-material/Mail';
 import EditIcon from '@mui/icons-material/Edit';
 import { useNavigate } from 'react-router-dom';
+import Tickets from '../../pages/Tickets';
 
 function FlightNoButton({ flightNo, type }) {
 
@@ -75,7 +76,7 @@ function FlightNoButton({ flightNo, type }) {
 	);
 }
 
-export default function TicketItem({ ticket }) {
+export default function TicketItem({ ticket, triggerDep, triggerRet }) {
 	const [flightDeparture, setFlightDeparture] = useState();
 	const [flightReturn, setFlightReturn] = useState();
 
@@ -386,21 +387,22 @@ export default function TicketItem({ ticket }) {
 				</Card>
 			</Grid>
 
-			<Grid item xs>
+			<Grid item xs sx={{ pb: 1 }}>
 				<Collapse in={expandedDeparture} unmountOnExit>
 					<FlightDetails
 						selectedCabin={ticket.cabin}
 						flight={flightDeparture}
 						text='change'
 						onClick={() => {
-							const data = {
-								departureFlight: null,
+							let myTicket = {
+								...ticket,
 								returnFlight: flightReturn,
-								ticket: ticket,
-								adults: ticket.seatsDeparture.length,
+								oldDepartureFlight: flightDeparture,
+								adults: ticket.seatsDeparture.length
 							}
-							navigate('/flights', {replace: true, state: data})
-							}}
+							triggerDep(myTicket);
+							triggerRet(null);
+						}}
 					/>
 				</Collapse>
 			</Grid>
@@ -412,14 +414,14 @@ export default function TicketItem({ ticket }) {
 						flight={flightReturn}
 						text='change'
 						onClick={() => {
-							const data = {
+							let myTicket = {
+								...ticket,
 								departureFlight: flightDeparture,
-								returnFlight: null,
-								arrivalTime: flightDeparture.arrivalTime,
-								ticket: ticket,
-								adults: ticket.seatsReturn.length,
+								oldReturnFlight: flightReturn,
+								adults: ticket.seatsDeparture.length
 							}
-							navigate('/flights', {replace: true, state: data})
+							triggerRet(myTicket);
+							triggerDep(null);
 						}}
 					/>
 				</Collapse>
