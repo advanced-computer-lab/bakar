@@ -14,20 +14,19 @@ export default function NavBar({ userType }) {
 	let flag = userType === UserType.guest;
 	let isAdmin = userType === UserType.admin;
 
-	function handleClick(event) {
-		if (event.target.name === 'log') {
-			if (flag) {
-				navigate('/login');
-			} else {
-				localStorage.removeItem('token');
-				navigate('/');
-				document.location.reload();
-			}
+	const handleLog = () => {
+		if (flag) {
+			navigate('/login');
 		} else {
-			console.log('hoho');
-			navigate('/flights?');
+			localStorage.removeItem('token');
+			navigate('/');
 			document.location.reload();
 		}
+	}
+	function handleClick(event) {
+		console.log('hoho');
+		navigate('/flights?', {state: {search: false}});
+		document.location.reload();
 	}
 	return (
 		<AppBar
@@ -106,7 +105,7 @@ export default function NavBar({ userType }) {
 					startIcon={flag ? <LoginIcon /> : <LogoutIcon />}
 					color="primary"
 					variant="contained"
-					onClick={handleClick}
+					onClick={handleLog}
 					sx={{ textTransform: 'none' }}
 				>
 					{flag ? 'Login' : 'Logout'}

@@ -5,9 +5,18 @@ import FlightTimeline from './FlightTimeline';
 export default function FlightDetails({
 	selectedCabin,
 	flight,
-	type,
+	text,
 	onClick,
+	departureFlight, setDepartureFlight, setReturnFlight
 }) {
+	const handleSelect = () => {
+		if (departureFlight) {
+			setReturnFlight(flight);
+		}
+		else {
+			setDepartureFlight(flight);
+		}
+	}
 	return (
 		<Card
 			sx={{
@@ -115,9 +124,9 @@ export default function FlightDetails({
 											mt: 2,
 											mb: 1.5,
 										}}
-										onClick={onClick}
+										onClick={onClick || handleSelect}
 									>
-										{type === 'select' ? 'Select' : 'Edit'}
+										{text}
 									</Button>
 								</Card>
 							</Grid>

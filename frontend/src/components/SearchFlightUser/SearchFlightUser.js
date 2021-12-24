@@ -15,10 +15,10 @@ import {
 	FormLabel,
 } from '@mui/material';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
-import { useNavigate } from 'react-router';
+import { useNavigate } from 'react-router-dom';
 import { ValidatorForm, TextValidator } from 'react-material-ui-form-validator';
 
-export default function SearchFlightUser({ detailsOnly, searchSteps }) {
+export default function SearchFlightUser({ detailsOnly, flag}) {
 	const [departureTime, setDepartureTime] = React.useState(
 		new Date(Date.now() + 3600 * 1000 * 3)
 	);
@@ -30,23 +30,16 @@ export default function SearchFlightUser({ detailsOnly, searchSteps }) {
 	const [cabin, setCabin] = React.useState('Economy');
 	const [adults, setAdults] = React.useState(1);
 	const [children, setChildren] = React.useState(0);
-
-	let navigate = useNavigate();
+	const navigate = useNavigate();
 
 	const handleSubmit = async (event) => {
 		event.preventDefault();
 		try {
 			let data = {
 				departureTime: departureTime,
-				returnTime: returnTime,
-				departureTerminal:
-					departureTerminal == null
-						? departureTerminal
-						: departureTerminal.toUpperCase(),
-				arrivalTerminal:
-					arrivalTerminal == null
-						? arrivalTerminal
-						: arrivalTerminal.toUpperCase(),
+				arrivalTime: returnTime,
+				departureTerminal: departureTerminal.toUpperCase(),
+				arrivalTerminal: arrivalTerminal.toUpperCase(),
 				cabin: cabin,
 				adults: adults,
 				children: children,
@@ -59,16 +52,12 @@ export default function SearchFlightUser({ detailsOnly, searchSteps }) {
 			} else {
 				data.availableBus = requestedSeats;
 			}
-
-			navigate(`/flights`, {
-				state: {
-					search: true,
-					...data,
-					transaction: {
-						searchSteps: searchSteps, // searchSteps = ['return'] or ['departure', 'return']
-					},
-				},
+			navigate(
+				"/flights", {
+				state: { ...data, search: true },
+				replace:true,
 			});
+
 		} catch (err) {
 			console.log(err);
 		}

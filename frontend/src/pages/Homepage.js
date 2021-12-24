@@ -126,9 +126,7 @@ export default function Homepage({ userType }) {
 			</Grid>
 			<Grid container alignItems="center" justifyContent="center">
 				<Grid item>
-					<SearchFlightUser
-						searchSteps={['departure', 'return']}
-					></SearchFlightUser>
+					<SearchFlightUser flag={flag}/>
 				</Grid>
 			</Grid>
 		</div>

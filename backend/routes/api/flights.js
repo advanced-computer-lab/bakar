@@ -37,24 +37,24 @@ router.post("/", auth, async (req, res) => {
   }
 });
 
-router.get("/", async (req, res) => {
-  console.log("hello");
-  console.log(req.headers);
-  try {
-    const myQuery = {
-      ...req.query,
-      departureTime: { $gte: req.query.departureTime || new Date().getTime() },
-      availableBus: { $gte: req.query.availableBus || 0 },
-      availableEcon: { $gte: req.query.availableEcon || 0 },
-    };
-
-    console.log(myQuery);
-    const result = await Flight.find(myQuery).exec();
-    console.log("result: " + result);
-    res.send(result);
-  } catch (err) {
-    console.log(err);
-  }
+router.get('/', async (req, res) => {
+	try {
+		const myQuery = {
+			...req.query,
+			departureTime: { $gte: new Date(req.query.departureTime).getTime() || new Date().getTime() },
+			availableBus: { $gte: req.query.availableBus || 0 },
+			availableEcon: { $gte: req.query.availableEcon || 0 },
+		};
+		if (myQuery.arrivalTime) {
+			myQuery.arrivalTime = { $gte: new Date(myQuery.arrivalTime).getTime() };
+		}
+		console.log(myQuery);
+		const result = await Flight.find(myQuery).exec();
+		console.log('result: ' + result);
+		res.send(result);
+	} catch (err) {
+		console.log(err);
+	}
 });
 
 router.get("/:flightNo", async (req, res) => {
@@ -72,7 +72,7 @@ router.put("/:flightNo", auth, async (req, res) => {
   if (req.user.isAdmin) {
     try {
       if (req.body.arrivalTime > req.body.departureTime) {
-        await Flight.updateOne(
+        const newFlight = await Flight.updateOne(
           { flightNo: req.params.flightNo },
           req.body
         ).exec();

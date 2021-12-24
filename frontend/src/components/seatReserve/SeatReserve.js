@@ -1,27 +1,29 @@
 import { React, useState } from 'react';
-import { useNavigate } from 'react-router';
+import { useLocation, useNavigate } from 'react-router-dom';
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
 import { Button, IconButton } from '@mui/material';
 import Dialog from '@mui/material/Dialog';
-import Air from '@mui/icons-material/AirlineSeatReclineNormal';
-import CheckOut from '../CheckOut/CheckOut';
 import SeatItem from './SeatItem';
 
 export default function SeatReserve({
 	flight,
 	selectedCabin,
 	number,
-	transaction,
+	open,
+	setOpen,
+	departureFlight,
+	returnFlight,
+	setDepartureFlight,
+	setReturnFlight,
 }) {
 	const [pickedSeats, setPickedSeats] = useState([]);
 	const [requestedSeats, setRequestedSeats] = useState(number);
 	const reservedSeats =
 		selectedCabin === 'economy' ? flight.seatsEconView : flight.seatsBusView;
-	const [open, setOpen] = useState(true);
 
 	let navigate = useNavigate();
-
+	const location = useLocation();
 	const handleClose = () => {
 		setOpen(false);
 	};
@@ -32,20 +34,37 @@ export default function SeatReserve({
 				`You have picked ${pickedSeats.length} seat(s)\nPlease pick ${number} seat(s)`
 			);
 		} else {
-			navigate('flights/', {
-				state: {
-					//...data,
-					transaction: {
-						searchStep: [],
-					},
-				},
-			});
+			if (!departureFlight) {
+				console.log('wadda');
+				navigate("/flights", 
+				{
+					replace: true,
+					state: {
+						...location.state,
+						departureFlight: { ...flight, seats: pickedSeats, cabin: selectedCabin  },
+						returnFlight: returnFlight,
+					}
+				});
+				setDepartureFlight({ ...flight, seats: pickedSeats, cabin: selectedCabin });
+			}
+			else {
+				console.log('noway');
+				navigate("/flights", 
+				{
+					replace: true,
+					state: {
+						...location.state,
+						departureFlight: departureFlight,
+						returnFlight: { ...flight, seats: pickedSeats, cabin: selectedCabin  },
+					}
+				});
+				setReturnFlight({ ...flight, seats: pickedSeats, cabin: selectedCabin  });
+			}
 			setOpen(false);
 		}
 	};
 
 	return (
-		<div>
 			<Dialog open={open} onClose={handleClose}>
 				<Box sx={{ width: '100%', height: '100%', padding: '50px' }}>
 					<Grid
@@ -74,6 +93,5 @@ export default function SeatReserve({
 					</Grid>
 				</Box>
 			</Dialog>
-		</div>
 	);
 }

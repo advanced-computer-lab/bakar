@@ -29,8 +29,10 @@ import FlightDetails from '../FlightList/FlightDetails';
 import axios from '../../api';
 import MailIcon from '@mui/icons-material/Mail';
 import EditIcon from '@mui/icons-material/Edit';
+import { useNavigate } from 'react-router-dom';
 
 function FlightNoButton({ flightNo, type }) {
+
 	return (
 		<Card
 			sx={{
@@ -81,7 +83,7 @@ export default function TicketItem({ ticket }) {
 	const [expandedReturn, setExpandedReturn] = useState(false);
 
 	const [open, setOpen] = useState(false);
-
+	const navigate = useNavigate();
 	const getFlights = async () => {
 		let flightDeparture = (
 			await axios.get(`/flights/${ticket.departureFlightNo}`)
@@ -389,8 +391,16 @@ export default function TicketItem({ ticket }) {
 					<FlightDetails
 						selectedCabin={ticket.cabin}
 						flight={flightDeparture}
-						type="edit"
-						onPressed={{}}
+						text='change'
+						onClick={() => {
+							const data = {
+								departureFlight: null,
+								returnFlight: flightReturn,
+								ticket: ticket,
+								adults: ticket.seatsDeparture.length,
+							}
+							navigate('/flights', {replace: true, state: data})
+							}}
 					/>
 				</Collapse>
 			</Grid>
@@ -400,8 +410,17 @@ export default function TicketItem({ ticket }) {
 					<FlightDetails
 						selectedCabin={ticket.cabin}
 						flight={flightReturn}
-						type="edit"
-						onClick={() => {}}
+						text='change'
+						onClick={() => {
+							const data = {
+								departureFlight: flightDeparture,
+								returnFlight: null,
+								arrivalTime: flightDeparture.arrivalTime,
+								ticket: ticket,
+								adults: ticket.seatsReturn.length,
+							}
+							navigate('/flights', {replace: true, state: data})
+						}}
 					/>
 				</Collapse>
 			</Grid>

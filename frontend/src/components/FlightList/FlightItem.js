@@ -17,6 +17,7 @@ import PriceTag from './PriceTag';
 import FlightDetails from '../FlightList/FlightDetails';
 import { UserType } from '../../userType';
 import SeatReserve from '../seatReserve/SeatReserve';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 export default function FlightItem({
 	flight,
@@ -24,10 +25,13 @@ export default function FlightItem({
 	priceFactor,
 	userType,
 	noOfSeats,
-	transaction,
+	departureFlight, returnFlight, setDepartureFlight, setReturnFlight
 }) {
 	const [expanded, setExpanded] = useState(false);
 	const [selectedCabin, setSelectedCabin] = useState(cabin);
+	const [openReserve, setOpenReserve] = useState(false);
+	const location = useLocation();
+	const navigate = useNavigate();
 
 	function formatHHMM(date) {
 		function z(n) {
@@ -40,21 +44,52 @@ export default function FlightItem({
 	}
 
 	const handleClick = () => {
-		if (userType !== UserType.guest) {
-			return (
-				<SeatReserve
-					selectedCabin={selectedCabin}
-					flight={flight}
-					number={noOfSeats}
-					transaction={transaction}
-				/>
-			);
-		} else {
+		if (userType === UserType.guest) {
+			const newFlight = { ...flight, cabin: selectedCabin };
+			if (!departureFlight) {
+				navigate("/flights", 
+				{
+					replace: true,
+					state: {
+						...location.state,
+						departureFlight: newFlight,
+						returnFlight: returnFlight,
+					}
+				});
+				setDepartureFlight(newFlight);
+			}
+			else {
+				navigate("/flights", 
+				{
+					replace: true,
+					state: {
+						...location.state,
+						departureFlight: departureFlight,
+						returnFlight: newFlight,
+					}
+				});
+				setReturnFlight(newFlight);
+			}
+		}
+		else {
+			setOpenReserve(true);
 		}
 	};
 
+
 	return (
 		<Grid container direction="column" rowSpacing={1}>
+			<SeatReserve
+				open={openReserve}
+				setOpen={setOpenReserve}
+				selectedCabin={selectedCabin}
+				flight={flight}
+				number={noOfSeats}
+				departureFlight={departureFlight}
+				returnFlight={returnFlight}
+				setDepartureFlight={setDepartureFlight}
+				setReturnFlight={setReturnFlight}
+			/>
 			<Grid item xs>
 				<Card
 					sx={{
@@ -185,8 +220,8 @@ export default function FlightItem({
 					<FlightDetails
 						selectedCabin={selectedCabin}
 						flight={flight}
-						type="select"
-						onClick={() => {}}
+						text="select"
+						onClick={handleClick}
 					/>
 				</Collapse>
 			</Grid>

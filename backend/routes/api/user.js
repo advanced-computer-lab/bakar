@@ -9,6 +9,7 @@ const JwtStrategy = require("passport-jwt").Strategy;
 const ExtractJwt = require("passport-jwt").ExtractJwt;
 require("dotenv").config();
 const auth = require("../../authorization/authorization");
+const ticket = require('../../models/Ticket.js');
 
 router.post("/login", async (req, res) => {
   passport.authenticate("local", function (err, user, info) {
@@ -138,18 +139,53 @@ router.put("/password", auth, async (req, res) => {
     console.log(error);
     res.sendStatus(401);
   }
+})
+router.put("/", auth, async (req, res) => {
+  try {
+    if (!req.user.isAdmin) {
+      const user = req.user;
+      console.log(req.user);
+      const oldUsername = user.username;
+			const oldEmail = user.email;
+			const userTickets = await ticket.find({ email: oldEmail, username: oldUsername }).exec();
+			const updatedUser = await User.updateOne(
+				{ username: user.username },
+				req.body
+			).exec();
+			if (updatedUser.username !== oldUsername || updatedUser.email !== oldEmail) {
+				for (const userTicket of userTickets) {
+					userTicket.username = updatedUser.username;
+					userTicket.email = user.email;
+					userTicket.save();
+				}
+			}
+      console.log("The user is Updated successfully !");
+      console.log(req.user.username);
+      const updatedToken = jwt.sign(
+        {
+          username: req.user.username,
+          firstName: req.body.firstName,
+          lastName: req.body.lastName,
+          email: req.body.email,
+          passport: req.body.passport,
+          isAdmin: false,
+        },
+        process.env.secretKey,
+        {
+          expiresIn: "24h",
+        }
+      );
+      console.log(updatedUser);
+      console.log(updatedToken);
+      res.send(updatedToken);
+    } else {
+      console.log("hello from the other side");
+      throw "can't change Admin Status";
+    }
+  } catch (err) {
+    console.log(err);
+  }
 });
 
-router.get('/', async (req, res) => {
-	try {
-		const result = await User.find({ username: 'tom' }).exec();
-		console.log('result: ' + result);
-
-		res.status(200).send(result);
-	} catch (err) {
-		console.log(err);
-		res.send(400);
-	}
-});
 
 module.exports = router;
