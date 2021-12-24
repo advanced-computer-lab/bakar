@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/rules-of-hooks */
 import {
   Button,
   Grid,
@@ -9,27 +8,154 @@ import {
   Typography,
 } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
-import { grid } from "@mui/system";
 import axios from "../api";
 import React, { useState } from "react";
 import NavBar from "../components/NavBar/NavBar";
 import { UserType } from "../userType";
-import { useNavigate } from 'react-router';
-import AccountCircleIcon from '@mui/icons-material/AccountCircle';
-const jwt = require("jsonwebtoken");
+import AccountCircleIcon from "@mui/icons-material/AccountCircle";
+import { ValidatorForm, TextValidator } from "react-material-ui-form-validator";
 
-export default function Profile() {
-  //const [user, setUser] = React.useState();
-    let navigate = useNavigate();
-    let test;
+const itemStyle = {
+  pl: 10,
+  pr: 10,
+};
+
+function ChangePassword({ setIsChangePassword }) {
+  const [oldPassword, setOldPassword] = useState();
+  const [newPassword, setNewPassword] = useState();
+  const [reNewPassword, setReNewPassword] = useState();
+  const [error, setError] = useState(false);
+
+  const handleSubmit = async () => {
+    try {
+      let res = await axios.put("/users/password", {
+        oldpassword: oldPassword,
+        newpassword: newPassword,
+      });
+    } catch (err) {
+      if (err.response.status === 401) {
+		  setError(true);
+		  console.log("habd4");
+	  }
+    }
+  };
+
+  ValidatorForm.addValidationRule("isPasswordMatch", (value) => {
+    if (value !== newPassword) {
+      return false;
+    }
+    return true;
+  });
+
+  return (
+    <ValidatorForm
+      onSubmit={handleSubmit}
+      onError={(errors) => console.log(errors)}
+      fullWidth
+    >
+      <Grid
+        container
+        component={Paper}
+        direction="column"
+        rowSpacing={2}
+        sx={{
+          mt: 1,
+          backgroundColor: "rgb(254, 239, 221, .75)",
+          maxWidth: "700px",
+          p: 2,
+        }}
+      >
+        <Grid container direction="row">
+          <Grid item>
+            <AccountCircleIcon sx={{ width: "50px", height: "50px" }} />
+          </Grid>
+          <Grid item alignSelf="center" sx={{ pl: 2 }}>
+            <Typography component="p" variant="h6" color="#183642">
+              Change Password
+            </Typography>
+          </Grid>
+        </Grid>
+
+        <Grid item sx={itemStyle}>
+          <label> Old Password </label>
+          <TextValidator
+            error={error}
+            helperText={error ? "wrong password" : ""}
+            value={oldPassword}
+            margin="dense"
+            name="oldPassword"
+            fullWidth
+            type="password"
+            variant="outlined"
+            onChange={(event) => {
+              setOldPassword(event.target.value);
+              setError(false);
+            }}
+            validators={["required"]}
+            errorMessages={["this field is required"]}
+          />
+        </Grid>
+
+        <Grid item sx={itemStyle}>
+          <label> New Password </label>
+          <TextValidator
+            value={newPassword}
+            margin="dense"
+            name="newPassword"
+            type="password"
+            fullWidth
+            variant="outlined"
+            onChange={(event) => setNewPassword(event.target.value)}
+            validators={["required"]}
+            errorMessages={["this field is required"]}
+            sx={{ width: "500px" }}
+          />
+        </Grid>
+
+        <Grid item sx={itemStyle}>
+          <label> Re-enter New Password </label>
+          <TextValidator
+            value={reNewPassword}
+            margin="dense"
+            name="reNewPassword"
+            type="password"
+            fullWidth
+            variant="outlined"
+            onChange={(event) => setReNewPassword(event.target.value)}
+            validators={["required", "isPasswordMatch"]}
+            errorMessages={["this field is required", "passwords don't match"]}
+          />
+        </Grid>
+
+        <Grid item alignSelf="center">
+          <Button
+            variant="contained"
+            type="submit"
+            color="primary"
+            sx={{ ":hover": { backgroundColor: "#CD5334" }, mt: 3 }}
+          >
+            Submit
+          </Button>
+          <br></br>
+          <Button
+            variant="contained"
+            onClick={() => {
+              setIsChangePassword(false);
+            }}
+            color="primary"
+            sx={{ ":hover": { backgroundColor: "#CD5334" }, mt: 3 }}
+          >
+            Cancel
+          </Button>
+        </Grid>
+      </Grid>
+    </ValidatorForm>
+  );
+}
+
+function ProfileDetails({ setIsChangePassword }) {
   let token = localStorage.getItem("token");
-  console.log(token);
-  try{
-    test = JSON.parse(atob(token.split(".")[1]));
-    console.log(test);
-  } catch(err){
-    console.log(err);
-  }
+  let test = JSON.parse(atob(token.split(".")[1]));
   let username = test.username;
   let firstName = test.firstName;
   let lastName = test.lastName;
@@ -45,198 +171,212 @@ export default function Profile() {
   const [passportValue, setPassportValue] = React.useState(passport);
 
   const handleClick = async () => {
-	  
-  console.log(test);
-  console.log(username);
+    console.log("test");
     let data = {
-      username: test.username,
       firstName: firstNameValue,
       lastName: lastNameValue,
       email: emailValue,
       passport: passportValue,
     };
-	console.log(data);
-   let res = await axios.put("/users", data);
-	console.log(res);
-	localStorage.setItem("token", res.data);
-	
-	 token = localStorage.getItem("token");
-	 test = JSON.parse(atob(token.split(".")[1]));
-	 username = test.username;
-	 firstName = test.firstName;
-	 console.log(test);
-	 lastName = test.lastName;
-	 email = test.email;
-	 passport = test.passport;
-  document.location.reload();
+    console.log(data);
+    let res = await axios.put("/users", data, {
+      headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+    });
+    console.log(res);
+    localStorage.setItem("token", res.data);
+
+    token = localStorage.getItem("token");
+    test = JSON.parse(atob(token.split(".")[1]));
+    username = test.username;
+    firstName = test.firstName;
+    console.log(test);
+    lastName = test.lastName;
+    email = test.email;
+    passport = test.passport;
+    document.location.reload();
   };
 
-	const handleSubmit = (event) => {
-		if (event.currentTarget.name === 'firstName') {
-			setFirstNameEdit(false);
-			return;
-		} else if (event.currentTarget.name === 'lastName') {
-			setLastNameEdit(false);
-		} else if (event.currentTarget.name === 'email') {
-			setEmailEdit(false);
-		} else {
-			setPassportEdit(false);
-		}
-	};
-	const styles = {
-		backgroundImage:
-			'url(https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fwallup.net%2Fwp-content%2Fuploads%2F2017%2F03%2F15%2F96135-airplane-landing-sky.jpg&f=1&nofb=1)',
-		backgroundRepeat: 'no-repeat',
-		backgroundColor: (t) =>
-			t.palette.mode === 'light' ? t.palette.grey[50] : t.palette.grey[900],
-		backgroundSize: 'cover',
-		height: '100vh',
-	};
+  const handleSubmit = (event) => {
+    if (event.currentTarget.name === "firstName") {
+      setFirstNameEdit(false);
+      return;
+    } else if (event.currentTarget.name === "lastName") {
+      setLastNameEdit(false);
+    } else if (event.currentTarget.name === "email") {
+      setEmailEdit(false);
+    } else {
+      setPassportEdit(false);
+    }
+  };
 
-	const itemStyle = {
-		pl: 10,
-		pr: 10,
-	};
+  return (
+    <Grid
+      container
+      component={Paper}
+      direction="column"
+      rowSpacing={2}
+      sx={{
+        mt: 1,
+        backgroundColor: "rgb(254, 239, 221, .75)",
+        maxWidth: "700px",
+        p: 2,
+      }}
+    >
+      <Grid container direction="row">
+        <Grid item>
+          <AccountCircleIcon sx={{ width: "50px", height: "50px" }} />
+        </Grid>
+        <Grid item alignSelf="center" sx={{ pl: 2 }}>
+          <Typography component="p" variant="h6" color="#183642">
+            Profile Details
+          </Typography>
+        </Grid>
+        <Grid sx={{ pl: "250px" }}>
+          <Button
+            variant="contained"
+            onClick={() => {
+              setIsChangePassword(true);
+            }}
+            color="primary"
+            sx={{ ":hover": { backgroundColor: "#CD5334" }, mt: 3 }}
+          >
+            Change Password
+          </Button>
+        </Grid>
+      </Grid>
+      <Grid item sx={itemStyle}>
+        <label> First Name </label>
+        <TextField
+          InputProps={{
+            endAdornment: (
+              <InputAdornment position="end">
+                <IconButton name="firstName" onClick={handleSubmit}>
+                  <EditIcon />
+                </IconButton>
+              </InputAdornment>
+            ),
+          }}
+          disabled={firstNameEdit}
+          margin="dense"
+          name="firstName"
+          defaultValue={firstName}
+          fullWidth
+          type="text"
+          variant="outlined"
+          onChange={(event) => setFirstNameValue(event.target.value)}
+        />
+      </Grid>
+      <Grid item sx={itemStyle}>
+        <label> Last Name </label>
+        <TextField
+          InputProps={{
+            endAdornment: (
+              <InputAdornment position="end">
+                <IconButton name="lastName" onClick={handleSubmit}>
+                  <EditIcon />
+                </IconButton>
+              </InputAdornment>
+            ),
+          }}
+          disabled={lastNameEdit}
+          margin="dense"
+          name="lastName"
+          defaultValue={lastName}
+          type="text"
+          fullWidth
+          variant="outlined"
+          onChange={(event) => setLastNameValue(event.target.value)}
+        />
+      </Grid>
+      <Grid item sx={itemStyle}>
+        <label> Email </label>
+        <TextField
+          InputProps={{
+            endAdornment: (
+              <InputAdornment position="end">
+                <IconButton name="email" onClick={handleSubmit}>
+                  <EditIcon />
+                </IconButton>
+              </InputAdornment>
+            ),
+          }}
+          disabled={emailEdit}
+          margin="dense"
+          name="email"
+          defaultValue={email}
+          type="text"
+          fullWidth
+          variant="outlined"
+          onChange={(event) => setEmailValue(event.target.value)}
+        />
+      </Grid>
+      <Grid item sx={itemStyle}>
+        <label> Passport Number </label>
+        <TextField
+          InputProps={{
+            endAdornment: (
+              <InputAdornment position="end">
+                <IconButton name="passport" onClick={handleSubmit}>
+                  <EditIcon />
+                </IconButton>
+              </InputAdornment>
+            ),
+          }}
+          disabled={passportEdit}
+          name="passport"
+          id="flightNo"
+          defaultValue={passport}
+          type="text"
+          fullWidth
+          variant="outlined"
+          onChange={(event) => setPassportValue(event.target.value)}
+        />
+      </Grid>
+      <Grid item alignSelf="center">
+        <Button
+          variant="contained"
+          onClick={handleClick}
+          color="primary"
+          sx={{ ":hover": { backgroundColor: "#CD5334" }, mt: 3 }}
+        >
+          Submit
+        </Button>
+      </Grid>{" "}
+    </Grid>
+  );
+}
 
-	return (
-		<div style={styles}>
-			<NavBar />
+export default function Profile() {
+  const [isChangePassword, setIsChangePassword] = useState(false);
 
-			<div>
-				<Grid
-					container
-					alignItems="center"
-					justifyContent="center"
-					alignSelf="center"
-				>
-					<Grid
-						container
-						component={Paper}
-						direction="column"
-						rowSpacing={2}
-						sx={{
-							mt: 1,
-							backgroundColor: 'rgb(254, 239, 221, .75)',
-							maxWidth: '700px',
-							p: 2,
-						}}
-					>
-						<Grid container direction="row">
-							<Grid item>
-								<AccountCircleIcon sx={{ width: '50px', height: '50px' }} />
-							</Grid>
-							<Grid item alignSelf="center" sx={{ pl: 2 }}>
-								<Typography component="p" variant="h6" color="#183642">
-									Profile Details
-								</Typography>
-							</Grid>
-						</Grid>
+  const styles = {
+    backgroundImage:
+      "url(https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fwallup.net%2Fwp-content%2Fuploads%2F2017%2F03%2F15%2F96135-airplane-landing-sky.jpg&f=1&nofb=1)",
+    backgroundRepeat: "no-repeat",
+    backgroundColor: (t) =>
+      t.palette.mode === "light" ? t.palette.grey[50] : t.palette.grey[900],
+    backgroundSize: "cover",
+    height: "100vh",
+  };
 
-						<Grid item sx={itemStyle}>
-							<label> First Name </label>
-							<TextField
-								InputProps={{
-									endAdornment: (
-										<InputAdornment position="end">
-											<IconButton name="firstName" onClick={handleSubmit}>
-												<EditIcon />
-											</IconButton>
-										</InputAdornment>
-									),
-								}}
-								disabled={firstNameEdit}
-								margin="dense"
-								name="firstName"
-								defaultValue={firstName}
-								fullWidth
-								type="text"
-								variant="outlined"
-								onChange={(event) => setFirstNameValue(event.target.value)}
-							/>
-						</Grid>
+  return (
+    <div style={styles}>
+      <NavBar />
 
-						<Grid item sx={itemStyle}>
-							<label> Last Name </label>
-							<TextField
-								InputProps={{
-									endAdornment: (
-										<InputAdornment position="end">
-											<IconButton name="lastName" onClick={handleSubmit}>
-												<EditIcon />
-											</IconButton>
-										</InputAdornment>
-									),
-								}}
-								disabled={lastNameEdit}
-								margin="dense"
-								name="lastName"
-								defaultValue={lastName}
-								type="text"
-								fullWidth
-								variant="outlined"
-								onChange={(event) => setLastNameValue(event.target.value)}
-							/>
-						</Grid>
-
-						<Grid item sx={itemStyle}>
-							<label> Email </label>
-							<TextField
-								InputProps={{
-									endAdornment: (
-										<InputAdornment position="end">
-											<IconButton name="email" onClick={handleSubmit}>
-												<EditIcon />
-											</IconButton>
-										</InputAdornment>
-									),
-								}}
-								disabled={emailEdit}
-								margin="dense"
-								name="email"
-								defaultValue={email}
-								type="text"
-								fullWidth
-								variant="outlined"
-								onChange={(event) => setEmailValue(event.target.value)}
-							/>
-						</Grid>
-
-						<Grid item sx={itemStyle}>
-							<label> Passport Number </label>
-							<TextField
-								InputProps={{
-									endAdornment: (
-										<InputAdornment position="end">
-											<IconButton name="passport" onClick={handleSubmit}>
-												<EditIcon />
-											</IconButton>
-										</InputAdornment>
-									),
-								}}
-								disabled={passportEdit}
-								name="passport"
-								id="flightNo"
-								defaultValue={passport}
-								type="text"
-								fullWidth
-								variant="outlined"
-								onChange={(event) => setPassportValue(event.target.value)}
-							/>
-						</Grid>
-
-						<Grid item alignSelf="center">
-							<Button
-								variant="contained"
-								onClick={handleClick}
-								color="primary"
-								sx={{ ':hover': { backgroundColor: '#CD5334' }, mt: 3 }}
-							>
-								Submit
-							</Button>
-						</Grid>
-					</Grid>
-				</Grid>
-			</div>
-		</div>
-	);
+      <div>
+        <Grid
+          container
+          alignItems="center"
+          justifyContent="center"
+          alignSelf="center"
+        >
+          {isChangePassword ? (
+            <ChangePassword setIsChangePassword={setIsChangePassword} />
+          ) : (
+            <ProfileDetails setIsChangePassword={setIsChangePassword} />
+          )}
+        </Grid>
+      </div>
+    </div>
+  );
 }

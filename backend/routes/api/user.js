@@ -10,6 +10,7 @@ const ExtractJwt = require('passport-jwt').ExtractJwt;
 require('dotenv').config();
 const auth = require("../../authorization/authorization");
 
+
 router.post("/login", async (req, res) => {
   passport.authenticate("local", function (err, user, info) {
     if (!user) {
@@ -108,6 +109,30 @@ router.put("/", auth, async (req, res) => {
     console.log(err);
   }
 
+});
+
+router.put("/password", auth, async (req, res) => {
+  try {
+    let user = await User.find({username: req.user.username});
+    console.log(user);
+    console.log("habd5");
+    console.log("habd5");
+    user.changePassword(req.body.oldpassword, req.body.newpassword, function(err) {
+      if(err){
+        console.log("habd1");
+        res.sendStatus(401);
+      }
+      else{
+        console.log("habd2");
+        res.sendStatus(200);
+      }
+    });
+
+  } catch (error) {
+    console.log(error);
+    res.sendStatus(401);
+    
+  }
 });
 
 module.exports = router;
