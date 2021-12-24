@@ -107,8 +107,8 @@ export default function PriceTag({ flight, priceFactor, cabin, selected }) {
 							component="div"
 						>
 							{cabin === 'Economy'
-								? flight.priceEcon * priceFactor
-								: flight.priceBus * priceFactor}
+								? Math.floor(flight.priceEcon * priceFactor)
+								: Math.floor(flight.priceBus * priceFactor)}
 							$
 						</Typography>
 					</Grid>

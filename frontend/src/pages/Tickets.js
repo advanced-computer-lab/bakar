@@ -12,8 +12,8 @@ function Tickets({ userType }) {
 			t.palette.mode === 'light' ? t.palette.grey[50] : t.palette.grey[900],
 		backgroundSize: 'cover',
 		backgroundAttachment: 'fixed',
-		position: 'sticky',
 		height: '100vh',
+		overflowY: 'hidden',
 	};
 
 	const [tickets, setTickets] = useState([]);
