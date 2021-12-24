@@ -6,7 +6,11 @@ import CreateFlight from '../components/CreateFlight/CreateFlight';
 import DeleteFlight from '../components/DeleteFlight/DeleteFlight';
 import SearchFlight from '../components/SearchFlight/SearchFlight';
 import axios from 'axios';
-import { useLocation, createSearchParams, useSearchParams } from 'react-router-dom';
+import {
+	useLocation,
+	createSearchParams,
+	useSearchParams,
+} from 'react-router-dom';
 import { UserType } from '../userType';
 import CheckOut from '../components/CheckOut/CheckOut';
 import FlightTable from '../components/FlightList/FlightTable';
@@ -26,7 +30,6 @@ function Flights({ userType }) {
 		backgroundAttachment: 'fixed',
 		minHeight: '100vh',
 		overflowY: 'hidden',
-		'&::-webkit-scrollbar': { width: '100px' },
 	};
 
 	let flag = userType === UserType.admin;
@@ -38,13 +41,22 @@ function Flights({ userType }) {
 		location.state = {
 			departureFlight: null,
 			returnFlight: null,
-		}
+		};
 	}
-	const [departureFlight, setDepartureFlight] = useState(location.state.departureFlight);
+	const [departureFlight, setDepartureFlight] = useState(
+		location.state.departureFlight
+	);
 	const [returnFlight, setReturnFlight] = useState(location.state.returnFlight);
-	
 
-	const { adults, children, cabin, departureTime, arrivalTime, arrivalTerminal, departureTerminal } = location.state;
+	const {
+		adults,
+		children,
+		cabin,
+		departureTime,
+		arrivalTime,
+		arrivalTerminal,
+		departureTerminal,
+	} = location.state;
 	console.log(location.state);
 	console.log(children);
 	let priceFactor = 0;
@@ -52,12 +64,10 @@ function Flights({ userType }) {
 	if (adults && children) {
 		priceFactor = parseInt(adults) + parseInt(children) * 0.8;
 		noOfSeats = parseInt(adults) + parseInt(children);
-	}
-	else if (adults) {
-		priceFactor = parseInt(adults)  * 0.8;
-		noOfSeats = parseInt(adults) ;
-	}
-	else {
+	} else if (adults) {
+		priceFactor = parseInt(adults);
+		noOfSeats = parseInt(adults);
+	} else {
 		priceFactor = parseInt(children) * 0.8;
 		noOfSeats = parseInt(children);
 	}
@@ -65,10 +75,9 @@ function Flights({ userType }) {
 	const getData = async (requested) => {
 		try {
 			let myQuery = {};
-			if (cabin == "Economy") {
+			if (cabin == 'Economy') {
 				myQuery.availableEcon = noOfSeats;
-			}
-			else {
+			} else {
 				myQuery.availableBus = noOfSeats;
 			}
 			// Should simplify boolean logic here & add documentation
@@ -76,18 +85,15 @@ function Flights({ userType }) {
 				myQuery.departureTime = departureTime;
 				myQuery.arrivalTerminal = arrivalTerminal;
 				myQuery.departureTerminal = departureTerminal;
-			}
-			else if (!departureFlight && returnFlight) {
+			} else if (!departureFlight && returnFlight) {
 				myQuery.departureTime = departureTime;
 				myQuery.departureTerminal = returnFlight.arrivalTerminal;
 				myQuery.arrivalTerminal = returnFlight.departureTerminal;
-			}
-			else if (departureFlight && !returnFlight) {
+			} else if (departureFlight && !returnFlight) {
 				myQuery.arrivalTime = arrivalTime;
 				myQuery.departureTerminal = departureFlight.arrivalTerminal;
 				myQuery.arrivalTerminal = departureFlight.departureTerminal;
-			}
-			else if (departureFlight && returnFlight) {
+			} else if (departureFlight && returnFlight) {
 				setFlights([]);
 				return;
 			}
@@ -98,11 +104,10 @@ function Flights({ userType }) {
 				}
 			}
 			console.log(myQuery);
-			let queryString = "";
+			let queryString = '';
 			if (requested) {
 				queryString = createSearchParams(requested).toString();
-			}
-			else {
+			} else {
 				queryString = createSearchParams(myQuery).toString();
 			}
 			console.log(requested);
@@ -151,11 +156,9 @@ function Flights({ userType }) {
 								getData={getData}
 							/>
 						</Grid>
-						
 					)}
-					
-					{false &&
-					returnFlight.seats !== undefined ? (
+
+					{false && returnFlight.seats !== undefined ? (
 						<CheckOut
 							departureFlight={departureFlight}
 							returnFlight={returnFlight}

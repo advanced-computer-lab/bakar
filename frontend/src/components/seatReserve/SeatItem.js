@@ -1,41 +1,67 @@
 import React from 'react';
-import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
-import { Button, IconButton } from '@mui/material';
-import Dialog from '@mui/material/Dialog';
-import Air from '@mui/icons-material/AirlineSeatReclineNormal';
+import { Card } from '@mui/material';
 
-export default function SeatItem({seatStatus, requestedSeats, setRequestedSeats, index, setPickedSeats}) {
-    const [picked, setPicked] = React.useState(false);
-    const canReserve = seatStatus === 'Free';
-    const handleClick = () => {
-        if (canReserve) {
-            if (!picked && requestedSeats > 0) {
-                setRequestedSeats(requestedSeats - 1);
-                setPicked(true);
-                setPickedSeats((prevPickedSeats) => [...prevPickedSeats, index+1]);
-            } else if (picked) {
-                setRequestedSeats(requestedSeats + 1);
-                setPicked(false);
-                // remove the seat from our picked seats
-                setPickedSeats((prevPickedSeats) => prevPickedSeats.filter(value => value !== (index + 1)));
-            }
-        }
-    }
-    
+export default function SeatItem({
+	seatStatus,
+	requestedSeats,
+	setRequestedSeats,
+	index,
+	pickedSeats,
+}) {
+	const [picked, setPicked] = React.useState(false);
 
-    return (
-        <Grid item xs={6}>
-            <IconButton
-                onClick={handleClick}
-                color={canReserve? (picked? "info": "success"): "error"}
-            >
-                <Air></Air>
-            </IconButton>
-            <label style={{ fontSize: '22px' }}>seat requestedSeats {index + 1}</label>
-        </Grid>
-    )
+	const canReserve = seatStatus === 'Free';
+
+	const handleClick = () => {
+		if (canReserve) {
+			console.log('old picked', picked);
+			const current = pickedSeats.current;
+			if (!picked && requestedSeats > 0) {
+				setRequestedSeats(requestedSeats - 1);
+				setPicked(true);
+				console.log('updated picked', picked);
+				pickedSeats.current = [...current, index + 1];
+			} else if (picked) {
+				setRequestedSeats(requestedSeats + 1);
+				setPicked(false);
+				// remove the seat from our picked seats
+				pickedSeats.current = current.filter((value) => value !== index + 1);
+			}
+		}
+		console.log(canReserve + ' ' + picked);
+		console.log(requestedSeats);
+	};
+
+	return (
+		<Card
+			onClick={handleClick}
+			sx={{
+				display: 'flex',
+				backgroundColor: canReserve
+					? picked
+						? 'info.main'
+						: 'secondary.main'
+					: 'primary.main',
+				color: '#183642',
+				':hover': {
+					backgroundColor: '#183642',
+					color: 'background.paper',
+				},
+				width: 50,
+				height: 50,
+				justifyContent: 'center',
+			}}
+		>
+			<Box
+				sx={{
+					display: 'flex',
+					alignItems: 'center',
+					color: 'background.paper',
+				}}
+			>
+				{index + 1}
+			</Box>
+		</Card>
+	);
 }
-
-/*
-*/

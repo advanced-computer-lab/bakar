@@ -29,7 +29,13 @@ export default function FlightTimeline({ flight }) {
 					<TimelineDot color="primary" />
 					<TimelineConnector sx={{ height: '50px' }}></TimelineConnector>
 				</TimelineSeparator>
-				<TimelineContent>Departure Date</TimelineContent>
+				<TimelineContent>
+					Departure Date
+					<br />
+					<Typography variant="subtitle2">
+						{flight.departureLocation}
+					</Typography>
+				</TimelineContent>
 			</TimelineItem>
 
 			<TimelineItem>
@@ -59,7 +65,11 @@ export default function FlightTimeline({ flight }) {
 				<TimelineSeparator>
 					<TimelineDot color="primary" />
 				</TimelineSeparator>
-				<TimelineContent>Arrival Date</TimelineContent>
+				<TimelineContent>
+					Arrival Date
+					<br />
+					<Typography variant="subtitle2">{flight.arrivalLocation}</Typography>
+				</TimelineContent>
 			</TimelineItem>
 		</Timeline>
 	);
