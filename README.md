@@ -2,6 +2,9 @@
 
 Bakar airlines is an airline flight booking system website that allows you to view and book tickets.
 
+## Motivation
+This project was created for a requirment in university cousre to help us learn and practice the MERN stack and get us ready for real life work
+
 ## Description
 As a normal user you can search on any flight by filling the required fields on the home page however, you will not be able to book any flight unless you login.
 
