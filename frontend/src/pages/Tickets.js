@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import NavBar from '../components/NavBar/NavBar';
 import TicketsList from '../components/Tickets/TicketsList';
 import axios from '../api';
-import { Collapse, Grid } from "@mui/material";
+import { Collapse, Grid } from '@mui/material';
 
 import SearchFlightUser from '../components/SearchFlightUser/SearchFlightUser';
 
@@ -15,13 +15,13 @@ function Tickets({ userType }) {
 			t.palette.mode === 'light' ? t.palette.grey[50] : t.palette.grey[900],
 		backgroundSize: 'cover',
 		backgroundAttachment: 'fixed',
-		height: '100vh',
+		minHeight: '100vh',
 		overflowY: 'hidden',
 	};
 
 	const [tickets, setTickets] = useState([]);
 	const [ticketDep, setTicketDep] = useState(null);
-	const [ticketReturn, setTicketReturn] = useState(null)
+	const [ticketReturn, setTicketReturn] = useState(null);
 
 	const getData = async () => {
 		const res = await axios.get('/tickets');
@@ -41,18 +41,25 @@ function Tickets({ userType }) {
 				<Collapse in={ticketDep} unmountOnExit>
 					<Grid container alignItems="center" justifyContent="center">
 						<Grid item>
-							<SearchFlightUser ticket={ticketDep}/>
+							<SearchFlightUser ticket={ticketDep} />
 						</Grid>
 					</Grid>
 				</Collapse>
 				<Collapse in={ticketReturn} unmountOnExit>
 					<Grid container alignItems="center" justifyContent="center">
 						<Grid item>
-							<SearchFlightUser ticket={ticketReturn}/>
+							<SearchFlightUser ticket={ticketReturn} />
 						</Grid>
 					</Grid>
 				</Collapse>
-				<TicketsList userType={userType} tickets={tickets} getData={tickets} triggerDep={setTicketDep} triggerRet={setTicketReturn}/>
+				<TicketsList
+					userType={userType}
+					tickets={tickets}
+					setTickets={setTickets}
+					getData={tickets}
+					triggerDep={setTicketDep}
+					triggerRet={setTicketReturn}
+				/>
 			</div>
 		</div>
 	);

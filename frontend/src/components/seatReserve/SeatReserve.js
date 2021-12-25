@@ -6,11 +6,13 @@ import { Button, IconButton, Typography } from '@mui/material';
 import Dialog from '@mui/material/Dialog';
 import SeatItem from './SeatItem';
 import SeatList from './SeatList';
+import axios from '../../api';
 
 export default function SeatReserve({
 	flight,
 	selectedCabin,
 	number,
+	alreadyPickedSeats,
 	open,
 	setOpen,
 	departureFlight,
@@ -19,7 +21,7 @@ export default function SeatReserve({
 	ticket,
 	setReturnFlight,
 }) {
-	const pickedSeats = useRef([]);
+	const pickedSeats = useRef(alreadyPickedSeats || []);
 	const requestedSeats = number;
 	const [seats, setSeats] = useState([]);
 	const reservedSeats =
@@ -49,56 +51,72 @@ export default function SeatReserve({
 
 	useEffect(() => populateSeats(), []);
 
-	const handleSubmit = () => {
+	const handleSubmit = async () => {
 		console.log('picked seats = ', pickedSeats);
 		if (pickedSeats.current.length < number) {
 			alert(
 				`You have picked ${pickedSeats.current.length} seat(s)\nPlease pick ${number} seat(s)`
 			);
 		} else {
+			const newSeats = pickedSeats.current;
+			console.log('new_seats ', newSeats);
 			if (!departureFlight) {
-				navigate('/flights', {
-					replace: true,
-					state: {
-						...location.state,
-						departureFlight: {
-							...flight,
-							seats: pickedSeats,
-							cabin: selectedCabin,
+				console.log('inside here');
+				if (!location.pathname.includes('tickets')) {
+					navigate('/flights', {
+						replace: true,
+						state: {
+							...location.state,
+							departureFlight: {
+								...flight,
+								seats: newSeats,
+								cabin: selectedCabin,
+							},
+							returnFlight: returnFlight,
 						},
-						returnFlight: returnFlight,
-					},
-				});
+					});
+				} else if (ticket) {
+					console.log('updateDep');
+					await axios.put(`/tickets/${ticket._id}`, {
+						seatsDeparture: newSeats,
+					});
+				}
 				setDepartureFlight({
 					...flight,
-					seats: pickedSeats,
+					seats: newSeats,
 					cabin: selectedCabin,
 				});
 			} else {
-				navigate('/flights', {
-					replace: true,
-					state: {
-						...location.state,
-						departureFlight: departureFlight,
-						returnFlight: {
-							...flight,
-							seats: pickedSeats,
-							cabin: selectedCabin,
+				if (!location.pathname.includes('tickets')) {
+					navigate('/flights', {
+						replace: true,
+						state: {
+							...location.state,
+							departureFlight: departureFlight,
+							returnFlight: {
+								...flight,
+								seats: newSeats,
+								cabin: selectedCabin,
+							},
 						},
-					},
-				});
+					});
+				} else if (ticket) {
+					console.log('updateRet');
+					await axios.put(`/tickets/${ticket._id}`, {
+						seatsReturn: newSeats,
+					});
+					document.location.reload();
+				}
 				setReturnFlight({
 					...flight,
-					seats: pickedSeats,
+					seats: newSeats,
 					cabin: selectedCabin,
 				});
 			}
 			setOpen(false);
 		}
 	};
-
-	console.log(requestedSeats);
-	console.log(pickedSeats);
+	console.log('picked seats ', pickedSeats);
 	return (
 		<Dialog open={open} onClose={handleClose}>
 			<Box

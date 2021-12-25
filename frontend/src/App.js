@@ -14,7 +14,7 @@ import Profile from './pages/Profile';
 import { UserType } from './userType';
 import ProtectedRoute from './components/protectedRoutes/protectedRoute';
 import { Scrollbars } from 'react-custom-scrollbars';
-import { StripeProvider, Elements } from 'react-stripe-elements';
+import Payment from './pages/Payment';
 
 const generalTheme = createTheme(theme);
 
@@ -38,51 +38,50 @@ function App() {
 	const [userType, setUserType] = useState(getToken());
 
 	return (
-		<StripeProvider apiKey="pk_test_51KAZrtBvkGmRM4gyfWeGpTCpsqGvUq4ZoMJEM0Byx6U4pfb2mUr8OV1giKevMwMqgkB39t0dGazcRNj083XFBQF400lnPRhzLA">
-			<Elements>
-				<Scrollbars style={{ width: '100vw', height: '100vh' }}>
-					<LocalizationProvider dateAdapter={AdapterDateFns}>
-						<ThemeProvider theme={generalTheme}>
-							<CssBaseline />
-							<Router>
-								<div style={style}>
-									<Routes>
-										<Route
-											path="/"
-											element={<Homepage userType={userType} />}
-										/>
-										<Route
-											path="/login"
-											element={<Login setUserType={setUserType} />}
-										/>
-										<Route
-											path="/register"
-											element={<Register setUserType={setUserType} />}
-										/>
-										<Route
-											path="/flights"
-											element={<Flights userType={userType} />}
-										/>
-										<Route path="/tickets" element={<ProtectedRoute />}>
-											<Route
-												path="/tickets"
-												element={<Tickets userType={userType} />}
-											/>
-										</Route>
-										<Route path="/profile" element={<ProtectedRoute />}>
-											<Route
-												path="/profile"
-												element={<Profile userType={userType} />}
-											/>
-										</Route>
-									</Routes>
-								</div>
-							</Router>
-						</ThemeProvider>
-					</LocalizationProvider>
-				</Scrollbars>
-			</Elements>
-		</StripeProvider>
+		<Scrollbars style={{ width: '100vw', height: '100vh' }}>
+			<LocalizationProvider dateAdapter={AdapterDateFns}>
+				<ThemeProvider theme={generalTheme}>
+					<CssBaseline />
+					<Router>
+						<div style={style}>
+							<Routes>
+								<Route path="/" element={<Homepage userType={userType} />} />
+								<Route
+									path="/login"
+									element={<Login setUserType={setUserType} />}
+								/>
+								<Route
+									path="/register"
+									element={<Register setUserType={setUserType} />}
+								/>
+								<Route
+									path="/flights"
+									element={<Flights userType={userType} />}
+								/>
+								<Route path="/tickets" element={<ProtectedRoute />}>
+									<Route
+										path="/tickets"
+										element={<Tickets userType={userType} />}
+									/>
+								</Route>
+								<Route path="/profile" element={<ProtectedRoute />}>
+									<Route
+										path="/profile"
+										element={<Profile userType={userType} />}
+									/>
+								</Route>
+								<Route path="/payments" element={<ProtectedRoute />}>
+									<Route
+										path="/payments"
+										element={<Payment userType={userType} />}
+									/>
+								</Route>
+							</Routes>
+						</div>
+					</Router>
+				</ThemeProvider>
+			</LocalizationProvider>
+		</Scrollbars>
 	);
 }
 

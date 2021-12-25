@@ -13,29 +13,24 @@ export default function SeatItem({
 	flight,
 	ticket,
 }) {
-	const [picked, setPicked] = React.useState(false);
-
-	const canReserve = seatStatus === 'Free';
-	if (!canReserve) {
-		//     const checkArray = departureFlight !== null ? ticket.seatsDeparture : ticket.seatsReturn;
-		//     if ((departureFlight && flight.flightNo == departureFlight.flightNo) ||
-		//         (returnFlight && flight.flightNo == returnFlight.flightNo)) {
-		//         return checkArray.includes(index + 1);
-		//     }
-		// }
+	const picked = pickedSeats.current.includes(index + 1);
+	let booked = false;
+	if (ticket) {
+		booked =
+			ticket.seatsDeparture.includes(index + 1) ||
+			ticket.seatsReturn.includes(index + 1);
 	}
+
+	const canReserve = seatStatus === 'Free' || booked;
+
 	const handleClick = () => {
 		if (canReserve) {
-			console.log('old picked', picked);
 			const current = pickedSeats.current;
 			if (!picked && requestedSeats > 0) {
 				setRequestedSeats(requestedSeats - 1);
-				setPicked(true);
-				console.log('updated picked', picked);
 				pickedSeats.current = [...current, index + 1];
 			} else if (picked) {
 				setRequestedSeats(requestedSeats + 1);
-				setPicked(false);
 				// remove the seat from our picked seats
 				pickedSeats.current = current.filter((value) => value !== index + 1);
 			} else if (requestedSeats <= 0) {

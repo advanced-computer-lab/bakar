@@ -26,7 +26,9 @@ function TicketsList(props) {
 								key={ticket._id}
 								userType={props.userType}
 								ticket={ticket}
-								triggerDep={props.triggerDep} triggerRet={props.triggerRet}
+								triggerDep={props.triggerDep}
+								triggerRet={props.triggerRet}
+								setTickets={props.setTickets}
 							/>
 						))}
 				</Grid>
