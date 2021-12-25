@@ -6,6 +6,7 @@ const theme = {
 			contrastText: '#F3F6F7',
 			dark: '#152328',
 			light: '#2D4853',
+			disabled: '#909FA5',
 		},
 		secondary: {
 			main: '#CD5334',
@@ -19,6 +20,7 @@ const theme = {
 		},
 		info: {
 			main: '#2196f3',
+			success: '#33CA7F',
 		},
 		divider: 'rgba(21,35,40,0.1)',
 	},
