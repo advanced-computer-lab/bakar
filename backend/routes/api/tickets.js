@@ -10,32 +10,54 @@ const JwtStrategy = require('passport-jwt').Strategy;
 const ExtractJwt = require('passport-jwt').ExtractJwt;
 const sendMessage = require('./nodemailer.js');
 require('dotenv').config();
-const auth = require("../../authorization/authorization");
+const auth = require('../../authorization/authorization');
 
-router.get('/', auth ,async (req, res) => {
-	console.log(req.user);
+router.get('/', auth, async (req, res) => {
 	try {
 		const result = await Ticket.find({ username: req.user.username }).exec();
-		console.log('result: ' + result);
 		res.send(result);
 	} catch (err) {
 		res.sendStatus(403);
 	}
 });
 
-router.delete('/:_id', auth ,async (req, res) => {
+router.delete('/:_id', auth, async (req, res) => {
 	try {
-		const dbResult = await Ticket.findOneAndDelete({
+		const user = req.user;
+		const ticket = await Ticket.findOne({
 			_id: req.params._id,
 		}).exec();
-		res.status(200).send(dbResult);
-		console.log('deleted ticket\n' + dbResult);
+		const depFlight = await Flight.findOne({
+			flightNo: ticket.departureFlightNo,
+		}).exec();
+		const retFlight = await Flight.findOne({
+			flightNo: ticket.returnFlightNo,
+		}).exec();
+		for (const seat of ticket.seatsDeparture) {
+			if (ticket.cabin == 'Economy') {
+				depFlight.seatsEconView[seat - 1] = 'Free';
+			} else {
+				depFlight.seatsBusView[seat - 1] = 'Free';
+			}
+		}
+		for (const seat of ticket.seatsReturn) {
+			if (ticket.cabin == 'Economy') {
+				retFlight.seatsEconView[seat - 1] = 'Free';
+			} else {
+				retFlight.seatsBusView[seat - 1] = 'Free';
+			}
+		}
+		ticket.delete();
+		retFlight.save();
+		depFlight.save();
+		res.status(200).send(ticket);
+		console.log('deleted ticket\n' + ticket);
 		sendMessage({
 			to: user.email,
 			subject: `Cancelled Ticket #${req.params._id}`,
 			text: 'Amount to be refunded.',
 			html: `<b>The following amount: ${
-				dbResult.priceReturn + dbResult.priceDeparture
+				ticket.priceReturn + ticket.priceDeparture
 			}, will be refunded to your account</b>`,
 		});
 	} catch (err) {
@@ -61,7 +83,6 @@ router.post('/', auth, async (req, res) => {
 	try {
 		req.body.username = req.user.username;
 		req.body.email = req.user.email;
-		console.log(req.body);
 		const ticket = Ticket(req.body);
 		ticket.save();
 		const depFlight = await Flight.findOne({
@@ -90,6 +111,85 @@ router.post('/', auth, async (req, res) => {
 		console.log(err);
 	}
 });
+
+router.put('/:_id', auth, async (req, res) => {
+	try {
+		const user = req.user;
+		const filter = {
+			_id: req.params._id,
+			email: user.email,
+			username: user.username,
+		};
+		const update = req.body; // update flightNo or update anything related to the ticket itself
+		for (const key in update) {
+			if (!update[key]) {
+				delete update[key];
+			}
+		}
+		console.log('filter ', filter);
+		console.log('update ', update);
+		const oldTicket = await Ticket.findOne(filter).exec();
+		const ticket = await Ticket.findOneAndUpdate(filter, update, {
+			new: true,
+		}).exec();
+		const compareDep = oldTicket.seatsDeparture
+			.sort()
+			.compare(ticket.seatsDeparture.sort());
+		const compareRet = oldTicket.seatsReturn
+			.sort()
+			.compare(ticket.seatsReturn.sort());
+
+		const retFlight = await Flight.findOne({
+			flightNo: ticket.returnFlightNo,
+		}).exec();
+		const depFlight = await Flight.findOne({
+			flightNo: ticket.departureFlightNo,
+		}).exec();
+		if (
+			!compareDep &&
+			oldTicket.departureFlightNo == ticket.departureFlightNo
+		) {
+			for (const seat of oldTicket.seatsDeparture) {
+				if (ticket.cabin == 'Economy') {
+					depFlight.seatsEconView[seat - 1] = 'Free';
+				} else {
+					depFlight.seatsBusView[seat - 1] = 'Free';
+				}
+			}
+			for (const seat of ticket.seatsDeparture) {
+				if (ticket.cabin == 'Economy') {
+					depFlight.seatsEconView[seat - 1] = 'Adult';
+				} else {
+					depFlight.seatsBusView[seat - 1] = 'Adult';
+				}
+			}
+		}
+		if (!compareRet && oldTicket.returnFlightNo == ticket.returnFlightNo) {
+			for (const seat of oldTicket.seatsReturn) {
+				if (ticket.cabin == 'Economy') {
+					retFlight.seatsEconView[seat - 1] = 'Free';
+				} else {
+					retFlight.seatsBusView[seat - 1] = 'Free';
+				}
+			}
+			for (const seat of ticket.seatsReturn) {
+				if (ticket.cabin == 'Economy') {
+					retFlight.seatsEconView[seat - 1] = 'Adult';
+				} else {
+					retFlight.seatsBusView[seat - 1] = 'Adult';
+				}
+			}
+		}
+		retFlight.save();
+		depFlight.save();
+		if (ticket) {
+			res.status(200).send('Updated successfully');
+		} else {
+			res.status(400).send('Something went wrong');
+		}
+	} catch (err) {}
+});
+
 router.post('/:_id', auth, async (req, res) => {
 	try {
 		const user = req.user;

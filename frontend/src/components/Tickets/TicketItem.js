@@ -32,9 +32,9 @@ import EditIcon from '@mui/icons-material/Edit';
 import { useNavigate } from 'react-router-dom';
 import MarkEmailReadIcon from '@mui/icons-material/MarkEmailRead';
 import Tickets from '../../pages/Tickets';
+import SeatReserve from '../seatReserve/SeatReserve';
 
 function FlightNoButton({ flightNo, type }) {
-
 	return (
 		<Card
 			sx={{
@@ -77,7 +77,12 @@ function FlightNoButton({ flightNo, type }) {
 	);
 }
 
-export default function TicketItem({ ticket, triggerDep, triggerRet }) {
+export default function TicketItem({
+	ticket,
+	triggerDep,
+	triggerRet,
+	setTickets,
+}) {
 	const [flightDeparture, setFlightDeparture] = useState();
 	const [flightReturn, setFlightReturn] = useState();
 
@@ -88,6 +93,17 @@ export default function TicketItem({ ticket, triggerDep, triggerRet }) {
 	const navigate = useNavigate();
 
 	const [mail, setMail] = useState(false);
+	const [edit, setEdit] = useState('departure');
+	const [openEdit, setOpenEdit] = useState(false);
+
+	const changeSeatDep = () => {
+		setEdit('departure');
+		setOpenEdit(true);
+	};
+	const changeSeatRet = () => {
+		setEdit('return');
+		setOpenEdit(true);
+	};
 
 	const handleMail = async () => {
 		setMail(true);
@@ -96,20 +112,22 @@ export default function TicketItem({ ticket, triggerDep, triggerRet }) {
 	};
 
 	const getFlights = async () => {
-		let flightDeparture = (
-			await axios.get(`/flights/${ticket.departureFlightNo}`)
-		).data;
-		setFlightDeparture(flightDeparture);
-
-		let flightReturn = (await axios.get(`/flights/${ticket.returnFlightNo}`))
+		let tempDep = (await axios.get(`/flights/${ticket.departureFlightNo}`))
 			.data;
-		setFlightReturn(flightReturn);
+		setFlightDeparture(tempDep);
+
+		let tempRet = (await axios.get(`/flights/${ticket.returnFlightNo}`)).data;
+		setFlightReturn(tempRet);
 	};
 
 	const handleDelete = async () => {
 		await axios.delete(`/tickets/${ticket._id}`);
 		setOpen(false);
+		setTickets((prevTickets) =>
+			prevTickets.filter((prevTicket) => prevTicket._id !== ticket._id)
+		);
 	};
+	console.log('ticket ', ticket);
 
 	const handleClose = () => {
 		setOpen(false);
@@ -122,6 +140,22 @@ export default function TicketItem({ ticket, triggerDep, triggerRet }) {
 
 	return (
 		<Grid container direction="column" rowSpacing={1}>
+			{(flightDeparture || flightReturn) && (
+				<SeatReserve
+					open={openEdit}
+					setOpen={setOpenEdit}
+					selectedCabin={ticket.cabin}
+					flight={edit == 'departure' ? flightDeparture : flightReturn}
+					number={0}
+					alreadyPickedSeats={
+						edit == 'departure' ? ticket.seatsDeparture : ticket.seatsReturn
+					}
+					departureFlight={edit == 'departure' ? null : flightDeparture}
+					setDepartureFlight={setFlightDeparture}
+					setReturnFlight={setFlightReturn}
+					ticket={ticket}
+				/>
+			)}
 			<Grid item xs>
 				<Card
 					sx={{
@@ -252,7 +286,7 @@ export default function TicketItem({ ticket, triggerDep, triggerRet }) {
 									<Grid item sx={{ ml: 2 }}>
 										<Typography component="div" variant="subtitle1" noWrap>
 											{ticket.seatsDeparture.join(', ')}
-											<IconButton>
+											<IconButton onClick={changeSeatDep}>
 												<EditIcon
 													sx={{
 														width: '20px',
@@ -278,7 +312,7 @@ export default function TicketItem({ ticket, triggerDep, triggerRet }) {
 									<Grid item sx={{ ml: 2 }}>
 										<Typography component="div" variant="subtitle1" noWrap>
 											{ticket.seatsReturn.join(', ')}
-											<IconButton>
+											<IconButton onClick={changeSeatRet}>
 												<EditIcon
 													sx={{
 														width: '20px',
@@ -410,14 +444,14 @@ export default function TicketItem({ ticket, triggerDep, triggerRet }) {
 					<FlightDetails
 						selectedCabin={ticket.cabin}
 						flight={flightDeparture}
-						text='change'
+						text="change"
 						onClick={() => {
 							let myTicket = {
 								...ticket,
 								returnFlight: flightReturn,
 								oldDepartureFlight: flightDeparture,
-								adults: ticket.seatsDeparture.length
-							}
+								adults: ticket.seatsDeparture.length,
+							};
 							triggerDep(myTicket);
 							triggerRet(null);
 						}}
@@ -430,14 +464,14 @@ export default function TicketItem({ ticket, triggerDep, triggerRet }) {
 					<FlightDetails
 						selectedCabin={ticket.cabin}
 						flight={flightReturn}
-						text='change'
+						text="change"
 						onClick={() => {
 							let myTicket = {
 								...ticket,
 								departureFlight: flightDeparture,
 								oldReturnFlight: flightReturn,
-								adults: ticket.seatsDeparture.length
-							}
+								adults: ticket.seatsDeparture.length,
+							};
 							triggerRet(myTicket);
 							triggerDep(null);
 						}}

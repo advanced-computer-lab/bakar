@@ -7,16 +7,17 @@ export default function FlightDetails({
 	flight,
 	text,
 	onClick,
-	departureFlight, setDepartureFlight, setReturnFlight
+	departureFlight,
+	setDepartureFlight,
+	setReturnFlight,
 }) {
 	const handleSelect = () => {
 		if (departureFlight) {
 			setReturnFlight(flight);
-		}
-		else {
+		} else {
 			setDepartureFlight(flight);
 		}
-	}
+	};
 	return (
 		<Card
 			sx={{
@@ -34,6 +35,7 @@ export default function FlightDetails({
 						<Card
 							sx={{
 								backgroundColor: 'rgb(254, 239, 221, 0.5)',
+								p: -2,
 							}}
 						>
 							<FlightTimeline flight={flight} />

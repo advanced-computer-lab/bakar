@@ -24,8 +24,7 @@ export default function SearchFlightUser({ detailsOnly, ticket }) {
 	let oldFlight = {};
 	if (ticket && ticket.oldDepartureFlight) {
 		oldFlight = ticket.oldDepartureFlight;
-	}
-	else if(ticket &&ticket.oldReturnFlight) {
+	} else if (ticket && ticket.oldReturnFlight) {
 		oldFlight = ticket.oldReturnFlight;
 	}
 	const [departureTime, setDepartureTime] = React.useState(
@@ -38,8 +37,12 @@ export default function SearchFlightUser({ detailsOnly, ticket }) {
 		oldFlight.adults = ticket.adults;
 	}
 
-	const [departureTerminal, setDepartureTerminal] = React.useState(oldFlight.departureTerminal);
-	const [arrivalTerminal, setArrivalTerminal] = React.useState(oldFlight.arrivalTerminal);
+	const [departureTerminal, setDepartureTerminal] = React.useState(
+		oldFlight.departureTerminal
+	);
+	const [arrivalTerminal, setArrivalTerminal] = React.useState(
+		oldFlight.arrivalTerminal
+	);
 	const [cabin, setCabin] = React.useState(oldFlight.cabin || 'Economy');
 	const [adults, setAdults] = React.useState(oldFlight.adults || 1);
 	const [children, setChildren] = React.useState(0);
@@ -66,20 +69,23 @@ export default function SearchFlightUser({ detailsOnly, ticket }) {
 				data.availableBus = requestedSeats;
 			}
 			if (ticket.departureFlight) {
-				data.departureFlight = ticket.departureFlight;
-			}
-			else if (ticket.returnFlight) {
-				data.returnFlight = ticket.returnFlight;
+				data.departureFlight = {
+					...ticket.departureFlight,
+					seats: ticket.seatsDeparture,
+				};
+			} else if (ticket.returnFlight) {
+				data.returnFlight = {
+					...ticket.returnFlight,
+					seats: ticket.seatsReturn,
+				};
 			}
 			if (ticket) {
 				data.ticket = ticket;
 			}
-			navigate(
-				"/flights", {
+			navigate('/flights', {
 				state: { ...data, search: true },
 				replace: true,
 			});
-
 		} catch (err) {
 			console.log(err);
 		}

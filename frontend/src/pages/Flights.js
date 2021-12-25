@@ -5,7 +5,7 @@ import FlightList from '../components/FlightList/FlightList';
 import CreateFlight from '../components/CreateFlight/CreateFlight';
 import DeleteFlight from '../components/DeleteFlight/DeleteFlight';
 import SearchFlight from '../components/SearchFlight/SearchFlight';
-import axios from 'axios';
+import axios from '../api';
 import {
 	useLocation,
 	createSearchParams,
@@ -48,7 +48,16 @@ function Flights({ userType }) {
 	);
 	const [returnFlight, setReturnFlight] = useState(location.state.returnFlight);
 
-	const { adults, children, cabin, departureTime, arrivalTime, arrivalTerminal, departureTerminal, ticket } = location.state;
+	const {
+		adults,
+		children,
+		cabin,
+		departureTime,
+		arrivalTime,
+		arrivalTerminal,
+		departureTerminal,
+		ticket,
+	} = location.state;
 	console.log(location.state);
 	console.log(children);
 	let priceFactor = 0;

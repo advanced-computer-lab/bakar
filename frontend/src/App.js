@@ -14,6 +14,7 @@ import Profile from './pages/Profile';
 import { UserType } from './userType';
 import ProtectedRoute from './components/protectedRoutes/protectedRoute';
 import { Scrollbars } from 'react-custom-scrollbars';
+import Payment from './pages/Payment';
 
 const generalTheme = createTheme(theme);
 
@@ -67,6 +68,12 @@ function App() {
 									<Route
 										path="/profile"
 										element={<Profile userType={userType} />}
+									/>
+								</Route>
+								<Route path="/payments" element={<ProtectedRoute />}>
+									<Route
+										path="/payments"
+										element={<Payment userType={userType} />}
 									/>
 								</Route>
 							</Routes>
