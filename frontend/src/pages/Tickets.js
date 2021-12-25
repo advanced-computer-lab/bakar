@@ -2,6 +2,9 @@ import React, { useState } from 'react';
 import NavBar from '../components/NavBar/NavBar';
 import TicketsList from '../components/Tickets/TicketsList';
 import axios from '../api';
+import { Collapse, Grid } from "@mui/material";
+
+import SearchFlightUser from '../components/SearchFlightUser/SearchFlightUser';
 
 function Tickets({ userType }) {
 	const styles = {
@@ -17,6 +20,8 @@ function Tickets({ userType }) {
 	};
 
 	const [tickets, setTickets] = useState([]);
+	const [ticketDep, setTicketDep] = useState(null);
+	const [ticketReturn, setTicketReturn] = useState(null)
 
 	const getData = async () => {
 		const res = await axios.get('/tickets');
@@ -24,6 +29,7 @@ function Tickets({ userType }) {
 		let ticketData = res['data'];
 		setTickets(ticketData);
 	};
+	console.log(ticketDep);
 
 	React.useEffect(() => getData(), []);
 
@@ -32,7 +38,21 @@ function Tickets({ userType }) {
 			<NavBar userType={userType} />
 			<div style={{ padding: '10px', paddingTop: '100px' }}>
 				<br />
-				<TicketsList userType={userType} tickets={tickets} getData={tickets} />
+				<Collapse in={ticketDep} unmountOnExit>
+					<Grid container alignItems="center" justifyContent="center">
+						<Grid item>
+							<SearchFlightUser ticket={ticketDep}/>
+						</Grid>
+					</Grid>
+				</Collapse>
+				<Collapse in={ticketReturn} unmountOnExit>
+					<Grid container alignItems="center" justifyContent="center">
+						<Grid item>
+							<SearchFlightUser ticket={ticketReturn}/>
+						</Grid>
+					</Grid>
+				</Collapse>
+				<TicketsList userType={userType} tickets={tickets} getData={tickets} triggerDep={setTicketDep} triggerRet={setTicketReturn}/>
 			</div>
 		</div>
 	);

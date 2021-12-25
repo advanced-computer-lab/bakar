@@ -25,7 +25,7 @@ export default function FlightItem({
 	priceFactor,
 	userType,
 	noOfSeats,
-	departureFlight, returnFlight, setDepartureFlight, setReturnFlight
+	departureFlight, returnFlight, setDepartureFlight, setReturnFlight, ticket
 }) {
 	const [expanded, setExpanded] = useState(false);
 	const [selectedCabin, setSelectedCabin] = useState(cabin);
@@ -89,6 +89,7 @@ export default function FlightItem({
 				returnFlight={returnFlight}
 				setDepartureFlight={setDepartureFlight}
 				setReturnFlight={setReturnFlight}
+				ticket={ticket}
 			/>
 			<Grid item xs>
 				<Card
@@ -172,7 +173,7 @@ export default function FlightItem({
 							>
 								<Button
 									onClick={() => {
-										setSelectedCabin('economy');
+										setSelectedCabin('Economy');
 										setExpanded(true);
 									}}
 								>
@@ -180,13 +181,13 @@ export default function FlightItem({
 										cabin="Economy"
 										flight={flight}
 										priceFactor={priceFactor}
-										selected={selectedCabin === 'economy' ? true : false}
+										selected={selectedCabin === 'Economy' ? true : false}
 									></PriceTag>
 								</Button>
 
 								<Button
 									onClick={() => {
-										setSelectedCabin('business');
+										setSelectedCabin('Business');
 										setExpanded(true);
 									}}
 								>
@@ -194,7 +195,7 @@ export default function FlightItem({
 										cabin="Business"
 										flight={flight}
 										priceFactor={priceFactor}
-										selected={selectedCabin === 'business' ? true : false}
+										selected={selectedCabin === 'Business' ? true : false}
 									></PriceTag>
 								</Button>
 							</Grid>

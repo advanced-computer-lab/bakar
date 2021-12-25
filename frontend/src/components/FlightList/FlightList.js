@@ -7,10 +7,10 @@ import { useNavigate, useLocation } from 'react-router-dom';
 
 function FlightList(props) {
 	let flag = props.userType !== UserType.admin;
-	const { departureFlight, returnFlight, setDepartureFlight, setReturnFlight } = props
+	const { departureFlight, returnFlight, setDepartureFlight, setReturnFlight, ticket } = props
 	const navigate = useNavigate();
 	const location = useLocation();
-	console.log('seats', props.noOfSeats);
+	
 	const changeDep = () => {
 		navigate("/flights", 
 				{
@@ -127,6 +127,7 @@ function FlightList(props) {
 									departureFlight={departureFlight}
 									setDepartureFlight={setDepartureFlight}
 									setReturnFlight={setReturnFlight}
+									ticket={ticket}
 								></FlightItem>
 							</Grid>
 						))}

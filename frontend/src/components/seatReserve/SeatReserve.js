@@ -16,13 +16,14 @@ export default function SeatReserve({
 	departureFlight,
 	returnFlight,
 	setDepartureFlight,
+	ticket,
 	setReturnFlight,
 }) {
 	const pickedSeats = useRef([]);
 	const requestedSeats = number;
 	const [seats, setSeats] = useState([]);
 	const reservedSeats =
-		selectedCabin === 'economy' ? flight.seatsEconView : flight.seatsBusView;
+		selectedCabin === 'Economy' ? flight.seatsEconView : flight.seatsBusView;
 
 	let navigate = useNavigate();
 	const location = useLocation();
@@ -111,6 +112,11 @@ export default function SeatReserve({
 					columnSpacing={{ xs: 1, sm: 1, md: 1 }}
 				>
 					<SeatList
+						ticket={ticket}
+						flight={flight}
+
+						departureFlight={departureFlight}
+						returnFlight={returnFlight}
 						seats={seats}
 						reqSeats={requestedSeats}
 						pickedSeats={pickedSeats}

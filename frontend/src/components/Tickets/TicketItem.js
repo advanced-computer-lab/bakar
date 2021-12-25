@@ -30,6 +30,8 @@ import axios from '../../api';
 import MailIcon from '@mui/icons-material/Mail';
 import EditIcon from '@mui/icons-material/Edit';
 import { useNavigate } from 'react-router-dom';
+import MarkEmailReadIcon from '@mui/icons-material/MarkEmailRead';
+import Tickets from '../../pages/Tickets';
 
 function FlightNoButton({ flightNo, type }) {
 
@@ -75,7 +77,7 @@ function FlightNoButton({ flightNo, type }) {
 	);
 }
 
-export default function TicketItem({ ticket }) {
+export default function TicketItem({ ticket, triggerDep, triggerRet }) {
 	const [flightDeparture, setFlightDeparture] = useState();
 	const [flightReturn, setFlightReturn] = useState();
 
@@ -84,6 +86,15 @@ export default function TicketItem({ ticket }) {
 
 	const [open, setOpen] = useState(false);
 	const navigate = useNavigate();
+
+	const [mail, setMail] = useState(false);
+
+	const handleMail = async () => {
+		setMail(true);
+		await axios.post(`/tickets/${ticket._id}`);
+		setTimeout(() => setMail(false), 3000);
+	};
+
 	const getFlights = async () => {
 		let flightDeparture = (
 			await axios.get(`/flights/${ticket.departureFlightNo}`)
@@ -347,14 +358,22 @@ export default function TicketItem({ ticket }) {
 											//height: '60x',
 											color: 'primary.main',
 											':hover': { color: 'background.paper' },
+											':disabled': {
+												backgroundColor: 'info.main',
+											},
 										}}
-										onClick={() => {
-											setOpen(true);
-										}}
+										onClick={handleMail}
+										disabled={mail}
 									>
-										<MailIcon
-											sx={{ height: 50, width: 50, color: 'inherit' }}
-										/>
+										{!mail ? (
+											<MailIcon
+												sx={{ height: 50, width: 50, color: 'inherit' }}
+											/>
+										) : (
+											<MarkEmailReadIcon
+												sx={{ height: 50, width: 50, color: 'inherit' }}
+											/>
+										)}
 									</Button>
 								</Grid>
 								<Divider
@@ -386,21 +405,22 @@ export default function TicketItem({ ticket }) {
 				</Card>
 			</Grid>
 
-			<Grid item xs>
+			<Grid item xs sx={{ pb: 1 }}>
 				<Collapse in={expandedDeparture} unmountOnExit>
 					<FlightDetails
 						selectedCabin={ticket.cabin}
 						flight={flightDeparture}
 						text='change'
 						onClick={() => {
-							const data = {
-								departureFlight: null,
+							let myTicket = {
+								...ticket,
 								returnFlight: flightReturn,
-								ticket: ticket,
-								adults: ticket.seatsDeparture.length,
+								oldDepartureFlight: flightDeparture,
+								adults: ticket.seatsDeparture.length
 							}
-							navigate('/flights', {replace: true, state: data})
-							}}
+							triggerDep(myTicket);
+							triggerRet(null);
+						}}
 					/>
 				</Collapse>
 			</Grid>
@@ -412,14 +432,14 @@ export default function TicketItem({ ticket }) {
 						flight={flightReturn}
 						text='change'
 						onClick={() => {
-							const data = {
+							let myTicket = {
+								...ticket,
 								departureFlight: flightDeparture,
-								returnFlight: null,
-								arrivalTime: flightDeparture.arrivalTime,
-								ticket: ticket,
-								adults: ticket.seatsReturn.length,
+								oldReturnFlight: flightReturn,
+								adults: ticket.seatsDeparture.length
 							}
-							navigate('/flights', {replace: true, state: data})
+							triggerRet(myTicket);
+							triggerDep(null);
 						}}
 					/>
 				</Collapse>

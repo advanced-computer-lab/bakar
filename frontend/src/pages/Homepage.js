@@ -126,7 +126,7 @@ export default function Homepage({ userType }) {
 			</Grid>
 			<Grid container alignItems="center" justifyContent="center">
 				<Grid item>
-					<SearchFlightUser flag={flag}/>
+					<SearchFlightUser flag={flag} ticket={{}}/>
 				</Grid>
 			</Grid>
 		</div>
