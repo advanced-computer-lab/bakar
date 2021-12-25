@@ -9,9 +9,9 @@ After logging in you can then book return flights to any number of people in any
 
 You will be able to see the price per person and baggage allowance for each cabin. 
 
-You can pay for your ticket online.
+You can pay for your ticket online and recive a confirmation mail.
 
-At any time you can see all your reserved flights, you could email the itinerary to yourself if you wish and you will also be able to modify your reservations.
+At any time you can see all your reserved flights, you could email the itinerary to yourself if you wish and you will also be able to modify your reservations and pay any diffrence in price.
 
 If you logged in as an admin you will be able to manage the system, such as adding and removing flights, see all flights, edit existing flights etc....
 
