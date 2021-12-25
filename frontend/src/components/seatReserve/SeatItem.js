@@ -15,7 +15,7 @@ export default function SeatItem({
 }) {
 	const picked = pickedSeats.current.includes(index + 1);
 	let booked = false;
-	if (ticket) {
+	if (ticket && ticket.seatsDeparture) {
 		booked =
 			ticket.seatsDeparture.includes(index + 1) ||
 			ticket.seatsReturn.includes(index + 1);
