@@ -30,6 +30,7 @@ import axios from '../../api';
 import MailIcon from '@mui/icons-material/Mail';
 import EditIcon from '@mui/icons-material/Edit';
 import { useNavigate } from 'react-router-dom';
+import MarkEmailReadIcon from '@mui/icons-material/MarkEmailRead';
 import Tickets from '../../pages/Tickets';
 
 function FlightNoButton({ flightNo, type }) {
@@ -85,6 +86,15 @@ export default function TicketItem({ ticket, triggerDep, triggerRet }) {
 
 	const [open, setOpen] = useState(false);
 	const navigate = useNavigate();
+
+	const [mail, setMail] = useState(false);
+
+	const handleMail = async () => {
+		setMail(true);
+		await axios.post(`/tickets/${ticket._id}`);
+		setTimeout(() => setMail(false), 3000);
+	};
+
 	const getFlights = async () => {
 		let flightDeparture = (
 			await axios.get(`/flights/${ticket.departureFlightNo}`)
@@ -348,14 +358,22 @@ export default function TicketItem({ ticket, triggerDep, triggerRet }) {
 											//height: '60x',
 											color: 'primary.main',
 											':hover': { color: 'background.paper' },
+											':disabled': {
+												backgroundColor: 'info.main',
+											},
 										}}
-										onClick={() => {
-											setOpen(true);
-										}}
+										onClick={handleMail}
+										disabled={mail}
 									>
-										<MailIcon
-											sx={{ height: 50, width: 50, color: 'inherit' }}
-										/>
+										{!mail ? (
+											<MailIcon
+												sx={{ height: 50, width: 50, color: 'inherit' }}
+											/>
+										) : (
+											<MarkEmailReadIcon
+												sx={{ height: 50, width: 50, color: 'inherit' }}
+											/>
+										)}
 									</Button>
 								</Grid>
 								<Divider

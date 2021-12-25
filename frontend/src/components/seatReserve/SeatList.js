@@ -32,7 +32,7 @@ export default function SeatList({ seats, reqSeats, pickedSeats, departureFlight
 		<Grid item>
 			{seats.map((row, index) => {
 				return (
-					<Grid container direction="row" key={index}>
+					<Grid container direction="row" sx={{width: 340}} key={index}>
 						<Seats
 							row={row}
 							reqSeats={totalSeats}
