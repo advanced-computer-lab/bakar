@@ -8,7 +8,10 @@ export default function SeatItem({
 	setRequestedSeats,
 	index,
 	pickedSeats,
-	departureFlight, returnFlight, flight, ticket
+	departureFlight,
+	returnFlight,
+	flight,
+	ticket,
 }) {
 	const [picked, setPicked] = React.useState(false);
 
@@ -35,6 +38,8 @@ export default function SeatItem({
 				setPicked(false);
 				// remove the seat from our picked seats
 				pickedSeats.current = current.filter((value) => value !== index + 1);
+			} else if (requestedSeats <= 0) {
+				alert(`You can't pick more than ${pickedSeats.current.length} seat(s)`);
 			}
 		}
 		console.log(canReserve + ' ' + picked);
@@ -49,11 +54,11 @@ export default function SeatItem({
 				backgroundColor: canReserve
 					? picked
 						? 'info.main'
-						: 'secondary.main'
-					: 'primary.main',
+						: 'info.success'
+					: 'primary.disabled',
 				color: '#183642',
 				':hover': {
-					backgroundColor: '#183642',
+					backgroundColor: canReserve ? 'secondary.main' : '',
 					color: 'background.paper',
 				},
 				width: 50,
