@@ -76,7 +76,7 @@ Pull requests are welcome. For major changes, please open an issue first to disc
 ## Authors and acknowledgment
 - Seif el-berkawy
 - Mohamed Kamal
-- Rafik Yasser
+- Rafik Youssef
 - Ahmad Abdallah
 - Abdallah Adel
 
